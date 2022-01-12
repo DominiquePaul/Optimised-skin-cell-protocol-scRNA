@@ -1,0 +1,105 @@
+﻿Cell Type;Subclustering;Markers
+Keratinocyte;Undiff. (Kerat.);DSC3
+Keratinocyte;Undiff. (Kerat.);LGALS7
+Keratinocyte;Basal (Kerat.);KRT5
+Keratinocyte;Basal (Kerat.);KRT15
+Keratinocyte;Basal (Kerat.);KRT14
+Keratinocyte;Basal (Kerat.);COL17A1
+Keratinocyte;Suprabasal (Kerat.);KRT1
+Keratinocyte;Suprabasal (Kerat.);KRT10
+Keratinocyte;Suprabasal (Kerat.);KRT16
+Keratinocyte;Suprabasal (Kerat.);S100
+Keratinocyte;Differentiated (Kerat.);LOR
+Keratinocyte;Differentiated (Kerat.);SPINK5
+Keratinocyte;outer root sheath (ORS) (Kerat.);KRT6B
+Keratinocyte;outer root sheath (ORS) (Kerat.);KRT17
+Keratinocyte;Channel (Kerat.);GJB2
+Keratinocyte;Channel (Kerat.);GJB6
+Keratinocyte;Channel (Kerat.);ATP1B1
+Keratinocyte;Sebaceous gland (Kerat.);MGST1
+Keratinocyte;Sebaceous gland (Kerat.);FASN
+Keratinocyte;Sweat gland (Kerat.);DCD
+Keratinocyte;Sweat gland (Kerat.);AQP5
+Fibroblast;Undiff. (Fibroblast);COL1A1
+Fibroblast;Undiff. (Fibroblast);COL1A2
+Fibroblast;Undiff. (Fibroblast);COL3A1
+Fibroblast;Undiff. (Fibroblast);COL6
+Fibroblast;Undiff. (Fibroblast);DCN
+Fibroblast;Undiff. (Fibroblast);LUM
+Fibroblast;Undiff. (Fibroblast);MMP2
+Fibroblast;Undiff. (Fibroblast);PDGFA
+Fibroblast;Undiff. (Fibroblast);VIM
+Fibroblast;Undiff. (Fibroblast);APOE
+Fibroblast;Undiff. (Fibroblast);APOD
+Fibroblast;Undiff. (Fibroblast);ABCA6
+Fibroblast;Undiff. (Fibroblast);FBN1
+Fibroblast;Undiff. (Fibroblast);COL6A5
+Fibroblast;Undiff. (Fibroblast);CRABP1
+Fibroblast;Undiff. (Fibroblast);DPP4
+Fibroblast;Undiff. (Fibroblast);MFAP5
+Fibroblast;Undiff. (Fibroblast);SFRP2
+Fibroblast;Undiff. (Fibroblast);WIF1M
+Fibroblast;Undiff. (Fibroblast);COMP
+Fibroblast;Undiff. (Fibroblast);CXCL12
+Fibroblast;Undiff. (Fibroblast);POSTN
+Fibroblast;Undiff. (Fibroblast);COL11A1
+Fibroblast;Undiff. (Fibroblast);LAMC3
+Fibroblast;Undiff. (Fibroblast);FMO1
+Fibroblast;Undiff. (Fibroblast);LSP1
+Pericyte/ vacular smooth muscle cell (vSMC);Undiff. (Pericyte / vSMC);ACTA2
+Pericyte/ vacular smooth muscle cell (vSMC);Undiff. (Pericyte / vSMC);TAGLN
+Pericyte/ vacular smooth muscle cell (vSMC);Pericyte (Pericyte / vSMC);ACTA2
+Pericyte/ vacular smooth muscle cell (vSMC);Pericyte (Pericyte / vSMC);RGS5
+Pericyte/ vacular smooth muscle cell (vSMC);Pericyte (Pericyte / vSMC);PDGFRB
+Pericyte/ vacular smooth muscle cell (vSMC);vSMC (Pericyte / vSMC);DES
+Pericyte/ vacular smooth muscle cell (vSMC);vSMC (Pericyte / vSMC);ACTG2
+Pericyte/ vacular smooth muscle cell (vSMC);vSMC (Pericyte / vSMC);MYL9
+Pericyte/ vacular smooth muscle cell (vSMC);vSMC (Pericyte / vSMC);TPM2
+Pericyte/ vacular smooth muscle cell (vSMC);vSMC (Pericyte / vSMC);RERGL
+Endothelial cell;Undiff. (Endothelial);VWF
+Endothelial cell;Undiff. (Endothelial);PECAM1
+Endothelial cell;Undiff. (Endothelial);SELE
+Endothelial cell;Undiff. (Endothelial);CLDN5
+Endothelial cell;Undiff. (Endothelial);CDH5
+Endothelial cell;Lymphatic (Endothelial);CLDN5
+Endothelial cell;Lymphatic (Endothelial);PROX1
+Endothelial cell;Lymphatic (Endothelial);LYVE1
+Endothelial cell;Vascular (Endothelial);SELE
+Endothelial cell;Vascular (Endothelial);VWF
+Endothelial cell;Vascular (Endothelial);CDH5
+Endothelial cell;Vascular (Endothelial);PECAM1
+Myeloid cell;Undiff. (Myeloid);HLA-DRA
+Myeloid cell;Undiff. (Myeloid);HLA-DRB
+Myeloid cell;Undiff. (Myeloid);FCER1G
+Myeloid cell;Undiff. (Myeloid);TYROBP
+Myeloid cell;Undiff. (Myeloid);AIF1
+Myeloid cell;Undiff. (Myeloid);LYZ
+Myeloid cell;Dendritic cell (Myeloid);CD1C
+Myeloid cell;Langerhans cell (Myeloid);CD207
+Myeloid cell;Macrophage (Myeloid);CD68
+Myeloid cell;Macrophage (Myeloid);RNASE1
+Myeloid cell;Macrophage (Myeloid);SEPP1
+Myeloid cell;Macrophage (Myeloid);ITGAX
+Lymphocyte;Undiff. (Lymphocyte);CD3D
+Lymphocyte;Undiff. (Lymphocyte);CD3E
+Lymphocyte;Undiff. (Lymphocyte);CD52
+Lymphocyte;Undiff. (Lymphocyte);IL7R
+Lymphocyte;T cells (Lymphocyte);CD3D
+Lymphocyte;T cells (Lymphocyte);IL13
+Lymphocyte;T cells (Lymphocyte);IL122
+Lymphocyte;T cells (Lymphocyte);CD84
+Lymphocyte;T cells (Lymphocyte);CCR6
+Lymphocyte;T cells (Lymphocyte);NKG7
+Lymphocyte;B cells (Lymphocyte);IGJ
+Melanocyte;Melanocyte ;DCT
+Melanocyte;Melanocyte ;MLANA
+Melanocyte;Melanocyte ;PMEL
+Melanocyte;Melanocyte ;TYP1
+Melanocyte;Melanocyte ;TYR
+Schwann cell;Schwann cell ;CDH19
+Schwann cell;Schwann cell ;NGFR
+Schwann cell;Schwann cell ;MPZ
+Mitotic cell;Mitotic cell ;UBE2C
+Mitotic cell;Mitotic cell ;PCNA
+Mitotic cell;Mitotic cell ;MKI67
+Cornfied envelope cells;Cornfied envelope cells ;LOR

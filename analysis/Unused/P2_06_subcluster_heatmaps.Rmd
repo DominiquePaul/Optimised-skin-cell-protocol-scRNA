@@ -1,0 +1,72 @@
+---
+title: "Subcluster heatmaps"
+author: "Dominique Paul"
+date: "12/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressPackageStartupMessages({
+  library(hrbrthemes)
+  library(openxlsx)
+  library(scater)
+  library(scran)
+  library(ggplotify)
+  library(pheatmap)
+  library(BiocParallel)
+  library(ggrepel)
+  library(ggplot2)
+  require(plyr)
+  library(dplyr)
+  library(viridis)
+  library(RhpcBLASctl)
+  library(kableExtra)
+  library(parallel)
+})
+
+
+n_workers <- min(detectCores()-1, 16)
+RhpcBLASctl::blas_set_num_threads(n_workers)
+bpparam <- BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)
+
+source("../code/general_purpose_code.R")
+```
+
+# Load data
+
+```{r}
+sce_fresh <- readRDS(file="/Users/dominiquepaul/xRobinson Group/01_Systemic Sclerosis/data/fresh_data/Protocol2_Fresh_all_sce_EOS3.rds")
+```
+
+
+```{r data blaz 2}
+cells <- read.csv("../output/EDI_cells_per_stage.csv")
+```
+
+
+```{r data blaz 2, fig.width=16, fig.height=10}
+sce <- readRDS(file="/Users/dominiquepaul/xRobinson Group/01_Systemic Sclerosis/data/fresh_data/protocol_integration_analysis_sce_EOS6.rds")
+
+total_cells <- dim(sce)[2]
+
+sce %>%
+  group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>% 
+  mutate(percentage = counts/total_cells)
+
+plotReducedDim(sce, "UMAP", colour_by="label", text_by="label", point_size=0.25) +
+  labs(title="Unsupervised clustering",
+       subtitle="Integrated datasets") +
+  theme_ipsum_rc() +
+  theme(legend.position="bottom",
+        panel.spacing = unit(5, "mm")) +
+  guides(color=guide_legend(title="",
+                            nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))
+
+
+```
+

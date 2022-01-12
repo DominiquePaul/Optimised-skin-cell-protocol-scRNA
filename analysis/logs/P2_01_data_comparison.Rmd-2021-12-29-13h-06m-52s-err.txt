@@ -1,0 +1,3 @@
+Error in parse_block(g[-1], g[1], params.src, markdown_mode) : 
+  Duplicate chunk label 'average marker gene expressions ', which has been used for the chunk:
+plot_heatmap_of_top_genes(sce_fresh_filtered, markers_fresh)

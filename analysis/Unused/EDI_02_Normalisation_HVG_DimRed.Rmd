@@ -1,0 +1,304 @@
+---
+title: "Normalisation, HVGs, Dimensionality Reduction"
+author: "Dominique Paul"
+date: "11/1/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressMessages({
+  library(tidySingleCellExperiment)
+  library(scran)
+  library(BiocParallel)
+  library(scater)
+  library(parallel)
+  library(hrbrthemes)
+  library(kableExtra)
+  library(intrinsicDimension)
+  library(Seurat)
+})
+
+# Setting for parallel computing
+n_workers <- min(detectCores()-1, 16)
+RhpcBLASctl::blas_set_num_threads(n_workers)
+bpparam <- BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)
+
+# load utils functions
+source("../code/general_purpose_code.R")
+```
+
+
+# Load data
+
+```{r}
+sce <- readRDS(file = "../data/fresh_data/protocol_integration_analysis_sce_EOS1.rds")
+# some row symbols are duplicated 
+sce <- sce[!duplicated(rownames(sce)),]
+```
+
+# Normalisation
+
+## Normalisation by library size
+
+Many cell have to be reformatted with very large or small factors. We would normally expect the values to be normally distributed.
+
+If we divide the expression values of each cell by its respective librarySizeFactor we get the same total expression count for all cells. The new total expression count will be what was formerly the average of the total expression values.
+
+```{r Normalisation by library size}
+lib_sce <- librarySizeFactors(sce)
+hist(log10(lib_sce), xlab="Log10 of re-sizing factor", col="grey80", main="Distribution of factors to resize cells")
+```
+
+## Normalisation via deconvolution {.tabset}
+
+```{r normalisation via deconvolution, fig.width=12, fig.height=10, resuts="asis", warning=FALSE}
+#bpstart(bpparam)
+clust.sce <- sce %>%  
+  quickCluster(block=sce$Sampe) #BPPARAM=bpparam)
+# bpstop(bpparam)
+
+#bpstart(bpparam)
+sce_deconv <- sce %>%  
+  computeSumFactors(cluster=clust.sce) #, BPPARAM=bpparam)
+#bpstop(bpparam)
+
+# we overwrite the sce variable here as it can cause issues with parallel processing.
+sce <- sce_deconv
+
+
+cat("\n\n### By clusters \n\n")
+plot(librarySizeFactors(sce), sizeFactors(sce), 
+     xlab="Library size factor",
+     ylab="Deconvolution size factor", 
+     log='xy', pch=20,
+     col=as.integer(factor(clust.sce)),
+     main="Deconvolution factors for individual clusters")
+abline(a=0, b=1, col="red")
+
+cat("\n\n### By samples \n\n")
+plot(librarySizeFactors(sce), sizeFactors(sce), 
+     xlab="Library size factor",
+     ylab="Deconvolution size factor", 
+     log='xy', pch=20,
+     col=as.integer(factor(sce$Sample)),
+     main="Deconvolution factors for individual samples")
+abline(a=0, b=1, col="red")
+
+
+```
+
+## Apply normalisation to SCE
+
+First we just apply the scaling factors.
+
+```{r Apply normalisation, class.source="fold-show"}
+sce <- logNormCounts(sce)
+```
+
+## Check for downsampling
+
+We now check whether there are any issues due to the downsampling. Specifically, we are checking for a systematic trend of the log-counts with respect to the count size. We can observe this if there is a correlation between the major PC dimensions and the library size.
+
+```{r downsampling, fig.width=12, fig.height=8}
+# runPCA stores the first 50 dimension per default
+set.seed(100)
+sce <- runPCA(sce)
+
+plotReducedDim(sce, "PCA", colour_by=I(sce$log_total), point_size=0.1) +
+  labs(title="Correlation between library size and principal components",
+       subtitle="Coloured by library size factors with colouring capped at 5") +
+  scale_colour_gradientn(limits = c(0,5),  colours=c("navyblue", "darkmagenta", "darkorange1"),) +
+  theme_ipsum_rc()
+
+cor.test(reducedDim(sce, "PCA")[,"PC1"], sce$log_total)
+```
+
+*--> There is evidence for correlation between the PC 1 and the library size factors* 
+
+We fix this by instead using scTransform
+
+# Normalisation via SC Transform 
+
+```{r sctransform, fig.width=12, fig.height=8, warning=FALSE}
+sce <- logNormCounts(sce)
+
+sce_seurat <- as.Seurat(sce, counts="counts", data="logcounts")
+
+seurat_normalized = sce_seurat %>%
+  Seurat::SCTransform(verbose = FALSE, assay="originalexp", min_cells=1)
+
+
+sct_HVGs <- seurat_normalized@assays$SCT@var.features
+
+assay(sce, "corrected") <- seurat_normalized@assays$SCT@counts
+assay(sce, "logcounts") <- seurat_normalized@assays$SCT@data
+rowData(sce)[, "sct_HVG"] <- FALSE
+rowData(sce)[sct_HVGs, "sct_HVG"] <- TRUE
+
+
+# Run PCA
+set.seed(100)
+sce <- runPCA(sce, subset_row=rowData(sce)$sct_HVG)
+
+plotReducedDim(sce, "PCA", colour_by=I(sce$log_total), point_size=0.1) +
+  labs(title="Correlation between library size and principal components",
+       subtitle="Coloured by library size factors with colouring capped at 5") +
+  scale_colour_gradientn(#limits = c(0,5),  
+                         colours=c("navyblue", "darkmagenta", "darkorange1"),) +
+  theme_ipsum_rc()
+
+# Check for correlation of PCA with log_total
+cor.test(reducedDim(sce, "PCA")[,"PC1"], sce$log_total)
+cor.test(reducedDim(sce, "PCA")[,"PC2"], sce$log_total)
+```
+
+
+
+# Identification of highly variable genes
+
+Gene selection is important for the downstream analysis, such as clustering and dimensionality reduction. A too high number of genes can slow down computation speed and by including genes which aren't interesting from a biological perspective we, more importantly, add more noise to the analysis. In general, there is a trade-off between retaining biological signals and increasing the noise form irrelevant genes.
+
+We model the mean and the variance for each gene. Subsequently a trend is fitted to the data. Based on this trend we identify which genes strongly deviate from the trend and calculate the statistical significance: the p-value transformed into an false discovery rate (FDR) of the given result. We mark all genes with an FDR value 0.05 as a highly variable gene.
+
+
+## Show highly variable genes
+
+### Corrected
+
+```{r gene variation with adjusted data , fig.width=14, fig.height=10}
+dec.sce <- modelGeneVar(sce, block=sce$Sample)
+#fit.vs <- metadata(dec.sce)
+
+hvg_sub <- getTopHVGs(dec.sce, fdr.threshold=0.05)
+
+mean_var_comb_sub <- purrr::map(unique(sce$Sample), ~ {
+ dec.sce$per.block[[.x]] %>% 
+  as_tibble %>% 
+  mutate(row_names = rownames(dec.sce$per.block[[.x]]),
+         is_hvg = row_names %in% hvg_sub,
+         Sample = .x)
+  }) %>% 
+  purrr::reduce(rbind)
+
+mean_var_comb_sub %>% 
+  ggplot() +
+    geom_point(aes(x = mean, y = total, color= is_hvg)) +
+    geom_line(aes(x=mean, y= tech)) +
+    labs(y="Variance",x="Mean expression") +
+    facet_wrap(~Sample) +
+    scale_color_manual(values=c("orange","black")) +
+    labs(x="Mean of log-expression", 
+         y="Variance of log-expression",
+         title="Variance of the expression values as a function of the mean")
+
+rowData(sce)$is_hvg <- FALSE
+rowData(sce)[hvg_sub,]$is_hvg <- TRUE
+```
+
+# {-}
+
+## Tabular overview of highly variable genes
+
+```{r variance}
+# Ordering by most interesting genes for inspection.
+dec.sce[order(dec.sce$bio, decreasing=TRUE),] %>%
+       as.data.frame() %>%
+       dplyr::select(c("mean", "total", "tech", "bio", "p.value", "FDR")) %>%
+  head(n=10) %>%
+  kable(digits=5) %>%
+  kable_styling(full_width=TRUE)
+```
+
+
+# Dimension reduction
+
+We create a principal components dimensionality reduction of our data. We then use `maxLikGlobalDimEst` from the `intrinsicDimension` package to choose a number of dimensions that captures a big part of the variety in the data and at the same reduces the complexity of further operations. We use these reduced dimensions to calculate a UMAP (Uniform Manifold Approximation) dimensionality reduction.
+
+However, in the next script we run the batch integration which we can then use for a much better UMAP.
+
+```{r dimension reduction}
+# run PCA
+set.seed(100)
+sce_tmp <- runPCA(sce, name = "PCA", subset_row=rowData(sce)$is_hvg)
+
+# subset dimensions for reduced representation
+ndims <- intrinsicDimension::maxLikGlobalDimEst(as.matrix(reducedDim(sce_tmp, "PCA")), k=20)
+reducedDim(sce_tmp,"PCA_reduced") <- reducedDim(sce_tmp,"PCA")[,seq_len(ceiling(ndims$dim.est))]
+
+# run UMAP
+set.seed(100)
+sce_tmp <- runUMAP(sce_tmp, name = "UMAP", dimred = "PCA_reduced", subset_row=rowData(sce_tmp)$is_hvg, n_neighbors=50, min_dist = 0.1)
+
+
+# add all reduced dimensions to the original sce object
+reducedDim(sce, "PCA") <- reducedDim(sce_tmp, "PCA")
+reducedDim(sce, "PCA_reduced") <- reducedDim(sce_tmp, "PCA")[,seq_len(ceiling(ndims$dim.est))]
+reducedDim(sce, "UMAP") <- reducedDim(sce_tmp,"UMAP")
+
+cor.test(reducedDim(sce, "PCA")[,"PC1"], sce$log_total)
+```
+
+
+# Plot PCA and UMAP
+
+The data is not yet batch-corrected, so we don't expect any interesting biological differences to be reflected in the first reduced dimension plots.
+
+## PCA {.tabset}
+
+```{r PCA plot, fig.width=14, fig.height=10, results="asis"}
+# by Sample
+cat("\n\n### PCA by sample \n")
+set.seed(100)
+shuffle <- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], "PCA", colour_by = "Sample") +
+  labs(title="PCA coloured by sample") +
+  theme_ipsum_rc() +
+  get_sample_colours(levels(sce$Sample))
+
+# by protocol
+cat("\n\n### PCA by protocol \n")
+set.seed(100)
+shuffle <- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], "PCA", colour_by = "Protocol") +
+  labs(title="PCA coloured by protocol") +
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce$Protocol))
+```
+
+## UMAP {.tabset}
+
+We see that the UMAP clearly does not filter for biological features like cell types before applying any batch correction.
+
+```{r UMAP, fig.width=14, fig.height=10, results="asis"}
+# by sample
+cat("\n\n### UMAP by sample \n")
+set.seed(100)
+shuffle <- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], "UMAP", colour_by = "Sample", point_size=0.5) +
+  labs(color="Sample",
+       title="UMAP (uncorrected) coloured by Sample") +
+  theme_ipsum_rc() +
+  get_sample_colours(levels(sce$Sample))
+
+# by protocol
+cat("\n\n### UMAP by protocol \n")
+set.seed(100)
+shuffle <- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], "UMAP", colour_by = "Protocol", point_size=0.5) +
+  labs(title="UMAP (uncorrected) coloured by Protocol", color="Protocol") +
+  theme_ipsum_rc()
+  get_protocol_colours(levels(sce$Protocol))
+```
+
+
+# Save data
+
+```{r}
+saveRDS(sce, file = "../data/fresh_data/protocol_integration_analysis_sce_EOS2.rds")
+```
+
+
+
+

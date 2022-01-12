@@ -1,0 +1,71 @@
+---
+title: "test_muscat"
+author: "Dominique Paul"
+date: "6/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library("ExperimentHub")
+eh <- ExperimentHub()
+query(eh, "Kang")
+
+(sce <- eh[["EH2259"]])
+
+saveRDS(sce, "muscat.rds")
+sce_ <- readRDS("muscat.rds")
+```
+
+## Preprocessing
+
+```{r}
+# remove undetected genes
+sce <- sce[rowSums(counts(sce) > 0) > 0, ]
+dim(sce)
+
+
+# calculate per-cell quality control (QC) metrics
+library(scater)
+qc <- perCellQCMetrics(sce)
+
+# remove cells with few or many detected genes
+ol <- isOutlier(metric = qc$detected, nmads = 2, log = TRUE)
+sce <- sce[, !ol]
+dim(sce)
+
+# remove lowly expressed genes
+sce <- sce[rowSums(counts(sce) > 1) >= 10, ]
+dim(sce)
+
+# compute sum-factors & normalize
+sce <- computeLibraryFactors(sce)
+sce <- logNormCounts(sce)
+
+library(sctransform)
+assays(sce)$vstresiduals <- vst(counts(sce), verbosity = FALSE)$y
+```
+## inspection of data
+```{r}
+
+sce$sample_id
+sce$cluster_id
+sce$group_id
+
+unique(sce$stim)
+unique(sce$cell)
+unique(sce$ind)
+
+```
+
+## data preparation
+```{r}
+sce$id <- paste0(sce$stim, sce$ind)
+(sce <- prepSCE(sce, 
+    kid = "cell", # subpopulation assignments
+    gid = "stim",  # group IDs (ctrl/stim)
+    sid = "id",   # sample IDs (ctrl/stim.1234)
+    drop = TRUE))  # drop all other colData columns
+
+```

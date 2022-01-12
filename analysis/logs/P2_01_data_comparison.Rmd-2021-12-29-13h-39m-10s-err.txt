@@ -1,0 +1,2 @@
+Error in get_marker_genes(sce_fresh_filtered, "Fresh samples only", test = "wilcox",  : 
+  object 'reduced_ipsum_rc_theme' not found

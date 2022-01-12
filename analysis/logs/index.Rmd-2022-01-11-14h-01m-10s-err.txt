@@ -1,0 +1,11 @@
+
+Output created: /Users/dominiquepaul/xRobinson Group/02_Protocol/docs/index.html
+Warning messages:
+1: In readLines(input) :
+  incomplete final line found on '/Users/dominiquepaul/xRobinson Group/02_Protocol/analysis/index.Rmd'
+2: In readLines(input) :
+  incomplete final line found on '/Users/dominiquepaul/xRobinson Group/02_Protocol/analysis/index.Rmd'
+3: In readLines(input) :
+  incomplete final line found on '/Users/dominiquepaul/xRobinson Group/02_Protocol/analysis/index.Rmd'
+4: In readLines(input) :
+  incomplete final line found on '/Users/dominiquepaul/xRobinson Group/02_Protocol/analysis/index.Rmd'

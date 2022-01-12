@@ -1,0 +1,52 @@
+---
+title: "Home"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+library(magrittr)
+
+all_files_analysis <- list.files(here::here("docs"))
+all_files_output <- list.files(here::here("docs/output"))
+
+mod_times <- data.frame(filename = c(all_files_analysis,all_files_output),
+           date = c(file.info(here::here("docs", all_files_analysis))$mtime,file.info(here::here("docs/output",all_files_output))$mtime) %>% 
+             as.Date(format = "%m/%d/%y"))
+
+give_date <- function(filename, dataframe = mod_times){
+  tmpout <- dataframe$date[dataframe$filename == filename]
+  if (length(tmpout) == 0){
+    tmpout <- "never"
+  }
+  paste0("  *<font size=\"1\">(Last modified: ",tmpout," )</font>*")
+}
+```
+
+# iSEE App
+
+Click here to open iSEE app: <a target="_blank" href="http://imlspenticton.uzh.ch:3839/iSEE/">http://imlspenticton.uzh.ch:3839/iSEE/</a>
+
+
+
+# Fresh only  & Fresh v. Culture
+
+1. [Comparison of data processed with the new protocol with skin control samples](P2_01_data_comparison.html) `r give_date("P2_data_comparison.html")`
+1. [Cell cycle analysis](P2_02_Cell_Cycle.html) `r give_date("P2_data_comparison.html")`
+
+
+### Downloads
+
+1. <p>Fresh only marker genes: <a href="output/P2_Fresh_only.xlsx">Click to Download</a> `r give_date("P2_Fresh_only.xlsx")`</p>
+1. <p>Fresh and culture marker genes: <a href="output/P2_Fresh_v_culture.xlsx">Click to Download</a> `r give_date("P2_Fresh_v_culture.xlsx")`</p>
+
+
+
+# External data integration
+
+1. [Data preparation](EDI_01_Loading_and_Preprocessing.html)  `r give_date("EDI_01_Loading_and_Preprocessing.html")`
+

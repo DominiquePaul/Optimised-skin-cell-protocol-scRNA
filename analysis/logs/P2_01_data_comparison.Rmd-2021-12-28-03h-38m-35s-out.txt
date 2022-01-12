@@ -1,0 +1,16 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   2%
+   inline R code fragments
+
+  |                                                                              |..                                                                    |   3%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |...                                                                   |   5%
+  ordinary text without R code
+
+  |                                                                              |....                                                                  |   6%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+

@@ -1,0 +1,82 @@
+---
+title: "Merge reads with UMIs"
+author: "Dominique Paul"
+date: "7/14/2021"
+output: html_document
+---
+
+```{r}
+library(DropletUtils)
+```
+
+```{r setup, include=FALSE}
+samples <- list.files(path = "../data/cultured_fibroblasts",
+                      pattern = "matrix.mtx",
+                      full.names = TRUE, recursive = TRUE)
+
+# removes the filenames and just returns the directories
+samples <- dirname(samples)
+
+# get only the filtered files
+samples <- grep('filtered', samples, value=TRUE)
+
+# sets the names of the filepaths to the tissue type name
+names(samples) <- sapply(strsplit(samples, "/"), .subset, 4) 
+
+names(samples) <- gsub("00_54150_2021-02-12--19-56-25", "Sample 1", names(samples))
+names(samples) <- gsub("01_o24793_1_11-BB", "Sample 2", names(samples))
+names(samples) <- gsub("02_o24793_1_12-BB", "Sample 3", names(samples))
+names(samples) <- gsub("03_o25154_1_6-hashing_pellet", "Sample 4", names(samples))
+
+
+# Creates a Single Cell Experiment from all data sources
+sce <- DropletUtils::read10xCounts(samples=samples)
+
+sce$Sample <- factor(sce$Sample) # the tissue sample, only one sample for now
+colnames(sce) <- paste0(sce$Sample, ".", sce$Barcode)
+rownames(sce) <- paste0(rowData(sce)$ID, ".", rowData(sce)$Symbol)
+```
+
+```{r empty-drops}
+umi_samples  <- list.files(path = "../data/cultured_fibroblasts",
+                      pattern = "molecule_info.h5",
+                      full.names = TRUE, recursive = TRUE)
+
+names(umi_samples) <- sapply(strsplit(umi_samples, "/"), .subset, 4) 
+
+names(umi_samples) <- gsub("00_54150_2021-02-12--19-56-25", "Sample 1", names(umi_samples))
+names(umi_samples) <- gsub("01_o24793_1_11-BB", "Sample 2", names(umi_samples))
+names(umi_samples) <- gsub("02_o24793_1_12-BB", "Sample 3", names(umi_samples))
+names(umi_samples) <- gsub("03_o25154_1_6-hashing_pellet", "Sample 4", names(umi_samples))
+
+mol_infos <- mapply(function(file_name, sample_name){
+  mol <- read10xMolInfo(file_name, get.gene = F, get.reads = F, get.gem = F)
+  mol_df <- mol$data
+  # change rownames
+  rownames(mol_df) <- paste0(sample_name, ".", mol_df$cell)
+  mol_df
+  }, umi_samples, names(umi_samples))
+
+# merge umi_counts onto sce values
+df <- mol1[[1]]$data
+rownames(df) <- paste0(sample_name, ".", df$cell)
+
+names(mol1[[1]])
+```
+
+
+```{r droplet-counts}
+library(DropletUtils)
+bcrank <- barcodeRanks(sce)
+
+uniq <- !duplicated(bcrank$rank)
+plot(bcrank$rank[uniq], bcrank$total[uniq], log="xy",
+    xlab="Rank", ylab="Total UMI count", cex.lab=1.2)
+
+abline(h=metadata(bcrank)$inflection, col="darkgreen", lty=2)
+abline(h=metadata(bcrank)$knee, col="dodgerblue", lty=2)
+
+legend("bottomleft", legend=c("Inflection", "Knee"), 
+        col=c("darkgreen", "dodgerblue"), lty=2, cex=1.2)
+```
+

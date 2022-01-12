@@ -1,0 +1,1175 @@
+---
+title: "External Data Integration"
+author: "Dominique Paul"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+suppressMessages({
+  library(SingleCellExperiment)
+  library(dplyr)
+  library(DropletUtils)
+  library(kableExtra)
+  library(scater)
+  library(BiocParallel)
+  library(tidySingleCellExperiment)
+  library(hrbrthemes)
+  library(parallel)
+  library(RhpcBLASctl)
+  library(scDblFinder)
+})
+
+# Setting for parallel computing
+n_workers <- min(detectCores()-1, 8)
+RhpcBLASctl::blas_set_num_threads(n_workers)
+bpparam <- BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)
+
+# load utils functions
+source("../code/general_purpose_code.R")
+```
+
+# Load data
+
+## Load data by Tabib et al.
+
+```{r load tabib data, eval=T}
+file_names_tabib <- c(
+          "GSM4115868_SC1raw_feature_bc_matrix.h5",
+          "GSM4115870_SC4raw_feature_bc_matrix.h5",
+          "GSM4115872_SC18raw_feature_bc_matrix.h5",
+          "GSM4115874_SC32raw_feature_bc_matrix.h5",
+          "GSM4115875_SC33raw_feature_bc_matrix.h5",
+          "GSM4115876_SC34raw_feature_bc_matrix.h5",
+          "GSM4115878_SC50raw_feature_bc_matrix.h5",
+          "GSM4115880_SC68raw_feature_bc_matrix.h5",
+          "GSM4115885_SC124raw_feature_bc_matrix.h5",
+          "GSM4115886_SC125raw_feature_bc_matrix.h5")
+
+sce_tabib <- read10xCounts(paste0("../data/tabib_data/h5_files/", file_names_tabib), type="HDF5")
+colData(sce_tabib)$Sample <-  as.factor(paste0("Tabib_S", stringr::str_match(colData(sce_tabib)$Sample, "_SC\\s*(.*?)\\s*raw_feature_bc_matrix.h5")[,2]))
+sce_tabib$Protocol <- factor("Tabib_et_al")
+```
+
+## Load data by Sole-Boldo et al.
+
+```{r load Sole-Boldo data, eval=T}
+# Skin control data loaded as one group
+samples_boldo <- list.files(path="../data/sole_boldo_data/sole_boldo_reads",
+                        pattern="matrix.mtx",
+                        full.names=TRUE,
+                        recursive=TRUE)
+
+samples_boldo <- samples_boldo[grepl("raw", samples_boldo)]
+samples_boldo <- dirname(samples_boldo)
+names(samples_boldo) <- sapply(strsplit(samples_boldo, "/"), .subset, 5)
+
+# Load data
+sce_boldo <- DropletUtils::read10xCounts(samples=samples_boldo)
+
+colnames(sce_boldo) <- paste0(sce_boldo$Sample, ".", sce_boldo$Barcode) # Rename the columns
+sce_boldo$Protocol <- factor("Sole_Boldo_et_al")
+```
+
+## Load data by He et al.
+
+```{r load He data, eval=T}
+# Skin control data loaded as one group
+samples_he <- list.files(path="../data/he_data/He_reads",
+                        pattern="matrix.mtx",
+                        full.names=TRUE,
+                        recursive=TRUE)
+
+samples_he <- samples_he[grepl("raw", samples_he)]
+samples_he <- dirname(samples_he)
+names(samples_he) <- sapply(strsplit(samples_he, "/"), .subset, 5)
+
+# Load data
+sce_he <- DropletUtils::read10xCounts(samples=samples_he)
+
+colnames(sce_he) <- paste0(sce_he$Sample, ".", sce_he$Barcode) # Rename the columns
+sce_he$Protocol <- factor("He_et_al")
+```
+
+
+## Load our skin samples sequenced with the 'Fresh' protcol
+
+```{r load fresh skin samples, eval=T}
+samples_fresh <- list.files(path="../data/fresh_data",
+                      pattern="matrix.mtx",
+                      full.names=TRUE,
+                      recursive=TRUE)
+
+samples_fresh <- dirname(samples_fresh)
+samples_fresh <- grep("raw", samples_fresh, value=TRUE)
+
+names(samples_fresh) <- sapply(strsplit(samples_fresh, "/"), .subset, 4) # This number might have to be adapted for other file paths or folder structures
+
+names(samples_fresh) <- gsub("01_o25154_1_5-HC_fresh", "Fresh_S1", names(samples_fresh))
+names(samples_fresh) <- gsub("02_o25459_1_6-HS_Blaz", "Fresh_S2", names(samples_fresh))
+
+# Load data
+sce_fresh <- DropletUtils::read10xCounts(samples=samples_fresh)
+
+# Factoring
+sce_fresh$Sample <- factor(sce_fresh$Sample) # Factor the sample name to save space
+sce_fresh$Protocol <- factor("Fresh")
+
+# Renaming
+colnames(sce_fresh) <- paste0(sce_fresh$Sample, ".", sce_fresh$Barcode) # Rename the columns
+```
+
+## Count total sample reads before crude filtering
+
+```{r reads per stage function}
+# returns a dataframe with the sum of all reads for a given sample
+get_total_reads_per_sample <- function(sce_object, analysis_stage){
+  # expects a column called "Sample" in the sce_object
+  
+  result <- lapply(unique(sce_object$Sample), function(sample){
+    total_reads <- sum(assay(sce_object[,sce_object$Sample == sample]))
+    data.frame("sample"=sample, "analysis_stage"=analysis_stage, "values"=total_reads)
+  }) %>% purrr::reduce(rbind)
+  
+  result
+}
+
+get_total_cells_per_sample <- function(sce_object, analysis_stage){
+  # expects a column called "Sample" in the sce_object
+  result <- lapply(unique(sce_object$Sample), function(sample){
+    total_cells <- dim(sce_object[,sce_object$Sample == sample])[2]
+    data.frame("sample"=sample, "analysis_stage"=analysis_stage, "cells"=total_cells)
+  }) %>% purrr::reduce(rbind)
+}
+```
+
+
+```{r reads per stage 1, eval=T}
+reads_per_analysis_stage1 <- mapply(get_total_reads_per_sample, 
+       sce_object=list(sce_fresh, sce_boldo, sce_he, sce_tabib),
+       analysis_stage="01_Raw",
+       SIMPLIFY=FALSE) %>% 
+  purrr::reduce(rbind)
+
+cells_per_analysis_stage1 <- mapply(get_total_cells_per_sample, 
+       sce_object=list(sce_fresh, sce_boldo, sce_he, sce_tabib),
+       analysis_stage="01_Raw",
+       SIMPLIFY=FALSE) %>% 
+  purrr::reduce(rbind)
+```
+
+# Crude filtering of the data
+
+We run a crude filtering that eliminates the majority of bad reads and speeds up the runtime of the further analysis. We require a minimum of 10 cells to be expressed per gene and each cell to express at least 150 genes. Genes and cells below this threshold are filtered out. 
+
+These thresholds run on each group of data (i.e. by source, e.g. the Tabib data) individually. This is necessary before merging the data as the entire raw data cannot be loaded onto disk at the same time. Most cells/genes that are filtered out due to this are unlikely to make it through the quality control such that any minor differences should not have an impact on the further analysis.
+
+
+```{r filter-crude, eval=T}
+filter_crude <- function(sce_object, dataset_name){
+  # The function returns the cleaned SCE object but also information on how many 
+  # cell and genes were filtered
+  
+  original_sce_dimensions <- dim(sce_object)
+    
+  sce_object <- sce_object[rowSums(counts(sce_object)>0) > 10,  # We only keep genes expressed in more than ten cells
+             colSums(counts(sce_object) >0) > 150] # We only keep cells with more than 150 genes expressed
+  
+  new_sce_dimensions <- dim(sce_object)
+  
+  output <- list(sce=sce_object, original_sce_dimensions=original_sce_dimensions, new_sce_dimensions=new_sce_dimensions, dataset_name=dataset_name)
+  
+  return(output)
+}
+
+
+# get all the filtered output. 
+tabib_filtering_output <- filter_crude(sce_tabib, "Tabib")
+sce_tabib <- tabib_filtering_output$sce
+
+boldo_filtering_output <- filter_crude(sce_boldo, "Sole-Boldo et. al.")
+sce_boldo <- boldo_filtering_output$sce
+
+he_filtering_output <- filter_crude(sce_he, "He et al.")
+sce_he <- he_filtering_output$sce
+  
+fresh_output <- filter_crude(sce_fresh, "Fresh")
+sce_fresh <- fresh_output$sce
+
+
+# Construct tabular overview
+construct_filtering_res_row <- function(filtering_output){
+  absolute_changes <- filtering_output$original_sce_dimensions - filtering_output$new_sce_dimensions
+  relative_changes <- filtering_output$absolute_changes / filtering_output$original_sce_dimensions
+  
+  result= data.frame("Dataset"= filtering_output$dataset_name,
+             "Original cell count"= filtering_output$original_sce_dimensions[2],
+             "New cell count"= filtering_output$new_sce_dimensions[2],
+             "Number of cells filtered out"=absolute_changes[2],
+             "Percent of cells filtered out"= relative_changes[2],
+             "Original gene count"= filtering_output$original_sce_dimensions[1],
+             "New gene count"= filtering_output$new_sce_dimensions[1],
+             "Number of genes filtered out"=absolute_changes[1],
+             "Percent of genes filtered out"= relative_changes[1]
+             )
+  return(result)
+}
+
+
+lapply(list(tabib_filtering_output, boldo_filtering_output, he_filtering_output, fresh_output), construct_filtering_res_row) %>% 
+  rbind() %>%
+  kableExtra::kable() %>% 
+  kableExtra::kable_styling()
+```
+
+```{r reads per stage 2, eval=T}
+reads_per_analysis_stage2 <- mapply(get_total_reads_per_sample, 
+       sce_object=list(sce_fresh, sce_boldo, sce_he, sce_tabib),
+       analysis_stage="02_Crude_filtering",
+       SIMPLIFY=FALSE) %>% 
+  purrr::reduce(rbind)
+
+cells_per_analysis_stage2 <- mapply(get_total_cells_per_sample, 
+       sce_object=list(sce_fresh, sce_boldo, sce_he, sce_tabib),
+       analysis_stage="02_Crude_filtering",
+       SIMPLIFY=FALSE) %>% 
+  purrr::reduce(rbind)
+```
+
+
+# Merge data together
+
+To merge the data we first find the genes common to all datasets. We then subset each dataset to only include these genes before merging them together to a single Single Cell Experiment object which we then save to disk so we don't have to run the initial loading and filtering steps each time we run the script.
+
+## Find common genes
+
+The datasets have different numbers of genes with expression values. To enable a fair comparison we limit our analysis to the intersection of genes that all datasets have in common.
+
+```{r find-common-genes, eval=T}
+# We get the ensemble IDs of each SCE
+unique_ID_tabib <- rowData(sce_tabib)$ID
+unique_ID_boldo <- rowData(sce_boldo)$ID
+unique_ID_he <- rowData(sce_he)$ID
+unique_ID_fresh <- rowData(sce_fresh)$ID
+
+
+# we get the intersection of all ensemble ID
+ID_intersection <- Reduce(intersect, list(unique_ID_tabib, unique_ID_fresh, unique_ID_boldo, unique_ID_he)) # unique_ID_ssc
+
+# Short tabular overview of the differences.
+kable(data.frame("Name"=c("Num. genes Tabib et al.", "Num. genes Sole-Boldo et al", "Num. genes He et al.", "Num. genes Fresh", "Num. genes common to all"), # "Num. genes SSc"
+                 "Value"=c(dim(sce_tabib)[1], dim(sce_boldo)[1], dim(sce_he)[1], dim(sce_fresh)[1], length(ID_intersection)))) # , dim(sce_ssc)[1]
+
+# Create a subset of each sce object with only the genes that all have in common. 
+sce_tabib <- sce_tabib[ID_intersection,]
+sce_boldo <- sce_boldo[ID_intersection,]
+sce_he <- sce_he[ID_intersection,]
+sce_fresh <- sce_fresh[ID_intersection,]
+
+# it seems like the tabib dataset gene symbols are from an older version
+# of the HNGC naming convention. We update the names to correspond to the same
+# version as our data (the ENSG IDs clearly match) as this otherwise throws an 
+# error when we try to merge the datasets
+rowData(sce_tabib)$Symbol <- rowData(sce_fresh)$Symbol
+
+```
+
+## Merge datasets to one single cell object
+
+The Tabib et al. dataset was stored as a `DelayedMatrix` This means that the data is operated on disk and not loaded into memory, keeping memory requirements low. Some methods, such as `cbind`, cannot work with a mix of `DelayedMatrix` and `dgCMatrix` data types, so we convert the Tabib et al. data to `dcGMatrix`.
+
+```{r reduce to one sce, eval=T}
+assay(sce_tabib) <- as(assay(sce_tabib), "dgCMatrix")
+
+sce <- purrr::reduce(list(sce_tabib, sce_boldo, sce_he, sce_fresh), cbind, deparse.level=1) # sce_ssc
+
+# change the level order. This is changes the order for plotting later on
+sce$Protocol <- factor(sce$Protocol, levels=c("Fresh", "Sole_Boldo_et_al", "He_et_al","Tabib_et_al"))
+```
+
+```{r reads per stage 3, eval=T}
+reads_per_analysis_stage3 <- get_total_reads_per_sample(sce, "03_Common_genes_subset")
+cells_per_analysis_stage3 <- get_total_cells_per_sample(sce, "03_Common_genes_subset")
+```
+
+## Save merged data to disk
+
+The above steps take some time to run. We save the merged single cell experiment to disk, to save time when re-opening work on the script.
+
+```{r Save RDS, eval=T}
+# save SCE
+saveRDS(sce, file = paste0("../data/fresh_data/merged_SCE_data_sources.rds"))
+
+# Save reads per stage information
+reads_per_analysis_stage <- rbind(reads_per_analysis_stage1, reads_per_analysis_stage2, reads_per_analysis_stage3)
+saveRDS(reads_per_analysis_stage, file = "../data/fresh_data/EDI_reads_per_stage.rds")
+
+# Save reads per stage information
+cells_per_analysis_stage <- rbind(cells_per_analysis_stage1, cells_per_analysis_stage2, cells_per_analysis_stage3)
+saveRDS(cells_per_analysis_stage, file = "../data/fresh_data/EDI_cells_per_stage.rds")
+```
+
+
+```{r Read in rds}
+# load SCE
+sce <- readRDS(file = paste0("../data/fresh_data/merged_SCE_data_sources.rds"))
+
+# load reads per stage information
+reads_per_analysis_stage <- readRDS(file = paste0("../data/fresh_data/EDI_reads_per_stage.rds"))
+cells_per_analysis_stage <- readRDS(file = paste0("../data/fresh_data/EDI_cells_per_stage.rds"))
+```
+
+How many cells do we have per sample?
+
+```{r how many cells before preprocessing}
+print(as.data.frame(table(colData(sce)$Sample)) %>%
+  rename(Sample=Var1) %>%
+  ggplot(aes(x=Sample, y=Freq)) +
+  geom_bar(stat = "identity") +
+  labs(title="Cell count before preprocessing",
+       subtitle="By sample") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()))
+```
+
+
+# Droplet detection
+
+We assume that the samples from the external data were sequenced separately and thus there can only be droplets within a sample.
+
+```{r droplet detection}
+# bpstart(bpparam)
+sce_doublet <- scDblFinder::scDblFinder(sce,
+                                samples=sce$Sample)
+                                # BPPARAM = bpparam)
+# bpstop(bpparam)
+
+# we overwrite the sce variable here as it can cause issues with parallelisation when doing it above.
+sce <- sce_doublet
+```
+
+`r sum(sce$scDblFinder.class != "singlet")` out of `r dim(sce)[2]` (`r sum(sce$scDblFinder.class != "singlet") / dim(sce)[2]`) cells were identified as doublets and dropped from the dataset.
+
+```{r print doublet stats}
+print(as.data.frame(colData(sce)) %>%
+  dplyr::group_by(Protocol, scDblFinder.class) %>%
+  dplyr::summarise(counts=n()) %>%
+  ggplot(aes(x=Protocol, y=counts, fill=scDblFinder.class)) + 
+  geom_bar(stat="identity") +
+  labs(title="Doublet detection results",
+       subtitle="By protocol") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()))
+
+print(as.data.frame(colData(sce)) %>%
+  dplyr::group_by(Sample, scDblFinder.class) %>%
+  dplyr::summarise(counts=n()) %>%
+  ggplot(aes(x=Sample, y=counts, fill=scDblFinder.class)) + 
+  geom_bar(stat="identity") +
+  labs(title="Doublet detection results",
+       subtitle="By sample") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()))
+```
+
+```{r drop doublets}
+sce <- sce[ ,sce$scDblFinder.class == "singlet"]
+```
+
+```{r reads per stage 4}
+reads_per_analysis_stage4 <- get_total_reads_per_sample(sce, "04_Doublet_detection")
+cells_per_analysis_stage4 <- get_total_cells_per_sample(sce, "04_Doublet_detection")
+```
+
+# Quality Control
+
+## Add quality control metrics
+
+```{r Add QC metrics}
+# change the rownames to the gene symbol (instead of the enembl gene id). This makes the data easier to read.
+rownames(sce) <- rowData(sce)$Symbol
+
+is_mitochondrial <- grepl("^(MT-)[^.]*", rownames(sce), ignore.case = TRUE)
+
+sce <- scuttle::addPerCellQC(sce, 
+                            list(Mt = is_mitochondrial, 
+                                genes = !is_mitochondrial),
+                            percent_top=c(50,100,200,500)
+                            )
+
+sce$log_sum <- log10(sce$sum)
+sce$log_total <- log10(sce$total)
+```
+
+## Violin plots prior to QC
+
+```{r plots prior to qc, fig.width=14, fig.height=7, results="asis"}
+qcs <- as.data.frame(colData(sce))
+
+plot1 <- ggplot(qcs, aes(x=Sample, y=log10(detected))) +
+  geom_violin(scale="count") +
+  ylab("Number of detected genes (log10)") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
+  ggtitle("Number of detected genes across samples") +
+  facet_grid(.~Protocol, scales="free", space="free")
+
+plot2 <- ggplot(qcs, aes(x=Sample, y=log10(total))) +
+  geom_violin(scale="count") +
+  ylab("Total gene expression counts (log10)") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
+  ggtitle("Total gene expression counts across samples") +
+  facet_grid(.~Protocol, scales="free", space="free")
+
+plot3 <- ggplot(qcs, aes(x=Sample, y=subsets_Mt_percent)) +
+  geom_violin(scale="count") +
+  ylab("Mitochodrial share (percent)") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
+  ggtitle("Share of mitochondrial genes across samples") +
+  facet_grid(.~Protocol, scales="free", space="free")
+
+cat("\n\n### Detected genes \n\n")
+plot1
+
+cat("\n\n### Total expression counts \n\n")
+plot2
+
+cat("\n\n### Mitochondrial share \n\n")
+plot3
+```
+
+
+## Mark cells to be dropped
+
+Cells are marked to be dropped if: 
+
+* Sum of all expression values in a given cell is lower than 2 median absolute deviations from the sample mean
+* Number of genes of a given cell is lower than 2 median absolute deviations from the average number of genes in the given sample
+* The percentage of mitochondrial gene expression values is higher than 2 median absolute deviations from the sample mean
+* More than 25% percent of a genes expression values are from mitochondrial genes
+* The sum of all expression values is less than 1500
+* If they express less than 500 genes
+
+A table of how many cell fulfil this criteria is given below.
+
+```{r preprocessing}
+# Relative criteria for filtering
+sce$total_expression_counts_drop <- isOutlier(sce$sum, nmads=3, type="lower", batch=sce$Sample, log=TRUE)
+
+sce$genes_detected_drop <- isOutlier(sce$detected, nmads=3, type="lower", batch=sce$Sample, log=TRUE)
+
+sce$mito_drop <- isOutlier(sce$subsets_Mt_percent, nmads=3, type="higher", batch=sce$Sample, log=TRUE)
+
+
+# Drop cells with a percentage of mitochondrial expression values above a certain value
+sce$mito_drop_manual_thresh_25 <- sce$subsets_Mt_percent > 25
+
+# A manual threshold: we require cells to have a total expression count of at minimum 1500
+sce$total_expression_counts_drop_manual_thresh <- sce$sum < 750
+
+# A manual threshold: we require cells to have at least 500 genes expressed
+sce$genes_detected_manual_thresh <- sce$detected < 500
+
+# Display a table indicating the number of cells that are captured by each of the filters independently
+# Some cells will be captured by multiple filters
+summary <- data.frame(Drop_via_lib_size = sum(sce$total_expression_counts_drop),
+                      Drop_via_lib_size_manual = sum(sce$total_expression_counts_drop_manual_thresh),
+                      Drop_via_detected_genes = sum(sce$genes_detected_drop),
+                      Drop_via_manual_genes_thresh = sum(sce$genes_detected_manual_thresh),
+                      Drop_via_mito_percentage = sum(sce$mito_drop),
+                      Drop_via_mito_thresh_25 = sum(sce$mito_drop_manual_thresh_25),
+                      Drop_via_joint_relative_criteria = sum(sce$total_expression_counts_drop | sce$genes_detected_drop | sce$mito_drop),
+                      Total_cells = nrow(colData(sce)) )
+kable(t(summary)) %>% 
+  kableExtra::kable_styling()
+
+# mark cells that will be dropped
+sce$to_be_dropped <- factor(sce$total_expression_counts_drop | 
+                              sce$genes_detected_drop | 
+                              sce$genes_detected_manual_thresh | 
+                              sce$mito_drop | 
+                              sce$mito_drop_manual_thresh_25 | 
+                              sce$total_expression_counts_drop_manual_thresh, 
+                            levels=c(TRUE, FALSE))
+```
+
+
+## Mitochondrial genes
+
+
+```{r plots for QC: Mitochondrial content 1, fig.height=10, fig.width=14, warnings=FALSE}
+sfig1a2 <- ggplot(colData(sce) %>% as.data.frame,
+       aes(x=log_total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(title="Library size vs. number of non-mitochondrial genes",
+       subtitle="Colour indicates mito. percentage of library size",
+       x="Library size (log10)",
+       y="") +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_rc() +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +# Left margin) +
+  guides(color=guide_colourbar(title="% mito.")) 
+
+suppressWarnings(sfig1a2)
+```
+
+
+```{r plots for QC: Mitochondrial content 2,fig.width=14, fig.height=16, warnings=FALSE}
+plt <- ggplot(colData(sce) %>% as.data.frame,
+       aes(x=subsets_Mt_percent, 
+           y=subsets_genes_detected, 
+           color=log_sum)) +
+  geom_point(size=0.75) +
+  ylab("Genes detected") +
+  xlab("Percentage of mito. content") +
+  ggtitle("Percentage of mito. content v. genes detected (before filtering) \n(coloured by log library size)") +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, ncol=4)
+
+suppressWarnings(plt)
+```
+
+## Plot visualisations coloured by cells to be dropped {.tabset}
+
+```{r plotting QC differences, fig.width=12, fig.height=8, results="asis"}
+# Gene counts
+cat("\n\n### Detected genes \n\n")
+plt <- plotColData(sce, x="Sample", y="detected", colour_by="to_be_dropped") +
+  labs(title="Number of genes detected by cell",
+       y="Number of genes") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank())
+suppressWarnings(plt)
+
+# Mitochondrial percentage
+cat("\n\n### Mitochondrial percentage \n\n")
+plt <- plotColData(sce, x="Sample", y="subsets_Mt_percent", colour_by="to_be_dropped", point_size=0.5) +
+  labs(title="Mitochondrial expression values as % of total expression values") +
+  ylab("Mito. gene expression values as % of total") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank())
+  # theme_ipsum_rc()
+
+suppressWarnings(plt)
+
+# Total expression values per cell
+cat("\n\n### Total expression values \n\n")
+plt <- plotColData(sce, x="Sample", y="log_total", colour_by="to_be_dropped", point_size=0.5) +
+  labs(title="Log sums of expression values by cell (log-scale)",
+       y="Sum of expression values (log-scale)") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank())
+  # theme_ipsum_rc()
+
+suppressWarnings(plt)
+```
+
+
+```{r plots for QC: Mitochondrial content after filtering 1, fig.width=14, fig.height=14, results="asis"}
+# Expression values vs genes
+cat("\n\n### Expression values vs. number of genes \n\n")
+sfig1a1 <- colData(sce) %>% 
+  as.data.frame() %>%
+  ggplot(aes(x=log_total, y=subsets_genes_detected, color=to_be_dropped)) +
+  geom_point(size=0.25) +
+  labs(y="",
+       x="Library size (log10)",
+       title="Library size vs. number of non-mitochondrial genes",
+       subtitle="Cells dropped are coloured in red") +
+  scale_y_log10() +
+  geom_density_2d() +
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_rc() +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +
+  guides(color=guide_legend(title="Dropped")) +
+  scale_colour_manual(values=c("#DB1E0D", "#2065AE"))
+
+suppressWarnings(sfig1a1)
+```
+
+```{r plots for QC: Mitochondrial content after filtering 2, fig.width=16, fig.height=16, results="asis"}
+# Expression values vs genes
+cat("\n\n### Mitochondrial content vs. number of genes \n\n")
+plt <- ggplot(colData(sce) %>% as.data.frame, 
+       aes(x=subsets_Mt_percent, y=subsets_genes_detected, color=to_be_dropped)) +
+  geom_point(size=0.5) +
+  labs(y="Number of non-mitochondrial genes",
+       x="Percentage of mito. content",
+       title="Percentage of mito. content vs. genes detected \n(coloured by filtering)") +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, ncol=4)
+
+suppressWarnings(plt)
+```
+
+```{r plots for QC: log total expressions vs. mito, fig.width=16, fig.height=16, results="asis"}
+cat("\n\n### Log total expressions vs. mito. count \n\n")
+# todo: maybe just colour by mitochondrial dropping criterium
+plt <- plotColData(sce,
+            x="log_total",
+            y="subsets_Mt_percent",
+            colour_by="to_be_dropped",
+            point_size=0.5,
+            point_alpha=0.5
+            ) +
+  scale_colour_manual(values=c("#F8766D", "#00BFC4")) +
+  ggtitle("Total gene expression values vs Total mitochondrial gene expression values",
+          subtitle="Dropped cells in red") +
+  ylab("Percentage mito. counts") +
+  xlab("Log-total expression values") +
+  facet_wrap(~sce$Sample, nrow = 4)
+  # theme(legend.position = c(0.92,0.97), legend.background = element_rect(color="grey",fill = "white"), legend.margin = margin(10,10,10,10))
+
+suppressWarnings(plt)
+```
+
+
+## How many cells are marked as 'to be dropped'
+
+```{r number after QC, fig.width=14, fig.height=8, results="asis"}
+df_plot <- as.data.frame(colData(sce))
+# this ensures that the colouring is correct. We want red to indicate the cells to be dropped
+df_plot$to_be_dropped <- factor(df_plot$to_be_dropped, levels=c(TRUE,FALSE))
+
+# To save space we just define this once for the next four plots
+custom_theme <- theme(panel.grid = element_blank(),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, hjust=1),
+        axis.text.y = element_text(size = 10),
+        plot.subtitle=element_text(size=12))
+
+# Relative comparison / by sample
+df_plot %>%
+  group_by(Sample, to_be_dropped) %>%
+  summarise(Freq=n()) %>% 
+  ggplot(aes(x=Sample, y=Freq, fill=to_be_dropped, label=Freq)) +
+         geom_bar(stat="identity", position="fill") +
+  labs(title="Cells to be dropped",
+       subtitle="Labels represent absolute number of cells",
+       x="",
+       y="Number of cells") + 
+  geom_text(size=3, position = position_fill(vjust=0.5)) +
+  custom_theme
+
+# Absolute comparison / by sample
+df_plot %>%
+  group_by(Sample, to_be_dropped) %>%
+  summarise(Freq=n()) %>% 
+  ggplot(aes(x=Sample, y=Freq, fill=to_be_dropped, label=Freq)) +
+         geom_bar(stat="identity", position="stack") +
+  labs(title="Cells to be dropped",
+       subtitle="Labels represent absolute number of cells",
+       x="",
+       y="Number of cells") + 
+  geom_text(size=3, position = position_fill(vjust=0.5)) +
+  custom_theme
+
+
+# Relative comparison / by protocol
+df_plot %>%
+  group_by(Protocol, to_be_dropped) %>%
+  summarise(Freq=n()) %>% 
+  ggplot(aes(x=Protocol, y=Freq, fill=to_be_dropped, label=Freq)) +
+         geom_bar(stat="identity", position="fill") +
+  labs(title="Cells to be dropped",
+       subtitle="Labels represent absolute number of cells",
+       x="",
+       y="Number of cells") + 
+  geom_text(size=3, position = position_fill(vjust=0.5)) +
+  custom_theme
+
+# Absolute comparison / by protocol
+df_plot %>%
+  group_by(Protocol, to_be_dropped) %>%
+  summarise(Freq=n()) %>% 
+  ggplot(aes(x=Protocol, y=Freq, fill=to_be_dropped, label=Freq)) +
+         geom_bar(stat="identity", position="stack") +
+  labs(title="Cells to be dropped",
+       subtitle="Labels represent absolute number of cells",
+       x="",
+       y="Number of cells") + 
+  geom_text(size=3, position = position_fill(vjust=0.5)) +
+  custom_theme
+```
+
+## Remove marked cells
+
+We finally drop the cells that we have marked as being of poor quality
+
+```{r remove marked cells}
+sce_filtered <- sce[, sce$to_be_dropped == FALSE]
+```
+
+```{r reads per stage 5}
+reads_per_analysis_stage5 <- get_total_reads_per_sample(sce_filtered, "05_Post_QC")
+cells_per_analysis_stage5 <- get_total_cells_per_sample(sce_filtered, "05_Post_QC")
+```
+
+
+## Violin plots after QC {.tabset}
+
+```{r violin plots after qc, fig.width=14, fig.height=7, results="asis"}
+qcs <- as.data.frame(colData(sce))
+
+plot1 <- ggplot(qcs, aes(x=Sample, y=log10(detected))) +
+  geom_violin(scale="count") +
+  ylab("Number of detected genes (log10)") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
+  ggtitle("Number of detected genes across samples (after QC)") +
+  facet_grid(.~Protocol, scales="free", space="free")
+
+plot2 <- ggplot(qcs, aes(x=Sample, y=log10(total))) +
+  geom_violin(scale="count") +
+  ylab("Total gene expression counts (log10)") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
+  ggtitle("Total gene expression counts across samples (after QC)") +
+  facet_grid(.~Protocol, scales="free", space="free")
+
+plot3 <- ggplot(qcs, aes(x=Sample, y=subsets_Mt_percent)) +
+  geom_violin(scale="count") +
+  ylab("Mitochodrial share (percent)") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
+  ggtitle("Share of mitochondrial genes across samples (after QC)") +
+  facet_grid(.~Protocol, scales="free", space="free")
+
+cat("\n\n### Detected genes\n\n")
+plot1
+
+cat("\n\n### Total expression counts \n\n")
+plot2
+
+cat("\n\n### Mitochondrial share \n\n")
+plot3
+
+```
+
+## Number of cells
+
+```{r prepare data for barplots}
+sample_to_protocol <- colData(sce_filtered) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Protocol, Sample) %>%
+  dplyr::summarise()
+
+cc_sample <- sce_filtered %>% 
+  nest(data=-Sample) %>% 
+  mutate(n_cells = purrr::map_dbl(data, ~ dim(.x)[2]),
+         sum_of_genes = purrr::map_dbl(data, ~ sum(colData(.x)$detected)),
+         average_n_genes = purrr::map_dbl(data, ~ mean(colData(.x)$detected)),
+         mean_n_nonzero_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 0)),
+         mean_n_10cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 10)),
+         mean_n_1perc_cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > ceiling(dim(.x)[2]/100)))) %>%
+  left_join(sample_to_protocol, by="Sample")
+
+
+cc_protocol <- sce_filtered %>% 
+  nest(data=-Protocol) %>% 
+  mutate(n_cells = purrr::map_dbl(data, ~ dim(.x)[2]),
+         sum_of_genes = purrr::map_dbl(data, ~ sum(colData(.x)$detected)),
+         average_n_genes = purrr::map_dbl(data, ~ mean(colData(.x)$detected)),
+         mean_n_nonzero_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 0)),
+         mean_n_10cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 10)),
+         mean_n_1perc_cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > ceiling(dim(.x)[2]/100))))
+
+```
+
+## By sample
+
+```{r number of cells by sample, fig.width=14, fig.height=10}
+sfig1b1 <- ggpubr::ggarrange(
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = average_n_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(title = "", x="", fill="Mean genes\nper cell", y="Cells") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45, hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = mean_n_1perc_cells_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(title = "", x="", 
+         fill="Num. genes\nin at least \n1% of cells",  y="Cells") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45,hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x=element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  nrow = 2)
+print(sfig1b1)
+```
+
+## By protocol
+
+```{r number of cells by protocol, fig.width=10, fig.height=10}
+sfig1b2 <- ggpubr::ggarrange(
+  ggplot(cc_protocol, aes(x = Protocol, y = n_cells, fill = average_n_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0) +
+    labs(title = "", x="", y="Number of cells",
+         fill="Genes\nper cell") +
+    theme_ipsum_rc() + 
+    theme(axis.ticks.x=element_blank(),
+          legend.position = c(1.1,0.5),
+          axis.text.y = element_text(size=8),
+          plot.margin = margin(0,110,0,0)),
+  
+  ggplot(cc_protocol, aes(x = Protocol, y = n_cells, fill = mean_n_1perc_cells_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0) +
+    labs(title = "", x="", 
+         fill="% genes in\n>1% of cells",  y="Number of cells") +
+    theme_ipsum_rc() + 
+    theme(axis.ticks.x=element_blank(),
+          legend.position = c(1.1,0.5),
+          axis.text.y = element_text(size=8),
+          plot.margin = margin(0,110,0,0)), 
+  nrow = 2)
+print(sfig1b2)
+```
+
+
+# Cell level comparisons
+
+## Two-sided ANOVA test
+
+We use a two-sided ANOVA test to see if there is a difference in the total counts (of non mito genes) between the original protocol used on the SSc data and the new protocol of the fresh data.
+
+```{r ANOVA test}
+is.mito <- grepl("\\.mt-", rownames(sce_filtered), ignore.case = TRUE)
+
+tc_mito <- colSums(counts(sce_filtered)[is.mito,])
+dftc_mito <- data.frame(tc=tc_mito, Sample=sce_filtered$Sample, Protocol=sce_filtered$Protocol, Mito=TRUE)
+
+tc_nomito <- colSums(counts(sce_filtered)[!is.mito,])
+dftc_nomito <- data.frame(tc=tc_nomito, Sample=sce_filtered$Sample, Protocol=sce_filtered$Protocol, Mito=FALSE)
+
+# two way anova, is 
+res_aov_total_nomito <- aov(log2(tc) ~ Protocol + Sample, data = dftc_nomito[dftc_nomito$Protocol %in% c("Tabib_et_al","Fresh"),])
+summary(res_aov_total_nomito)
+```
+
+## Plot: log total expression density by Protocol
+
+```{r plot log total expression density by protocol, fig.width=12, fig.height=7}
+# plot
+dftc_mitocomb <- rbind(dftc_mito,dftc_nomito)
+ggplot(dftc_mitocomb) +
+  geom_density(aes(log(tc), fill=Protocol, color=Protocol), alpha=0.4) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+         y="Density", x="Log library size") +
+  get_protocol_colours(dftc_mitocomb$Protocol, type="fill") +
+  get_protocol_colours(dftc_mitocomb$Protocol)
+```
+
+## Kolgomorov Smirnov test
+
+```{r KS test}
+# difference in total count distribution between "Protocol_2" and "Protocol_1" ?
+ks.test(log2(dftc_mitocomb$tc[dftc_mitocomb$Protocol == "Tabib_et_al"]+1), log2(dftc_mitocomb$tc[dftc_mitocomb$Protocol == "Fresh"]+1))
+
+sce_filtered %>% 
+  ggplot() +
+  geom_density(aes(qlogis(subsets_Mt_percent/100), fill=Protocol, color=Protocol),alpha=0.3) +
+  get_protocol_colours(colData(sce_filtered)$Protocol, type="fill") +
+  get_protocol_colours(colData(sce_filtered)$Protocol)
+  
+```
+
+
+## Other plots
+
+### Log-total count density by protocol
+
+```{r log10 counts by protocol}
+sfig1c1 <- sce_filtered %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_filtered)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_filtered)$Protocol))
+sfig1c1
+```
+
+
+## Log-total counts density by sample and grouped by protocol
+
+```{r log10 counts by sample, fig.width=14, fig.height=10}
+sfig1c2 <- sce_filtered %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm")) +
+  guides(fill=guide_legend(ncol=1, )) +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_filtered)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_filtered)$Sample))
+  
+sfig1c2
+```
+
+### Log-number of genes density by protocol
+
+```{r log-number of genes by protcol}
+sfig1d1 <- sce_filtered %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Protocol, color=Protocol), alpha=0.3) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_protocol_colours(levels(colData(sce_filtered)$Protocol)) +
+  get_protocol_colours(levels(colData(sce_filtered)$Protocol), type="fill")
+  # main_plot_theme()
+sfig1d1
+```
+
+### Log-number of genes density by sample and grouped by protocol
+
+```{r log number genes density by sample, fig.width=14, fig.height=10}
+sfig1d2 <- sce_filtered %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm")) +
+  guides(fill=guide_legend(ncol=1)) +
+  labs(title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_sample_colours(levels(colData(sce_filtered)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_filtered)$Sample))
+sfig1d2
+```
+
+# Supplementary Figure 10
+
+```{r supplementary figure, fig.width=20, fig.height=26}
+folder_path <- "../output/plots/"
+
+
+figure10 <- ggpubr::ggarrange(
+  ggpubr::ggarrange(sfig1a1,sfig1a2, ncol = 2),
+  sfig1b1,
+  ggpubr::ggarrange(sfig1c1, sfig1c2, ncol=2),
+  ggpubr::ggarrange(sfig1d1, sfig1d2, ncol=2),
+  ncol = 1, nrow = 4,labels = "AUTO"
+)
+
+suppressWarnings(figure10)
+
+ggsave(paste0(folder_path, "figure10.png"),
+       plot=figure10,
+       width=20*0.9,
+       height=26*0.9,
+       units="in",
+       bg="white")
+```
+
+
+
+# Reads per stage
+
+```{r reads per analysis evaluation}
+reads_df <- rbind(reads_per_analysis_stage, reads_per_analysis_stage4, reads_per_analysis_stage5)
+reads_df$protocol <- sub("_S[0-9]*", "", reads_df$sample)
+
+reads_df <- reads_df %>% 
+  dplyr::arrange(sample, analysis_stage)
+
+stages <- sort(unique(reads_df$analysis_stage))
+
+for (stage_id in seq_along(stages)){
+  if (stage_id == length(stages)){
+    reads_df[reads_df$analysis_stage == stages[[stage_id]], "diff_values"] <- reads_df[reads_df$analysis_stage == stages[[stage_id]], "values"]
+    break
+  }
+  stage_modified <- stages[[stage_id]]
+  other_stage<- stages[[stage_id + 1]]
+  
+  reads_df[reads_df$analysis_stage == stage_modified, "diff_values"] <- reads_df[reads_df$analysis_stage == stage_modified, "values"] - reads_df[reads_df$analysis_stage == other_stage, "values"]
+}
+
+
+# We also "normalise" by cell count
+
+# table containing number of cells per sample that we will merge onto the dataframe with the number of readsch
+sample_names <- unique(sce_filtered$Sample)
+
+sample_cell_numbers <- lapply(sample_names, function(sample_name){
+  dim(sce_filtered[,sce_filtered$Sample==sample_name])[2]
+})
+
+cell_count <- data.frame(sample=sample_names,
+           cells=unlist(sample_cell_numbers))
+
+# normalise values
+reads_df <- reads_df %>%
+  left_join(cell_count) %>%
+  mutate(values_per_cell = values/cells,
+         diff_values_per_cell = diff_values/cells)
+```
+
+## Total values  {.tabset}
+
+```{r plot unnormalised read information, fig.width=12, fig.height=8, results="asis"}
+# Relative counts per sample
+cat("\n\n### Relative share (sample) \n\n")
+ggplot(reads_df, aes(x=sample, y=diff_values, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="fill") +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Relative share of stage",
+       subtitle="The sum of all fractions equals the initial sum of reads") +
+  facet_grid(.~protocol, scales="free_x", space="free_x")
+
+# Stacked by sample
+cat("\n\n### Stacked bars (sample) \n\n")
+ggplot(reads_df, aes(x=sample, y=diff_values, fill=analysis_stage)) +
+  geom_bar(stat="identity") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Total reads per stage",
+       subtitle="Sum of fractions equal the initial sum of reads") +
+  facet_grid(.~protocol, scales="free_x", space="free_x")
+
+# Number of cells by stage
+cat("\n\n### Absolute cell numbers (sample) \n\n")
+ggplot(reads_df, aes(x=sample, y=values, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Absolute number of reads per stage",
+       subtitle="Each bar shows the number of cells at that stage") +
+  facet_grid(.~protocol, scales="free_x", space="free_x")
+
+# Relative counts per protocol
+cat("\n\n### Relative share (protocol) \n\n")
+ggplot(reads_df, aes(x=protocol, y=diff_values, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="fill") +
+  theme(axis.ticks.x=element_blank()) +
+  labs(title="Relative share of stage",
+       subtitle="The sum of all fractions equals the initial sum of reads")
+
+# Stacked by protocol
+cat("\n\n### Stacked bars (protocol) \n\n")
+ggplot(reads_df, aes(x=protocol, y=diff_values, fill=analysis_stage)) +
+  geom_bar(stat="identity") +
+  theme(axis.ticks.x=element_blank()) +
+  labs(title="Total reads per stage",
+       subtitle="Sum of fractions equal the initial sum of reads")
+
+# Number of cells by protocol
+cat("\n\n### Absolute cell numbers (protocol) \n\n")
+ggplot(reads_df, aes(x=protocol, y=values, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme(axis.ticks.x=element_blank()) +
+  labs(title="Absolute number of reads per stage",
+       subtitle="Each bar shows the number of cells at that stage")
+```
+
+## Normalised by number of cells identifed after QC {.tabset}
+
+Note that also the relative plots (that add to one) will exhibit changes as the contribution per sample changes based on how many cells it contains after quality control.
+
+```{r plot normalised read information, fig.width=12, fig.height=8, results="asis"}
+# Relative counts per sample
+cat("\n\n### Relative share (sample) \n\n")
+ggplot(reads_df, aes(x=sample, y=diff_values_per_cell, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="fill") +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Relative share of stage (normalised by cell count)",
+       subtitle="The sum of all fractions equals the initial sum of reads") +
+  facet_grid(.~protocol, scales="free_x", space="free_x")
+
+# Stacked by sample
+cat("\n\n### Stacked bars (sample) \n\n")
+ggplot(reads_df, aes(x=sample, y=diff_values_per_cell, fill=analysis_stage)) +
+  geom_bar(stat="identity") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Total reads per stage (normalised by cell count)",
+       subtitle="Sum of fractions equal the initial sum of reads") +
+  facet_grid(.~protocol, scales="free_x", space="free_x")
+
+# Number of cells by stage
+cat("\n\n### Absolute cell numbers (sample) \n\n")
+ggplot(reads_df, aes(x=sample, y=values_per_cell, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Absolute number of reads per stage (normalised by cell count)",
+       subtitle="Each bar shows the number of cells at that stage") +
+  facet_grid(.~protocol, scales="free_x", space="free_x")
+
+# Relative counts per protocol
+cat("\n\n### Relative share (protocol) \n\n")
+ggplot(reads_df, aes(x=protocol, y=diff_values_per_cell, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="fill") +
+  theme(axis.ticks.x=element_blank()) +
+  labs(title="Relative share of stage (normalised by cell count)",
+       subtitle="The sum of all fractions equals the initial sum of reads")
+
+# Stacked by protocol
+cat("\n\n### Stacked bars (protocol) \n\n")
+ggplot(reads_df, aes(x=protocol, y=diff_values_per_cell, fill=analysis_stage)) +
+  geom_bar(stat="identity") +
+  theme(axis.ticks.x=element_blank()) +
+  labs(title="Total reads per stage (normalised by cell count)",
+       subtitle="Sum of fractions equal the initial sum of reads")
+
+# Number of cells by protocol
+cat("\n\n### Absolute cell numbers (protocol) \n\n")
+ggplot(reads_df, aes(x=protocol, y=values_per_cell, fill=analysis_stage)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme(axis.ticks.x=element_blank()) +
+  labs(title="Absolute number of reads per stage (normalised by cell count)",
+       subtitle="Each bar shows the number of cells at that stage")
+
+
+```
+
+# Save data
+
+```{r save data}
+# save main sce file and upload to iSEE
+file_path_sce <- "../data/EOS_Files/EDI_EOS1_sce.rds"
+saveRDS(sce_filtered, file=file_path_sce)
+upload_file_to_iSEE(file_path_sce)
+
+# also save the unfiltered reads
+saveRDS(sce, file = "../data/EOS_Files/EDI_EOS1_sce_unfiltered.rds")
+
+# save the reads per stage
+reads_df <- rbind(reads_per_analysis_stage, reads_per_analysis_stage4, reads_per_analysis_stage5)
+write.csv(reads_df, "../output/EDI_EOS1_reads_per_stage.csv", row.names = FALSE)
+
+# save the cell counts
+cells_df <- rbind(cells_per_analysis_stage, cells_per_analysis_stage4, cells_per_analysis_stage5)
+write.csv(cells_df, "../output/EDI_EOS1_cells_per_stage.csv", row.names = FALSE)
+```
+
+

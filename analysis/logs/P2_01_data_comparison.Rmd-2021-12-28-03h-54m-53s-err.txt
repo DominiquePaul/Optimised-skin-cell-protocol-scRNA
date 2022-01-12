@@ -1,0 +1,2 @@
+Error in get_boolean_colour_scale() : 
+  could not find function "get_boolean_colour_scale"

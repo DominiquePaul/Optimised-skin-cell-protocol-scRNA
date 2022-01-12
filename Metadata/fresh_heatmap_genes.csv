@@ -1,0 +1,28 @@
+﻿Group,
+Vascular endothelial,PECAM1
+Vascular endothelial,VWF
+Vascular endothelial,CLDN5
+Macrophages/DC,LYZ
+Macrophages/DC,HLA-DRA
+Macrophages/DC,CXCL8
+Pericytes/VSMC,TAGLN
+Pericytes/VSMC,ACTA2
+Pericytes/VSMC,RGS5
+Fibroblasts,DCN
+Fibroblasts,COL1A1
+Fibroblasts,COL6A1
+Keratinocytes,KRT5
+Keratinocytes,KRT10
+Keratinocytes,KRT15
+T cells,IL7R
+T cells,CD3D
+T cells,CXCR4
+Lymphatic endothelial,LYVE1
+Lymphatic endothelial,FABP4
+Lymphatic endothelial,CCL21
+Mast cells,TPSB2
+Mast cells,TPSAB1
+Mast cells,CTSG
+Melanocytes/Schwann cells,PMEL
+Melanocytes/Schwann cells,DCT
+Melanocytes/Schwann cells,CDH19

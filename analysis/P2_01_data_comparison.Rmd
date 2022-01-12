@@ -1,0 +1,1627 @@
+---
+title: "Comparison of the 'new' skin tissue protocol with skin samples 1,2,4 & 5"
+author: "Dominique Paul"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressPackageStartupMessages({
+  library(workflowr)
+  library(ggplot2)
+  library(scater)
+  library(scran)
+  library(kableExtra)
+  library(pheatmap)
+  library(GSEABase)
+  library(AUCell)
+  library(hrbrthemes)
+  library(scDblFinder)
+  library(viridis)
+  library(tidySingleCellExperiment)
+  library(openxlsx)
+  library(ggplotify)
+  library(batchelor)
+  library(RColorBrewer)
+  library(plyr)
+  library(dplyr)
+  library(BiocParallel)
+  library(parallel)
+  library(Seurat)
+})
+
+# Parallelisation
+# n_workers <- min(detectCores(all.tests = TRUE, logical = TRUE) - 1, 16)
+# RhpcBLASctl::blas_set_num_threads(n_workers)
+# bpparam <- BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)
+
+# Set the ggplot2 theme for the file
+theme_set(theme_ipsum_rc())
+
+source("../code/general_purpose_code.R")
+```
+
+# Loading and preprocess the data
+
+## Identify cultured samples
+
+```{r Load multiple samples}
+# Skin control data loaded as one group
+samples_skin <- list.files(path="../data/skin_tissue/scRNA_datasets",
+                        pattern="matrix.mtx",
+                        full.names=TRUE,
+                        recursive=TRUE)
+
+samples_skin <- dirname(samples_skin)
+samples_skin <- grep("control", samples_skin, value=TRUE) # Only use control data
+samples_skin <- grep("filtered", samples_skin, value=TRUE)
+
+names(samples_skin) <- sapply(strsplit(samples_skin, "/"), .subset, 5) # This number might have to be adapted for other file paths or folder structures
+
+names(samples_skin) <- gsub("o24300_1_13-control1_BB", "Culture_S1", names(samples_skin))
+names(samples_skin) <- gsub("o24300_1_09-control2_MFB", "Culture_S2", names(samples_skin))
+names(samples_skin) <- gsub("o24793_1_09-BB_skin_control", "Culture_S3",names(samples_skin))
+names(samples_skin) <- gsub("o25154_1_1-SS08_control", "Culture_S4", names(samples_skin))
+names(samples_skin) <- gsub("o25154_1_3-SS18_control", "Culture_S5", names(samples_skin))
+
+samples_skin <- samples_skin[!names(samples_skin) %in% "Culture_S3"]
+
+```
+
+## Load fresh samples
+
+```{r data from fresh protocol loaded together}
+# Fresh data loaded together
+samples_fresh <- list.files(path="../data/fresh_data",
+                      pattern="matrix.mtx",
+                      full.names=TRUE,
+                      recursive=TRUE)
+
+samples_fresh <- dirname(samples_fresh)
+samples_fresh <- grep("filtered", samples_fresh, value=TRUE)
+
+names(samples_fresh) <- sapply(strsplit(samples_fresh, "/"), .subset, 4) # This number might have to be adapted for other file paths or folder structures
+
+names(samples_fresh) <- gsub("01_o25154_1_5-HC_fresh", "Fresh_S1", names(samples_fresh))
+names(samples_fresh) <- gsub("02_o25459_1_6-HS_Blaz", "Fresh_S2", names(samples_fresh))
+
+# Load data
+sce_fresh <- DropletUtils::read10xCounts(samples=samples_fresh)
+
+# Factoring
+sce_fresh$Sample <- factor(sce_fresh$Sample) # Factor the sample name to save space
+
+# Renaming
+rownames(sce_fresh) <- rowData(sce_fresh)$Symbol # Rename the rows
+sce_fresh <- sce_fresh[duplicated(rownames(sce_fresh)) == FALSE,] # remove duplicate rownames
+colnames(sce_fresh) <- paste0(sce_fresh$Sample, ".", sce_fresh$Barcode) # Rename the columns
+
+
+# add protocol name
+sce_fresh$Protocol <- factor("Fresh")
+```
+
+## Load fresh and cultured samples as one dataset
+
+```{r joint skin and fresh samples}
+samples_all <- c(samples_skin, samples_fresh)
+
+# Load data
+sce_all <- DropletUtils::read10xCounts(samples=samples_all)
+
+# Factoring
+sce_all$Sample <- factor(sce_all$Sample) # Factor the sample name to save space
+
+# Renaming
+rownames(sce_all) <- rowData(sce_all)$Symbol # Rename the rows
+sce_all <- sce_all[duplicated(rownames(sce_all)) == FALSE,] # remove duplicate rownames
+colnames(sce_all) <- paste0(sce_all$Sample, ".", sce_all$Barcode) # Rename the columns
+
+# Add column for protocol
+sce_all$Protocol <- factor(ifelse(grepl("Fresh", sce_all$Sample), "Fresh", "Culture"))
+```
+
+## Basic filtering {.tabset}
+
+We run a crude filtering on the cells to eliminate the majority of bad reads and speed up the runtime of the code below.
+
+```{r Basic filtering, results="asis"}
+
+crude_filtering <- function(sce, sce_name){
+  
+  original_sce_dimensions <- dim(sce)
+  
+  sce <- sce[rowSums(counts(sce)>0) > 10,  # We only keep genes expressed in more than ten cells
+             colSums(counts(sce) >0) > 150] # We only keep cells with more than 150 genes expressed
+
+  new_sce_dimensions <- dim(sce)
+
+  absolute_changes <- original_sce_dimensions - new_sce_dimensions
+  relative_changes <- absolute_changes / original_sce_dimensions
+
+  cat(paste0("\n\n### ", sce_name))
+  cat(paste0("\n\n#### Dropped ", absolute_changes[1], " genes out of ", original_sce_dimensions[1], " (~", round(100*relative_changes[1],2), "%). ", new_sce_dimensions[1], " genes remaining.\n\n"))
+  cat(paste0("\n#### Dropped ", absolute_changes[2], " cells out of ", original_sce_dimensions[2], " (~", round(100*relative_changes[2],2), "%). ", new_sce_dimensions[2], " cells remaining.\n\n" ))
+  
+  sce
+}
+
+sce_fresh <- crude_filtering(sce_fresh, "Fresh")
+sce_all <- crude_filtering(sce_all, "All")
+```
+
+# Overview of doublets dropped comparison
+
+```{r remove doublets, fig.width=14, fig.height=10, results="asis"}
+# identify doublets
+# seed_to_use <- readRDS("../code/seeds/seed8_fresh.rds")
+# set.seed(seed_to_use)
+set.seed(100)
+sce_fresh <- scDblFinder(sce_fresh, samples="Sample")
+
+# seed_to_use <- readRDS("../code/seeds/seed9_all.rds")
+# set.seed(seed_to_use)
+set.seed(100)
+sce_all <- scDblFinder(sce_all, samples="Sample")
+
+# plot the number of doublets per sample
+
+# Fresh
+cat(paste0("\n\n## Fresh samples only \n\n"))
+table(sce_fresh$scDblFinder.class, sce_fresh$Sample) %>%
+  as.data.frame() %>%
+  dplyr::rename("Type"="Var1", "Sample"="Var2") %>%
+  ggplot(aes(x=Sample, y=Freq, fill = Type, label=Freq)) +
+  geom_bar(stat="identity",
+           position = position_stack(reverse = TRUE)) +
+  labs(title = "Doublets identified",
+       x="",
+       y = "Number of Cells")
+  
+# Fresh and culture
+# plot the number of doublets per sample
+cat(paste0("\n\n## Fresh and cultured samples \n\n"))
+table(sce_all$scDblFinder.class, sce_all$Sample) %>%
+  as.data.frame() %>%
+  dplyr::rename("Type"="Var1", "Sample"="Var2") %>%
+  ggplot(aes(x=Sample, y=Freq, fill = Type, label=Freq)) +
+  geom_bar(stat="identity",
+           position = position_stack(reverse = TRUE)) +
+  labs(title = "Doublets identified",
+       x="",
+       y = "Number of Cells")
+  
+  
+
+# finally remove droplets
+sce_fresh <- sce_fresh[,colData(sce_fresh)$scDblFinder.class=="singlet"]
+sce_all <- sce_all[,colData(sce_all)$scDblFinder.class=="singlet"]
+```
+
+
+
+
+# Quality Control
+
+## Mitochondria check {.tabset}
+
+Do we have mitochondrial genes in the data?
+
+```{r Mitochondria check, results="asis"}
+identify_mitochondrial_genes <- function(sce, sce_name){
+  rowData(sce)$is_mitochondrial <- grepl("^(MT-)", rowData(sce)$Symbol, ignore.case=TRUE)
+  
+  cat(paste0("\n\n### ", sce_name, " \n\n"))
+  print(table(rowData(sce)$is_mitochondrial) %>%
+          as.data.frame() %>%
+          rename(is.mito.gene=Var1) %>%
+          kable() %>%
+          kable_styling())
+  
+  sce
+}
+
+sce_fresh <- identify_mitochondrial_genes(sce_fresh, "Fresh samples only")
+sce_all <- identify_mitochondrial_genes(sce_all, "Fresh and cultured samples")
+```
+
+## Add quality control metrics
+
+```{r Add quality control metrics}
+# Fresh only
+sce_fresh <- scater::addPerCellQC(sce_fresh, list(Mt = rowData(sce_fresh)$is_mitochondrial,
+                                                  genes= !rowData(sce_fresh)$is_mitochondrial),
+                                  percent_top=c(50, 100, 200, 500))
+
+sce_fresh$log_sum <- log10(sce_fresh$sum)
+sce_fresh$log_total <- log10(sce_fresh$total)
+  
+# Fresh and culture
+sce_all <- scater::addPerCellQC(sce_all, list(Mt = rowData(sce_all)$is_mitochondrial,
+                                                  genes= !rowData(sce_all)$is_mitochondrial),
+                                  percent_top=c(50, 100, 200, 500))
+
+sce_all$log_sum <- log10(sce_all$sum)
+sce_all$log_total <- log10(sce_all$total)
+```
+
+## First QC charts
+
+```{r First QC charts, results="asis", fig.width=20, fig.height=8, results="asis"}
+plot_qc_charts <- function(sce, sce_name){
+  
+  cat(paste0("\n\n### ", sce_name, " \n\n"))
+
+  # cat("\n### Number of genes \n\n")
+  plot1 <- ggplot(as.data.frame(colData(sce)), aes(x=Sample, y=log10(detected))) +
+    geom_violin(scale="count") +
+    labs(title="Number of detected genes",
+         subtitle=sce_name,
+         x="",
+         y="Number of detected genes (log10)") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+
+  # cat("\n### Number of genes \n\n")
+  plot2 <- ggplot(as.data.frame(colData(sce)), aes(x=Sample, y=log_total)) +
+    geom_violin(scale="count") +
+    labs(title="Total gene expression counts",
+         subtitle=sce_name,
+         x="",
+         y="Total gene expression counts (log10)") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+
+  # plot3 <- ggplot(as.data.frame(qcs), aes(x=Sample, y=subsets_Mt_percent)) +
+  plot3 <- ggplot(as.data.frame(colData(sce)), aes(x=Sample, y=subsets_Mt_percent)) +
+    geom_violin(scale="count") +
+    labs(title="Share of mitochondrial genes",
+         subtitle=sce_name,
+         x="",
+         y="Mitochodrial share (percent)") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+
+  gridExtra::grid.arrange(plot1, plot2, plot3, nrow=1)
+}
+
+plot_qc_charts(sce_fresh, "Fresh samples only")
+plot_qc_charts(sce_all, "Fresh and cultured samples")
+```
+
+## Mitochondria QC charts {.tabset}
+
+```{r plots for QC: Mitochondrial content 2, fig.width=20, fig.height=10, results="asis"}
+plot_mitochondrial_qc_charts <- function(sce, sce_name){
+  
+  cat(paste0("\n\n### ", sce_name, " \n\n"))
+  
+  mito1 <- ggplot(as.data.frame(colData(sce)),
+         aes(x=log_total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+    geom_point(size=0.25) +
+    labs(title="Library size vs. gene count",
+         subtitle="percentual share of mitochondrial genes in blue",
+         x="Sum of expression values by cell",
+         y="# of non-mitochondrial genes detected") +
+    geom_density_2d() +
+    scale_y_log10()
+
+  mito2 <- ggplot(as.data.frame(colData(sce)),
+         aes(x=subsets_Mt_percent,
+             y=subsets_genes_detected,
+             color=log_sum)) +
+    geom_point(size=0.25) +
+    labs(title="Mito. content vs. genes detected",
+         subtitle="coloured by log library size",
+         x="Percentage of mito. content",
+         y="# of non-mitochondrial genes detected") +
+    scale_y_log10(limits=c(100,NA)) +
+    geom_density_2d()
+
+  gridExtra::grid.arrange(mito1, mito2, nrow=1)
+  
+}
+
+plot_mitochondrial_qc_charts(sce_fresh, "Fresh samples only")
+plot_mitochondrial_qc_charts(sce_all, "Fresh and cultured samples")
+```
+
+## Library size vs. mito share by sample
+
+```{r lib size vs. mito, fig.width=16, fig.height=10}
+cat(paste0("\n\n### Fresh samples only \n\n"))
+ggplot(as.data.frame(colData(sce_fresh)),
+       aes(x=total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(title="Library size vs. gene count faceted by sample",
+       subtitle="percentual share of mitochondrial genes in blue",
+       x="Sum of expression values by cell",
+       y="# of non-mitochondrial genes detected") +
+  scale_x_log10() +
+  geom_density_2d() +
+  scale_y_log10() +
+  facet_wrap(~Sample)
+
+
+cat(paste0("\n\n### Fresh and cultured samples \n\n"))
+ggplot(as.data.frame(colData(sce_all)),
+       aes(x=total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(title="Library size vs. gene count faceted by sample",
+       subtitle="percentual share of mitochondrial genes in blue",
+       x="Sum of expression values by cell",
+       y="# of non-mitochondrial genes detected") +
+  scale_x_log10() +
+  geom_density_2d() +
+  scale_y_log10() +
+  facet_wrap(~Sample)
+```
+
+
+## Mito. percent vs. genes by sample
+
+```{r, fig.width=16, fig.height=10}
+cat(paste0("\n\n### Fresh samples only \n\n"))
+ggplot(as.data.frame(colData(sce_fresh)),
+         aes(x=subsets_Mt_percent,
+             y=subsets_genes_detected,
+             color=log_sum)) +
+    geom_point(size=0.25) +
+    labs(title="Mito. content vs. genes detected faceted by sample",
+         subtitle="Coloured by log library size",
+         x="Percentage of mito. content",
+         y="# of non-mitochondrial genes detected") +
+    scale_y_log10(limits=c(100,NA)) +
+    geom_density_2d() +
+    facet_wrap(~Sample)
+
+
+cat(paste0("\n\n### Fresh and cultured samples \n\n"))
+ggplot(as.data.frame(colData(sce_all)),
+         aes(x=subsets_Mt_percent,
+             y=subsets_genes_detected,
+             color=log_sum)) +
+    geom_point(size=0.25) +
+    labs(title="Mito. content vs. genes detected faceted by sample",
+         subtitle="Coloured by log library size",
+         x="Percentage of mito. content",
+         y="# of non-mitochondrial genes detected") +
+    scale_y_log10(limits=c(100,NA)) +
+    geom_density_2d() +
+    facet_wrap(~Sample)
+```
+
+## Filtering
+
+Cells are marked to be dropped if: 
+
+* Sum of all expression values in a given cell is lower than 2 median absolute deviations from the sample mean
+* Number of genes of a given cell is lower than 2 median absolute deviations from the average number of genes in the given sample
+* The percentage of mitochondrial gene expression values is higher than 2 median absolute deviations from the sample mean
+* More than 25% percent of a genes expression values are from mitochondrial genes
+* The sum of all expression values is less than 1500
+* If they express less than 500 genes
+
+```{r advanced filtering - marking}
+identify_lowq_cells <- function(sce){
+  
+  # Relative criteria for filtering
+  sce$total_expression_counts_drop <- isOutlier(sce$sum, nmads=2, type="lower", batch=sce$Sample, log=TRUE)
+
+  sce$genes_detected_drop <- isOutlier(sce$detected, nmads=2, type="lower", batch=sce$Sample, log=TRUE)
+
+  sce$mito_drop <- isOutlier(sce$subsets_Mt_percent, nmads=2, type="higher", batch=sce$Sample)
+
+  # Absolute thresholds for filtering
+
+  # Drop cells with a sum expression values lower than 1500
+  sce$total_expression_counts_drop_manual_thresh <- sce$sum < 1500
+  
+  # A manual threshold: we require cells to have at least 500 genes expressed
+  sce$genes_detected_manual_thresh <- sce$detected < 500
+
+  # Drop cells with a percentage of mitochondrial expression values above a certain value
+  sce$mito_drop_manual_thresh_25 <- sce$subsets_Mt_percent > 25
+  
+  sce$to_be_dropped <- sce$total_expression_counts_drop |
+    sce$genes_detected_drop |
+    sce$mito_drop |
+    sce$total_expression_counts_drop_manual_thresh | 
+    sce$genes_detected_manual_thresh |
+    sce$mito_drop_manual_thresh_25
+  
+
+ sce
+}
+
+sce_fresh <- identify_lowq_cells(sce_fresh)
+sce_all <- identify_lowq_cells(sce_all)
+```
+
+### How many cells are captured by each filter? {.tabset}
+
+```{r overview of filters, results="asis"}
+print_filter_overview <- function(sce, sce_name){
+  cat(paste0("\n\n### ", sce_name, " \n\n"))
+  
+  print(t(data.frame(Drop_via_lib_size = sum(sce$total_expression_counts_drop),
+           Drop_via_lib_size_manual = sum(sce$total_expression_counts_drop_manual_thresh),
+           Drop_via_detected_genes = sum(sce$genes_detected_drop),
+           Drop_via_manual_genes_thresh = sum(sce$genes_detected_manual_thresh),
+           Drop_via_mito_percentage = sum(sce$mito_drop),
+           Drop_via_mito_thresh_25 = sum(sce$mito_drop_manual_thresh_25),
+           Drop_via_joint_criteria = sum(sce$total_expression_counts_drop |
+           sce$genes_detected_drop |
+           sce$mito_drop |
+           sce$total_expression_counts_drop_manual_thresh |
+           sce$mito_drop_manual_thresh_25 | 
+           sce$genes_detected_manual_thresh),
+           Total_cells = nrow(colData(sce)))) %>%
+  kable() %>%
+  kable_styling())
+}
+
+print_filter_overview(sce_fresh, "Fresh samples only")
+print_filter_overview(sce_all, "Fresh and cultured samples")
+```
+
+## How many cells are affected by each filter {.tabset}
+
+```{r Overview of cells being dropped, results="asis", fig.width=14, fig.height=8, results='asis'}
+show_panel_overview_filters <- function(sce, sce_name){
+  
+  cat(paste0("\n\n### ", sce_name, " {.tabset }\n\n"))
+  
+  ### Absolute numbers ### 
+  
+  absolute_count <- rbind(
+    table(sce$Sample),
+    table(sce$total_expression_counts_drop, sce$Sample)[2,],
+    table(sce$total_expression_counts_drop_manual_thresh, sce$Sample)[2,],
+    table(sce$genes_detected_drop, sce$Sample)[2,],
+    table(sce$genes_detected_drop, sce$Sample)[2,],
+    table(sce$mito_drop, sce$Sample)[2,],
+    table(sce$mito_drop_manual_thresh_25, sce$Sample)[2,],
+    table(sce$to_be_dropped, sce$Sample)[2,],
+    table(sce$to_be_dropped, sce$Sample)[1,]) %>%
+    as.data.frame()
+
+  rownames(absolute_count) <- c("Number of cells",
+               "Library size relative filter",
+               "Library size manual filter",
+               "Number of genes relative filter",
+               "Number of genes manual filter",
+               "Mito. percentage relative threshold",
+               "Mito. percentage manual threshold",
+               "Total dropped",
+               "Cells remaining")
+  
+  absolute_count[, "Total"] <- rowSums(absolute_count)
+  
+  cat("\n\n#### Table (Absolute numbers) \n\n")
+  print(absolute_count %>% 
+    kable() %>%
+    kable_styling())
+  
+  cat("\n\n#### Panel (Absolute numbers) \n\n")
+  print(absolute_count[2:7,-dim(absolute_count)[2]] %>%
+    tibble::rownames_to_column() %>%
+    tidyr::gather(colname, value, -rowname) %>%
+    ggplot(aes(x = colname, y = rowname, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label=value), color="white") +
+    scale_x_discrete(position="top") +
+    labs(title="Cells filtered out by respective filter",
+         subtitle="Number of cells",
+         x="",
+         y="") +
+    guides(fill="none"))
+  
+  
+  ### Relative numbers ### 
+  
+  # divide by number of cells to give a relative count
+  relative_count <- mapply('/', absolute_count, absolute_count[1,]) %>%
+    round(3) %>%
+    as.data.frame()
+  
+  rownames(relative_count) <- c("Number of cells",
+                                         "Library size relative filter",
+                                         "Library size manual filter",
+                                         "Number of genes relative filter",
+                                         "Number of genes manual filter",
+                                         "Mito. percentage relative threshold",
+                                         "Mito. percentage manual threshold",
+                                         "Total dropped",
+                                         "Cells remaining")
+  
+  cat("\n\n#### Table (Relative numbers by sample) \n\n")
+  print(relative_count %>% 
+          mutate_all(list(~paste0(.*100, "%"))) %>%
+    kable() %>%
+    kable_styling())
+  
+  
+  cat("\n\n#### Panel (Relative numbers by sample) \n\n")
+  print(relative_count[2:7,-dim(relative_count)[2]] %>%
+    tibble::rownames_to_column() %>%
+    tidyr::gather(colname, value, -rowname) %>%
+    ggplot(aes(x = colname, y = rowname, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label=scales::percent(value, accuracy = 0.1)), color="white") +
+    scale_x_discrete(position="top") +
+    labs(title="Cells filtered out by respective filter",
+         subtitle="Percentage of all cells in given sample before filtering",
+         x="",
+         y="") +
+    guides(fill="none"))
+}
+
+show_panel_overview_filters(sce_fresh, "Fresh samples only")
+show_panel_overview_filters(sce_all, "Fresh and cultured samples")
+```
+
+
+## Plots cells that will be dropped {.tabset}
+
+```{r Violin plot of cells to be dropped, fig.width=20, fig.height=10, results="asis"}
+show_violin_plots_of_dropped <- function(sce, sce_name){
+  
+  cat(paste0("\n\n### ", sce_name, " {.tabset}\n\n"))
+  
+  # for the right colouring we order the levels manually
+  sce$to_be_dropped <- factor(sce$to_be_dropped, levels=c(FALSE, TRUE))
+
+  plot1 <- plotColData(sce,
+                       x="Sample",
+                       y="log_total",
+                       colour_by="to_be_dropped",
+                       point_size=0.5) +
+    labs(title="Library size",
+         subtitle="Dropped cells in orange",
+         x="",
+         y="Library size (log-scale)") +
+    guides(colour="none") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+  
+  plot2 <- plotColData(sce,
+                       x="Sample",
+                       y="detected",
+                       colour_by="to_be_dropped",
+                       point_size=0.5) +
+    labs(title="Genes detected",
+         subtitle="Dropped cells in orange",
+         x="",
+         y="Genes detected") +
+    guides(colour="none") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+  
+  plot3 <- plotColData(sce,
+                       x="Sample",
+                       y="subsets_Mt_percent",
+                       colour_by="to_be_dropped",
+                       point_size=0.5) +
+    labs(title="Mitochondrial counts as % library size",
+         x="",
+         subtitle="Dropped cells in orange",
+         y="Mito. gene expression values as % of total") +
+    guides(colour="none") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+
+  print(gridExtra::grid.arrange(plot1, plot2, plot3, nrow=1))
+}
+
+show_violin_plots_of_dropped(sce_fresh, "Fresh samples only")
+show_violin_plots_of_dropped(sce_all, "Fresh and cultured samples")
+```
+
+
+## Mitochondria plots after QC filtering {.tabset}
+
+```{r plots for QC: Mitochondrial content after QC, fig.width=20, fig.height=10, results="asis"}
+show_mito_plots <- function(sce, sce_name){
+  
+  cat(paste0("\n\n### ", sce_name, " {.tabset}\n\n"))
+  
+  # for the right colouring we order the levels manually
+  sce$to_be_dropped <- factor(sce$to_be_dropped, levels=c(TRUE, FALSE))
+
+  mito1 <- ggplot(as.data.frame(colData(sce)), 
+                  aes(x=log_total,
+                      y=subsets_genes_detected,
+                      color=to_be_dropped)) +
+    geom_point(size=0.5) +
+    labs(title="Library size vs. genes detected",
+         subtitle="Cells dropped in red",
+         x="Sum of expression values by cell",
+         y="# of non-mitochondrial genes") +
+    geom_density_2d(colour="black", alpha=0.6) +
+    get_boolean_colour_scale() +
+    scale_y_log10() +
+    guides(colour="none")
+
+
+  mito2 <- ggplot(as.data.frame(colData(sce)),
+                  aes(x=subsets_Mt_percent,
+                      y=subsets_genes_detected,
+                      color=to_be_dropped)) +
+    geom_point(size=0.5) +
+    labs(title="Mito. content v. genes detected",
+         subtitle="Cells dropped in red",
+         x="Percentage of mito. content",
+         y="Genes detected") +
+    scale_y_log10(limits=c(100,NA)) +
+    geom_density_2d(colour="black", alpha=0.6) +
+    get_boolean_colour_scale() +
+    guides(colour="none")
+
+  gridExtra::grid.arrange(mito1, mito2, nrow=1)
+}
+
+show_mito_plots(sce_fresh, "Fresh samples only")
+show_mito_plots(sce_all, "Fresh and cultured samples")
+```
+
+# Gene and expression counts stratified by sample 
+
+## Coloured by to_be_dropped {.tabset}
+
+```{r stratified samples, fig.width=18, fig.height=12, results="asis"}
+cat(paste0("\n\n### Fresh samples only \n\n"))
+ggplot(as.data.frame(colData(sce_fresh)),
+       aes(x=log_total,
+           y=subsets_genes_detected,
+           color=to_be_dropped)) +
+  geom_point(size=0.1) +
+  labs(title="Library size vs. genes detected",
+       subtitle="Cells dropped in red",
+       x="Library size (log10)",
+       y="# of non-mitochondrial genes") +
+  scale_y_log10() +
+  facet_wrap(~Sample) +
+  get_boolean_colour_scale() +
+  guides(colour="none")
+
+
+cat(paste0("\n\n### Fresh and cultured samples\n\n"))
+ggplot(as.data.frame(colData(sce_all)),
+       aes(x=log_total,
+           y=subsets_genes_detected,
+           color=to_be_dropped)) +
+  geom_point(size=0.1) +
+  labs(title="Library size vs. genes detected",
+       subtitle="Cells dropped in red",
+       x="Library size (log10)",
+       y="# of non-mitochondrial genes") +
+  scale_y_log10() +
+  facet_wrap(~Sample) +
+  get_boolean_colour_scale() +
+  guides(colour="none")
+```
+
+## Coloured by mitochondrial content {.tabset}
+
+```{r stratified coloured by mt percent, fig.width=18, fig.height=12, results="asis"}
+cat(paste0("\n\n### Fresh samples only \n\n"))
+ggplot(as.data.frame(colData(sce_fresh)),
+       aes(x=log_total,
+           y=subsets_genes_detected,
+           color=subsets_Mt_percent)) +
+  geom_point(size=0.1) +
+  labs(title="Library size vs. genes detected",
+       subtitle="Coloured by fraction of mitochondrial counts",
+       x="Library size (log10)",
+       y="# of non-mitochondrial genes") +
+  scale_y_log10() +
+  facet_wrap(~Sample) +
+  scale_colour_viridis_c(option = "inferno", limits=c(0,50), oob=scales::squish)
+
+
+cat(paste0("\n\n### Fresh and cultured samples\n\n"))
+ggplot(as.data.frame(colData(sce_all)),
+       aes(x=log_total,
+           y=subsets_genes_detected,
+           color=subsets_Mt_percent)) +
+  geom_point(size=0.1) +
+  labs(title="Library size vs. genes detected",
+       subtitle="Coloured by fraction of mitochondrial counts",
+       x="Library size (log10)",
+       y="# of non-mitochondrial genes") +
+  scale_y_log10() +
+  facet_wrap(~Sample) +
+  scale_colour_viridis_c(option = "inferno", limits=c(0,50), oob=scales::squish)
+```
+
+
+# Library size distributions before and after deleting cells marked in QC {.tabset}
+
+## By sample {.tabset}
+
+```{r log10 counts by sample, fig.width=16, fig.height=10, results="asis"}
+# Fresh only before QC
+cat(paste0("\n\n### Fresh samples only - before QC \n\n"))
+sce_fresh %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_fresh)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_fresh)$Sample))
+
+# Fresh only after QC
+cat(paste0("\n\n### Fresh samples only - after QC \n\n"))
+sce_fresh[, !sce_fresh$to_be_dropped] %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_fresh)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_fresh)$Sample))
+  
+
+# Fresh and culture before QC
+cat(paste0("\n\n### Fresh and cultured samples - before QC\n\n"))
+sce_all %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_all)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_all)$Sample))
+
+# Fresh and culture after QC
+cat(paste0("\n\n### Fresh and cultured samples - after QC\n\n"))
+sce_all[, !sce_all$to_be_dropped] %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_all)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_all)$Sample))
+  
+```
+
+## By protocol for fresh and cultured samples {.tabset}
+
+```{r log10 counts by protocol, fig.width=16, fig.height=10, results="asis"}
+cat("\n\n### Before QC\n\n")
+sce_all %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_all)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_all)$Protocol))
+
+cat("\n\n### After QC\n\n")
+sce_all[, !sce_all$to_be_dropped] %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_all)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_all)$Protocol))
+```
+
+
+
+# Gene count distributions after deleting cells marked in QC 
+
+## By sample {.tabset}
+
+```{r gene counts by sample, fig.width=16, fig.height=10, results="asis"}
+
+# Fresh only after QC
+cat(paste0("\n\n### Fresh samples only - after QC \n\n"))
+sce_fresh[, !sce_fresh$to_be_dropped] %>% 
+  ggplot() +
+  geom_density(aes(detected, fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of gene counts",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_fresh)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_fresh)$Sample))
+  
+
+# Fresh and culture after QC
+cat(paste0("\n\n### Fresh and cultured samples - after QC\n\n"))
+sce_all[, !sce_all$to_be_dropped] %>% 
+  ggplot() +
+  geom_density(aes(detected, fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of gene counts",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_all)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_all)$Sample))
+  
+```
+
+## By protocol for fresh and cultured samples {.tabset}
+
+```{r geme counts by protocol, fig.width=16, fig.height=10, results="asis"}
+cat("\n\n### After QC\n\n")
+sce_all[, !sce_all$to_be_dropped] %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of gene counts",
+       x="Log total expression", y="Density") +
+  geom_density(aes(detected, fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_all)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_all)$Protocol))
+
+```
+
+# {-}
+
+## Number of cells dropped and kept per sample
+
+```{r Barplot of cells to be dropped, results="asis", fig.width=12, fig.height=8}
+
+### Fresh only ###
+cat(paste0("\n\n### Fresh samples only {.tabset}\n\n"))
+
+# Absolute values
+cat(paste0("\n\n#### Absolute \n\n"))
+table(sce_fresh$to_be_dropped, sce_fresh$Sample) %>%
+  as.data.frame() %>%
+  rename(Dropped=Var1) %>%
+  mutate(Dropped=factor(Dropped, levels=c(TRUE, FALSE))) %>%
+  ggplot(aes(x=Var2, y=Freq, fill=Dropped)) +
+  geom_bar(stat="identity", position="stack") +
+  labs(title="Absolute number of cells dropped by sample",
+       subtitle="Cells dropped coloured in red",
+       x="", y="Number of cells") +
+  get_boolean_colour_scale(type="fill") +
+  guides(fill="none")
+
+# Relative values
+cat(paste0("\n\n#### Relative \n\n"))
+table(sce_fresh$to_be_dropped, sce_fresh$Sample) %>%
+  as.data.frame() %>%
+  rename(Dropped=Var1) %>%
+  mutate(Dropped=factor(Dropped, levels=c(TRUE, FALSE))) %>%
+  ggplot(aes(x=Var2, y=Freq, fill=Dropped)) +
+  geom_bar(stat="identity", position="fill") +
+  labs(title="Relative number of cells dropped by sample",
+       subtitle="Cells dropped coloured in red",
+       x="", y="Number of cells") +
+  get_boolean_colour_scale(type="fill") +
+  guides(fill="none")
+
+
+### Fresh v culture ###
+cat(paste0("\n\n### Fresh and cultured samples {.tabset}\n\n"))
+
+# Absolute values
+cat(paste0("\n\n#### Absolute \n\n"))
+table(sce_all$to_be_dropped, sce_all$Sample) %>%
+  as.data.frame() %>%
+  rename(Dropped=Var1) %>%
+  mutate(Dropped=factor(Dropped, levels=c(TRUE, FALSE))) %>%
+  ggplot(aes(x=Var2, y=Freq, fill=Dropped)) +
+  geom_bar(stat="identity", position="stack") +
+  labs(title="Absolute number of cells dropped by sample",
+       subtitle="Cells dropped coloured in red",
+       x="", y="Number of cells") +
+  get_boolean_colour_scale(type="fill") +
+  guides(fill="none")
+
+# Relative values
+cat(paste0("\n\n#### Relative \n\n"))
+table(sce_all$to_be_dropped, sce_all$Sample) %>%
+  as.data.frame() %>%
+  rename(Dropped=Var1) %>%
+  mutate(Dropped=factor(Dropped, levels=c(TRUE, FALSE))) %>%
+  ggplot(aes(x=Var2, y=Freq, fill=Dropped)) +
+  geom_bar(stat="identity", position="fill") +
+  labs(title="Relative number of cells dropped by sample",
+       subtitle="Cells dropped coloured in red",
+       x="", y="Number of cells") +
+  get_boolean_colour_scale(type="fill") +
+  guides(fill="none")
+```
+
+## Finally drop cells from dataset
+
+```{r drop cells from dataset, class.source="fold-show"}
+sce_fresh_filtered <- sce_fresh[, !sce_fresh$to_be_dropped]
+sce_all_filtered <- sce_all[, !sce_all$to_be_dropped]
+
+# Drop genes which are expressed in only one or no cells at all
+# These genes do not have an influence on the remaining analysis and 
+# can cause issues with normalisation
+
+# fresh cells 
+mask <- rowSums(counts(sce_fresh_filtered) > 0) > 1
+print(sum(mask==FALSE))
+sce_fresh_filtered <- sce_fresh_filtered[mask,]
+
+# fresh and cultured cells 
+mask <- rowSums(counts(sce_all_filtered) > 0) > 1
+print(sum(mask==FALSE))
+sce_all_filtered <- sce_all_filtered[mask,]
+```
+
+# Normalisation {.tabset}
+
+We normalise the data with scTransform
+
+<!-- ```{r normalisation, results='asis', eval=F} -->
+<!-- cat(paste0("\n\n## Fresh samples only \n\n")) -->
+
+<!-- lib.sce_fresh <- librarySizeFactors(sce_fresh_filtered) -->
+
+<!-- ggplot(data.frame("x"=log10(lib.sce_fresh)), aes(x)) + -->
+<!--   geom_histogram(color="black", fill="grey80") + -->
+<!--   labs(title="Distribution of normalisation factors", -->
+<!--        subtitle="Each normalisation factors are multiplied with the expression values of a given cell", -->
+<!--        x="Log10 of normalisation factor", -->
+<!--        y="Frequency") -->
+
+<!-- sce_fresh_filtered <- logNormCounts(sce_fresh_filtered) -->
+
+
+
+<!-- cat(paste0("\n\n## Fresh and cultured samples \n\n")) -->
+
+<!-- lib.sce_all <- librarySizeFactors(sce_all_filtered) -->
+
+<!-- ggplot(data.frame("x"=log10(lib.sce_all)), aes(x)) + -->
+<!--   geom_histogram(color="black", fill="grey80") + -->
+<!--   labs(title="Distribution of normalisation factors", -->
+<!--        subtitle="Each normalisation factors are multiplied with the expression values of a given cell", -->
+<!--        x="Log10 of normalisation factor", -->
+<!--        y="Frequency") -->
+
+<!-- sce_all_filtered <- logNormCounts(sce_all_filtered) -->
+<!-- ``` -->
+
+
+```{r scTransform normalisation}
+normalise_with_scTransform <- function(sce){
+  
+  sce <- logNormCounts(sce)
+
+  sce_seurat <- as.Seurat(sce, counts="counts", data="logcounts")
+  
+  seurat_normalized = sce_seurat %>%
+    Seurat::SCTransform(verbose = FALSE, assay="originalexp",  method="glmGamPoi", min_cells=1)
+  
+  sct_HVGs <- seurat_normalized@assays$SCT@var.features
+  
+  assay(sce, "corrected") <- seurat_normalized@assays$SCT@counts
+  assay(sce, "logcounts") <- seurat_normalized@assays$SCT@data
+  rowData(sce)[, "sct_HVG"] <- FALSE
+  rowData(sce)[sct_HVGs, "sct_HVG"] <- TRUE
+  
+  sce
+}
+
+
+sce_fresh_filtered <- normalise_with_scTransform(sce_fresh_filtered)
+sce_all_filtered <- normalise_with_scTransform(sce_all_filtered)
+```
+
+
+# Feature Selection - HVGs {.tabset}
+
+We select the 2000 most variable genes
+
+```{r feature selection, fig.width=14, fig.height=10, results="asis"}
+num_hvg=2000
+
+normalise_data_by_library_size <- function(sce, sce_name){
+  
+  cat(paste0("\n\n## ", sce_name, " \n\n"))
+
+  # model the gene variance
+  dec.sce <- scran::modelGeneVar(sce)
+  fit.vs <- metadata(dec.sce)
+
+  # Mark all HVGs for visualisation
+  hvg <- getTopHVGs(dec.sce, n=num_hvg)
+  label <- rep("No HVG", nrow(sce))
+  names(label) <- names(fit.vs$mean)
+  label[hvg] <- "Is HVG"
+
+  # construct a df to make plotting with ggplot easier
+  print(data.frame("x"=fit.vs$mean, "y"=fit.vs$var, "z"=fit.vs$trend(fit.vs$mean), "color"=label) %>%
+    ggplot(aes(x=x, y=y, color=color)) +
+    geom_point() +
+    scale_color_manual(values=c("orange","black")) +
+    geom_line(aes(x, z), colour="dodgerblue", size=0.75) +
+    labs(x="Mean of log-expression",
+         y="Variance of log-expression",
+         title=paste0("Top ", num_hvg, " highly variable genes")))
+
+
+  list("sco"=dec.sce, "hvg"=hvg)
+}
+
+res.fresh <- normalise_data_by_library_size(sce_fresh_filtered, "Fresh samples only")
+dec.sce.fresh <- res.fresh$sco
+hvg.fresh <- res.fresh$hvg
+
+res.all <- normalise_data_by_library_size(sce_all_filtered, "Fresh and cultured samples")
+dec.sce.all <- res.all$sco
+hvg.all <- res.all$hvg
+```
+
+#
+
+## Peek at highly variable genes {.tabset}
+
+```{r table of HVGs, results="asis"}
+cat(paste0("\n\n### Fresh samples only \n\n"))
+print(kable_styling(kable(dec.sce.fresh[order(dec.sce.fresh$bio, decreasing=TRUE)[1:10],], digits=2)))
+
+cat(paste0("\n\n### Fresh and cultured samples \n\n"))
+print(kable_styling(kable(dec.sce.all[order(dec.sce.all$bio, decreasing=TRUE)[1:10],], digits=2)))
+```
+
+
+## Subset selection of HVGs
+
+```{r mark HVGs}
+# fresh
+rowData(sce_fresh_filtered)[,"is_hvg"] <- F
+rowData(sce_fresh_filtered)[hvg.fresh,"is_hvg"] <- T
+
+# fresh and culture
+rowData(sce_all_filtered)[,"is_hvg"] <- F
+rowData(sce_all_filtered)[hvg.all,"is_hvg"] <- T
+
+
+# if we want to delete the other genes
+# sce <- sce[hvg,]
+```
+
+
+
+# Batch correction {.tabset}
+
+For batch correction we use the Harmony method. We only run batch correction for the single-cell experiments with merged samples.
+
+```{r batch correction harmony, fig.width=16, fig.height=10, results="asis"}
+run_batch_correction <- function(sce, sce_name){
+  
+  cat(paste0("\n\n## ", sce_name, " {.tabset}\n\n"))
+
+  # Before batch effects
+  # run UMAP
+  set.seed(100)
+  sce <- runPCA(sce, exprs_values="logcounts", subset_row=rowData(sce)$is_hvg)
+
+  set.seed(100)
+  sce <- runUMAP(sce, dimred="PCA", n_neighbors=50, min_dist = 0.1) #, subset_row=rowData(sce)$is_hvg
+
+  cat("\n\n### UMAP uncorrected \n\n")
+  print(plotReducedDim(sce, "UMAP", colour_by="Sample", point_size=0.5) +
+    ggtitle("UMAP prior to batch correction") +
+    guides(colour=guide_legend(override.aes=list(size=4))) +
+    theme_ipsum_rc())
+
+  # correct batch effects with Harmony
+  # set.seed(200)
+
+  meta_data <- colData(sce) %>%
+    as.data.frame() %>%
+    dplyr::select(c(Protocol, Sample))
+  
+  set.seed(100)
+  reducedDim(sce, "harmony") <- harmony::HarmonyMatrix(data_mat=reducedDim(sce, "PCA"),
+                                                meta_data= meta_data,
+                                                vars_use=c("Sample"),
+                                                do_pca = FALSE, verbose=FALSE)
+
+
+  set.seed(100)
+  sce <- runUMAP(sce, dimred="harmony", n_neighbors=50, min_dist = 0.1) #, subset_row=rowData(sce)$is_hvg
+
+  cat("\n\n### UMAP corrected \n\n")
+  print(plotReducedDim(sce, "UMAP", colour_by="Sample", point_size=0.5) +
+    ggtitle("UMAP post batch correction - Harmony") +
+    guides(colour=guide_legend(override.aes=list(size=4))) +
+    theme_ipsum_rc())
+
+    sce
+}
+
+sce_fresh_filtered <- run_batch_correction(sce_fresh_filtered, "Fresh samples only")
+sce_all_filtered <- run_batch_correction(sce_all_filtered, "Fresh and cultured samples")
+```
+
+
+
+# Clustering with k=50
+
+```{r Clustering, results="asis", class.source="fold-show"}
+run_clustering <- function(sce, sce_name){
+
+  set.seed(100)
+  g50 <- buildSNNGraph(sce, k=50, use.dimred = 'harmony')  #, subset.row=rowData(sce)$is_hvg) # build graph
+
+  set.seed(100)
+  clust50 <- igraph::cluster_walktrap(g50)$membership # find groups
+
+  # Assign labels based on clusters
+  colLabels(sce) <- factor(clust50)
+
+  sce
+}
+
+sce_fresh_filtered <- run_clustering(sce_fresh_filtered, )
+sce_all_filtered <- run_clustering(sce_all_filtered)
+```
+
+## Visualise clusters and samples {.tabset}
+
+```{r _ UMAP visualisation, results="asis", fig.width=16, fig.height=10}
+# fresh data
+cat("\n\n### Fresh samples only  {.tabset}\n\n")
+
+# by sample
+cat("\n\n#### Sample\n\n")
+plotReducedDim(sce_fresh_filtered, "UMAP", point_size=1,
+               colour_by="Sample") +
+  labs("UMAP coloured by sample") +
+  guides(colour = guide_legend(override.aes = list(size=2))) +
+  theme_ipsum_rc()
+
+# by label
+cat("\n\n#### Label\n\n")
+plotReducedDim(sce_fresh_filtered, "UMAP", point_size=1,
+               colour_by="label",
+               text_by = "label") +
+  labs("UMAP coloured by cluster label") +
+  guides(colour = guide_legend(override.aes = list(size=2))) +
+  theme_ipsum_rc()
+
+
+# Fresh and cultured data
+cat("\n\n### Fresh and cultured samples {.tabset}\n\n")
+
+# by sample
+cat("\n\n#### Sample\n\n")
+plotReducedDim(sce_all_filtered, "UMAP", point_size=1,
+               colour_by="Sample") +
+  labs("UMAP coloured by sample") +
+  guides(colour = guide_legend(override.aes = list(size=2))) +
+  theme_ipsum_rc()
+
+# by label
+cat("\n\n#### Label\n\n")
+plotReducedDim(sce_all_filtered, "UMAP", point_size=1,
+               colour_by="label",
+               text_by = "label") +
+  labs("UMAP coloured by cluster label") +
+  guides(colour = guide_legend(override.aes = list(size=2))) +
+  theme_ipsum_rc()
+  
+# by Protocol
+cat("\n\n#### Protocol\n\n")
+plotReducedDim(sce_all_filtered, "UMAP", point_size=1,
+               colour_by="Protocol") +
+  labs("UMAP coloured by protocol") +
+  guides(colour = guide_legend(override.aes = list(size=2))) +
+  theme_ipsum_rc()
+```
+
+
+## Show cluster to sample mapping
+
+The table below shows the mappings from unsupervised clustering to each individual sample. The clusters refer to the clustering performed on the dataset with all samples merged.
+
+```{r cluster to sample assignment, fig.height=12, fig.width=7}
+plot_cluster_to_sample_mapping <- function(sce, sce_name){
+  
+  cat(paste0("\n\n### ", sce_name, " \n\n"))
+  
+  tab <- table(sce$label, sce$Sample)
+  tab_annotation <- tab
+  tab_annotation[tab_annotation==0] <- ""
+
+  as.ggplot(pheatmap(tab, color=brewer.pal(n=9, name="Oranges"), display_numbers=tab_annotation, silent=T)) +
+    theme_ipsum_rc() +
+    labs(title="Clusters and samples") +
+    theme(axis.line=element_blank(), 
+          axis.text.x=element_blank(),
+          axis.text.y=element_blank(), 
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(), 
+          legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank())
+}
+
+plot_cluster_to_sample_mapping(sce_fresh_filtered, "Fresh samples only")
+plot_cluster_to_sample_mapping(sce_all_filtered, "Fresh and cultured samples")
+```
+
+# Marker genes
+
+Marker genes can help us identify clusters as specific cell types and also discover smaller changes between subclusters (e.g., changes in activation or differentiation state). We use the wilcoxon rank sum test.
+
+```{r prepare sheet to save data to}
+wb_fresh <- createWorkbook()
+addWorksheet(wb_fresh, "Intro")
+writeData(wb_fresh, "Intro", data.frame("Marker genes for fresh samples only"), colNames=FALSE)
+
+wb_all <- createWorkbook()
+addWorksheet(wb_all, "Intro")
+writeData(wb_all, "Intro", data.frame("Marker genes for fresh and cultured samples"), colNames=FALSE)
+```
+
+
+```{r Marker genes with function, fig.width=14, fig.height=14, results="asis"}
+get_marker_genes <- function(sce, sce_name, test_name, type_comparison, excel_workbook=NA, worksheet_prefix=""){
+  
+  cat(paste0("\n\n## ", sce_name, " {.tabset} \n\n"))
+  
+  prefix <- ifelse(test_name=="t", "logFC", "AUC")
+  
+  # set limits depending on the marker method used (AUC only goes from 0 to 1)
+  heatmap_lower_limit <- ifelse(test_name=="t", heatmaplimits[0], 0)
+  heatmap_upper_limit <- ifelse(test_name=="t", heatmaplimits[1], 1)
+
+  # we filter for only the highly variable genes. Otherwise we will see many genes which
+  # are *significantly* different (high p-values), but not marginally different (low logFCs)
+  markers.all.up <- findMarkers(sce[rowData(sce)$is_hvg], 
+                                test.type=test_name,
+                                pval.type=type_comparison,
+                                direction="up", 
+                                block=sce$Sample)
+
+  for (i in 1:length(unique(names(markers.all.up)))){
+
+    cat("\n\n### ", "Cluster ", i, " \n\n")
+
+    interesting.all.up <- markers.all.up[[i]]
+
+    # print(kable_styling(kable(interesting.all.up[1:10,], digits=2)))
+    # cat("\n")
+
+    # Per default we only look at union of the top 5 markers per pairwise comparison
+    if (type_comparison=="any"){
+      cluster_markers <- interesting.all.up[interesting.all.up$Top <= 10,]  
+    } else {
+      cluster_markers <- interesting.all.up[1:50,]
+    }
+    
+    cluster_markers_logFCs <- getMarkerEffects(cluster_markers, prefix = prefix)
+    cluster_markers_logFCs[is.na(cluster_markers_logFCs)] <- 0
+    
+    # Create pheatmap plot per cluster
+    heatmap_plt <- as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T, cluster_cols=FALSE)) +
+      labs(title=paste0("Cluster ", i), subtitle="Pairwise comparisons") 
+      theme_ipsum_rc() +
+      theme(axis.title.x=element_blank(),
+      axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.title.y=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank(),
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank())
+    
+    print(heatmap_plt)
+    
+    # write to excel if a workbook was specified. Else skip
+    if (is.na(excel_workbook)==FALSE){
+        sheet_name <- paste0(worksheet_prefix, "_c", i)
+        addWorksheet(excel_workbook, sheet_name)
+        cluster_markers_excel_out <- cbind("Gene"=rownames(interesting.all.up), interesting.all.up)
+        writeData(excel_workbook, sheet_name, cluster_markers_excel_out, rowNames = TRUE)
+    }
+  }
+  
+  # Either only return the marker results or also the updated excel
+  if (is.na(excel_workbook) == TRUE){
+    markers.all.up
+  } else {
+    return(list("marker_results"=markers.all.up,
+                "excel_workbook"=excel_workbook))
+  }
+
+}
+
+
+res_fresh <- get_marker_genes(sce_fresh_filtered, "Fresh samples only", test="wilcox", type_comparison="any", excel_workbook=wb_fresh)
+markers_fresh <- res_fresh$marker_results
+wb_fresh <- res_fresh$excel_workbook
+
+# Fresh and cultured
+res_all <- get_marker_genes(sce_all_filtered, "Fresh and cultured samples", test="wilcox", type_comparison="any", excel_workbook=wb_all)
+markers_all <- res_all$marker_results
+wb_all <- res_all$excel_workbook
+```
+
+
+# Average gene expression values for marker genes of all clusters {.tabset}
+
+```{r function for top_genes, fig.width=20, fig.height=20}
+plot_heatmap_of_top_genes <- function(sce, markers, top_n=5){
+  # function assumes the sce columns: label, Sample
+
+  # get top genes
+  top_genes <- lapply(markers, function(marker_set){
+    marker_set %>%
+      as.data.frame() %>%
+      filter(Top <= top_n) %>%
+      rownames()
+  }) %>%
+    unlist(use.names=F) %>%
+    unique()
+
+  # Matrix to plot the heatmap of expression values.
+  # To avoid a too big plot we only keep a fraction of the cells i there are too many
+  nth_cell <- max(1, round(dim(sce)[2] / 1000,0))
+  sce_plot <- sce[top_genes, seq(1, dim(sce)[2], nth_cell)]
+  # We sort by cluster
+  sce_plot <- sce_plot[,order(sce_plot$label, sce_plot$Sample)]
+  # Anotations
+  column_annotations <- data.frame("Sample"=sce_plot$Sample, "Cluster"=factor(sce_plot$label), row.names=colnames(sce_plot))
+  # clip heatmap values to ensure that colour contrast is high
+  sce_plot <- assay(sce_plot, "logcounts")
+  sce_plot[sce_plot >=5] = 5
+
+  print(as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations,
+           show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, silent=TRUE,
+           color=inferno(50))) +
+    labs(title="Gene signatures per cluster identified",
+         subtitle=paste0("Top ", top_n, " differentially expressed genes per cluster; values are log-counts clipped at 5")) +
+    theme_ipsum_rc()+
+    theme(axis.line=element_blank(),axis.text.x=element_blank(),
+            axis.text.y=element_blank(),axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),legend.position="none",
+            panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),plot.background=element_blank()))
+}
+```
+
+## Fresh samples only
+
+```{r average marker gene expressions fresh only, fig.width=20, fig.height=35, results="asis"}
+plot_heatmap_of_top_genes(sce_fresh_filtered, markers_fresh)
+```
+
+
+## Fresh and cultured samples
+
+```{r average marker gene expressions fresh and culture , fig.width=20, fig.height=50, results="asis"}
+plot_heatmap_of_top_genes(sce_all_filtered, markers_all)
+```
+
+
+<!-- # Marker genes identified by entropy & f-stat {.tabset} -->
+
+<!-- The following shows the marker genes as identified via the entropy-fstat-method for the dataset combining all samples as well as the dataset for only the fresh samples combined. -->
+
+<!-- ```{r entropy f-stat, results="asis", fig.width=10, fig.height=7, results="asis", warning=FALSE} -->
+<!-- for (annotation_name in c("All", "Fresh_all")){ -->
+
+<!--   if (annotation_name %in% master[["annotation_name"]]){ -->
+
+<!--     sample_name <- master[master$annotation_name==annotation_name, "sample_name"] -->
+<!--     cat(paste0("\n\n## ", sample_name, " {.tabset} \n\n")) -->
+
+<!--     sce_object <- sces_filtered[[as.integer(master[master$annotation_name==annotation_name, "num_id"])]] -->
+<!--     sce_object <- sce_object[rowData(sce_object)$is_hvg,] -->
+
+<!--     # sce_object <- sce_object[rowData(sce_object)$is_hvg==TRUE,] -->
+
+<!--     shannon_entropy <- function(x, e = 1e-10) { -->
+<!--       x <- x+e # allow zeros in x -->
+<!--       p <- (x)/sum(x) -->
+<!--       -sum((p)*log(p)) -->
+<!--     } -->
+
+<!--     aggr_syn_sce <- aggregateAcrossCells(sce_object, sce_object$label) -->
+
+<!--     entropy_fstat_sce <- BiocParallel::bplapply( -->
+<!--       seq_along(rownames(aggr_syn_sce)), -->
+<!--       function(.x) { -->
+<!--         data.frame( -->
+<!--           gene = rowData(sce_object)$Symbol[.x], -->
+<!--           entropy = shannon_entropy(counts(aggr_syn_sce[.x,])), -->
+<!--           fstat = summary(aov(logcounts(sce_object)[.x, ] ~ colLabels(sce_object)))[[1]]$`F value`[1] -->
+<!--         ) -->
+<!--         }, BPPARAM = BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)) %>% -->
+<!--       purrr::reduce(rbind) -->
+
+<!--     entropy_fstat_sce <- entropy_fstat_sce %>% -->
+<!--       dplyr::mutate(entropy_norm = (entropy+1e-3)/(max(entropy)+1e-3), -->
+<!--                     fstat_norm = fstat/max(fstat,na.rm = TRUE), -->
+<!--                     ent_fstat_ratio = fstat_norm / entropy_norm, na.rm = TRUE) -->
+
+<!--     topmarkers <- order(entropy_fstat_sce$ent_fstat_ratio, decreasing = TRUE)[1:50] -->
+
+<!--     topmarker_knownmarkers <- unique(entropy_fstat_sce[topmarkers,]) -->
+
+<!--     cat("\n\n### Entropy-fstat plot \n\n") -->
+<!--     print(ggplot(entropy_fstat_sce) + -->
+<!--       geom_point(aes(x=log(fstat), y=entropy), show.legend = F, colour="#02C39A") + -->
+<!--       labs(x="log(F-statistic)", y="Entropy", main="Entropy vs. F-statistic of cluster separation") + -->
+<!--       ggrepel::geom_text_repel(data=topmarker_knownmarkers, -->
+<!--                                aes(x=log(fstat), y=entropy, label=gene, size=4), -->
+<!--                                show.legend=F, -->
+<!--                                max.overlaps = 30)) -->
+
+<!--     # write to excel -->
+<!--     sheet_name <- paste0(annotation_name, "_fstat_top_markers") -->
+<!--     addWorksheet(wb, sheet_name) -->
+<!--     writeData(wb, sheet_name, topmarker_knownmarkers, rowNames=TRUE) -->
+
+<!--     # Expression plots -->
+<!--     cat("\n\n### Expression plots for all samples combined {.tabset} \n\n") -->
+
+<!--     genes_to_plot <-  unique(entropy_fstat_sce$gene[topmarkers]) -->
+<!--     rownames(sce_object) <- rowData(sce_object)$Symbol -->
+
+<!--     for(i in seq_along(genes_to_plot)){ -->
+<!--       cat("\n\n#### ", genes_to_plot[i], "\n\n") -->
+<!--       print(plotExpression(sce_object, -->
+<!--                      entropy_fstat_sce$gene[entropy_fstat_sce$gene == genes_to_plot[i]], -->
+<!--                      x = "label", colour_by = "Sample", point_size=0.75)) -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- ``` -->
+
+
+```{r save marker genes to excel}
+# Fresh only
+filename_marker_results <- "../docs/output/P2_Fresh_only.xlsx"
+saveWorkbook(wb_fresh, file = filename_marker_results, overwrite = TRUE)
+
+# Fresh and cultured
+filename_marker_results <- "../docs/output/P2_Fresh_v_culture.xlsx"
+saveWorkbook(wb_all, file = filename_marker_results, overwrite = TRUE)
+```
+
+
+# Foreign Annotations {.tabset}
+
+```{r plot relative frequencies}
+plot_frequencies <- function(sce_object){
+  plt <- table(colData(sce_object)[,annotations_name], colData(sce_object)[,"Sample"]) %>%
+    as.data.frame() %>%
+    dplyr::rename("Cell.Type"="Var1", "Sample"="Var2") %>%
+    ggplot(aes(x=Sample, y=Freq, fill=Cell.Type)) +
+    geom_bar(stat="identity", position = "fill", width = 0.85) +
+    theme(panel.grid = element_blank(),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle=30, hjust=1),
+          axis.text.y = element_text(size = 10),
+          plot.subtitle=element_text(size=12)) +
+    labs(title="Relative cell type abundances across samples",
+         subtitle=paste0("Labels: ", annotations_name))
+
+  return(plt)
+}
+```
+
+
+## Blaz {.tabset}
+
+```{r labels Blaz, fig.width=16, fig.height=10, results="asis"}
+csv_name <- "../Metadata/cell_annotation_markers/Markers_Blaz.csv"
+group_colname <- "Cell.Type"
+gene_colname <- "Markers"
+annotations_name <- "labels_blaz"
+
+cat("\n\n### Fresh samples only")
+sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
+
+
+cat("\n\n### Fresh and cultured samples")
+sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
+```
+
+## Raynolds {.tabset}
+
+```{r labels Raynolds, fig.width=16, fig.height=10, results="asis"}
+csv_name <- "../Metadata/cell_annotation_markers/Markers_Raynolds.csv"
+group_colname <- "Cell.Type"
+gene_colname <- "Gene"
+annotations_name <- "labels_raynolds"
+
+cat("\n\n### Fresh samples only")
+sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
+
+cat("\n\n### Fresh and cultured samples")
+sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
+```
+
+
+## He et al. {.tabset}
+
+```{r He et al., fig.width=16, fig.height=10, results="asis"}
+csv_name <- "../Metadata/cell_annotation_markers/Markers_He.csv"
+group_colname <- "cluster_fine"
+gene_colname <- "gene"
+annotations_name <- "labels_he_et_al_fine"
+
+cat("\n\n### Fresh samples only")
+sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
+
+cat("\n\n### Fresh and cultured samples")
+sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
+```
+
+## Tabib {.tabset}
+
+```{r Tabib, fig.width=16, fig.height=10, results="asis"}
+csv_name <- "../Metadata/cell_annotation_markers/Markers_Tabib.csv"
+group_colname <- "Cell.Type"
+gene_colname <- "Marker"
+annotations_name <- "labels_tabib"
+
+cat("\n\n### Fresh samples only")
+sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
+
+cat("\n\n### Fresh and cultured samples")
+sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
+```
+
+
+## Xue {.tabset}
+
+```{r Xue, fig.width=16, fig.height=10, results="asis"}
+csv_name <- "../Metadata/cell_annotation_markers/Markers_Xue.csv"
+group_colname <- "Cell.Type"
+gene_colname <- "Marker"
+annotations_name <- "labels_xue"
+
+sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
+sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
+```
+
+
+
+# Save SCE objects and upload them to iSEE
+
+```{r Save RDS, class.source="fold-show"}
+# Save all objects as one rds
+
+# Fresh samples only
+file_path_fresh <- "../data/EOS_files/Fresh_EOS1_sce.rds"
+saveRDS(sce_fresh_filtered, file=file_path_fresh)
+upload_file_to_iSEE(file_path_fresh)
+
+# Frsh and cultured samples
+file_path_all <- "../data/EOS_files/FvC_EOS1_sce.rds"
+saveRDS(sce_all_filtered, file=file_path_all)
+upload_file_to_iSEE(file_path_all)
+```
+
+
+
+

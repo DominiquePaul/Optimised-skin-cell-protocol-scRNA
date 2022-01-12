@@ -1,0 +1,21 @@
+Error in parse_block(g[-1], g[1], params.src, markdown_mode) : 
+  Duplicate chunk label 'log10 counts by protocol', which has been used for the chunk:
+cat("\n\n### Before QC\n\n")
+sce_all %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_all)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_all)$Protocol))
+
+cat("\n\n### After QC\n\n")
+sce_all[, !sce_all$to_be_dropped] %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_all)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_all)$Protocol))

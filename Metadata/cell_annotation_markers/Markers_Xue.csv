@@ -1,0 +1,551 @@
+﻿Cell Type;Cluster_Num;Marker;Subcluster
+Fibroblasts;1;SFRP2;Fibroblasts-1
+Fibroblasts;1;FBLN1;Fibroblasts-1
+Fibroblasts;1;DCN;Fibroblasts-1
+Fibroblasts;1;COMP;Fibroblasts-1
+Fibroblasts;1;MMP2;Fibroblasts-1
+Fibroblasts;1;COL1A1;Fibroblasts-1
+Fibroblasts;1;COL3A1;Fibroblasts-1
+Fibroblasts;1;COL1A2;Fibroblasts-1
+Fibroblasts;1;WIF1;Fibroblasts-1
+Fibroblasts;1;WISP2;Fibroblasts-1
+Fibroblasts;1;COL6A2;Fibroblasts-1
+Fibroblasts;1;CXCL14;Fibroblasts-1
+Fibroblasts;1;CFD;Fibroblasts-1
+Fibroblasts;1;COL6A1;Fibroblasts-1
+Fibroblasts;1;CTHRC1;Fibroblasts-1
+Fibroblasts;1;PI16;Fibroblasts-1
+Fibroblasts;1;C1R;Fibroblasts-1
+Fibroblasts;1;PTGDS;Fibroblasts-1
+Fibroblasts;1;MFAP4;Fibroblasts-1
+Fibroblasts;1;CTSK;Fibroblasts-1
+Fibroblasts;1;SERPINF1;Fibroblasts-1
+Fibroblasts;1;CFH;Fibroblasts-1
+Fibroblasts;1;MFAP5;Fibroblasts-1
+Fibroblasts;1;GSN;Fibroblasts-1
+Fibroblasts;1;LUM;Fibroblasts-1
+Fibroblasts;2;APOD;Fibroblasts-2
+Fibroblasts;2;CXCL12;Fibroblasts-2
+Fibroblasts;2;CFD;Fibroblasts-2
+Fibroblasts;2;CFH;Fibroblasts-2
+Fibroblasts;2;GSN;Fibroblasts-2
+Fibroblasts;2;CCDC80;Fibroblasts-2
+Fibroblasts;2;PTGDS;Fibroblasts-2
+Fibroblasts;2;MGP;Fibroblasts-2
+Fibroblasts;2;C1S;Fibroblasts-2
+Fibroblasts;2;APOE;Fibroblasts-2
+Fibroblasts;2;IGFBP6;Fibroblasts-2
+Fibroblasts;2;IGFBP3;Fibroblasts-2
+Fibroblasts;2;DCN;Fibroblasts-2
+Fibroblasts;2;SERPING1;Fibroblasts-2
+Fibroblasts;2;GPC3;Fibroblasts-2
+Fibroblasts;2;ADH1B;Fibroblasts-2
+Fibroblasts;2;EFEMP1;Fibroblasts-2
+Fibroblasts;2;C1R;Fibroblasts-2
+Fibroblasts;2;C3;Fibroblasts-2
+Fibroblasts;2;LUM;Fibroblasts-2
+Fibroblasts;2;ABCA8;Fibroblasts-2
+Fibroblasts;2;RARRES2;Fibroblasts-2
+Fibroblasts;2;CXCL14;Fibroblasts-2
+Fibroblasts;2;IGFBP7;Fibroblasts-2
+Fibroblasts;2;SERPINF1;Fibroblasts-2
+Fibroblasts;3;COCH;Fibroblasts-3
+Fibroblasts;3;ASPN;Fibroblasts-3
+Fibroblasts;3;TNMD;Fibroblasts-3
+Fibroblasts;3;LUM;Fibroblasts-3
+Fibroblasts;3;DPT;Fibroblasts-3
+Fibroblasts;3;COL1A2;Fibroblasts-3
+Fibroblasts;3;COL1A1;Fibroblasts-3
+Fibroblasts;3;PTGDS;Fibroblasts-3
+Fibroblasts;3;MFAP4;Fibroblasts-3
+Fibroblasts;3;POSTN;Fibroblasts-3
+Fibroblasts;3;CTSK;Fibroblasts-3
+Fibroblasts;3;GPC3;Fibroblasts-3
+Fibroblasts;3;TNN;Fibroblasts-3
+Fibroblasts;3;COL3A1;Fibroblasts-3
+Fibroblasts;3;MEG3;Fibroblasts-3
+Fibroblasts;3;PCOLCE;Fibroblasts-3
+Fibroblasts;3;FIBIN;Fibroblasts-3
+Fibroblasts;3;PRELP;Fibroblasts-3
+Fibroblasts;3;PTN;Fibroblasts-3
+Fibroblasts;3;HTRA1;Fibroblasts-3
+Fibroblasts;3;OGN;Fibroblasts-3
+Fibroblasts;3;SEPP1;Fibroblasts-3
+Fibroblasts;3;SRPX;Fibroblasts-3
+Fibroblasts;3;SPARC;Fibroblasts-3
+Fibroblasts;3;IGFBP5;Fibroblasts-3
+Keratinocytes;1;KRT17;Keratinocytes-1
+Keratinocytes;1;S100A2;Keratinocytes-1
+Keratinocytes;1;KRT14;Keratinocytes-1
+Keratinocytes;1;GJB6;Keratinocytes-1
+Keratinocytes;1;GJB2;Keratinocytes-1
+Keratinocytes;1;KRT5;Keratinocytes-1
+Keratinocytes;1;FXYD3;Keratinocytes-1
+Keratinocytes;1;PERP;Keratinocytes-1
+Keratinocytes;1;RPLP1;Keratinocytes-1
+Keratinocytes;1;RPLP0;Keratinocytes-1
+Keratinocytes;1;RPS2;Keratinocytes-1
+Keratinocytes;1;MGST1;Keratinocytes-1
+Keratinocytes;1;S100A14;Keratinocytes-1
+Keratinocytes;1;DEFB1;Keratinocytes-1
+Keratinocytes;1;SLC25A5;Keratinocytes-1
+Keratinocytes;1;TACSTD2;Keratinocytes-1
+Keratinocytes;1;ATP1B3;Keratinocytes-1
+Keratinocytes;1;SPINT2;Keratinocytes-1
+Keratinocytes;1;COX4I1;Keratinocytes-1
+Keratinocytes;1;CALML5;Keratinocytes-1
+Keratinocytes;1;DAPL1;Keratinocytes-1
+Keratinocytes;1;C19orf33;Keratinocytes-1
+Keratinocytes;1;ATP1A1;Keratinocytes-1
+Keratinocytes;1;CRABP2;Keratinocytes-1
+Keratinocytes;1;KRT15;Keratinocytes-1
+Keratinocytes;2;DMKN;Keratinocytes-2
+Keratinocytes;2;KRT1;Keratinocytes-2
+Keratinocytes;2;KRT2;Keratinocytes-2
+Keratinocytes;2;KRTDAP;Keratinocytes-2
+Keratinocytes;2;KRT10;Keratinocytes-2
+Keratinocytes;2;LY6D;Keratinocytes-2
+Keratinocytes;2;LGALS7B;Keratinocytes-2
+Keratinocytes;2;SFN;Keratinocytes-2
+Keratinocytes;2;PERP;Keratinocytes-2
+Keratinocytes;2;SBSN;Keratinocytes-2
+Keratinocytes;2;S100A14;Keratinocytes-2
+Keratinocytes;2;CALML5;Keratinocytes-2
+Keratinocytes;2;LYPD3;Keratinocytes-2
+Keratinocytes;2;DSP;Keratinocytes-2
+Keratinocytes;2;CSTA;Keratinocytes-2
+Keratinocytes;2;PHLDA2;Keratinocytes-2
+Keratinocytes;2;RHOV;Keratinocytes-2
+Keratinocytes;2;FABP5;Keratinocytes-2
+Keratinocytes;2;TACSTD2;Keratinocytes-2
+Keratinocytes;2;CLDN4;Keratinocytes-2
+Keratinocytes;2;LGALS7;Keratinocytes-2
+Keratinocytes;2;KLK11;Keratinocytes-2
+Keratinocytes;2;TMEM45A;Keratinocytes-2
+Keratinocytes;2;DSG1;Keratinocytes-2
+Keratinocytes;2;AQP3;Keratinocytes-2
+Keratinocytes;3;KRT14;Keratinocytes-3
+Keratinocytes;3;KRT5;Keratinocytes-3
+Keratinocytes;3;KRT15;Keratinocytes-3
+Keratinocytes;3;S100A2;Keratinocytes-3
+Keratinocytes;3;COL17A1;Keratinocytes-3
+Keratinocytes;3;DST;Keratinocytes-3
+Keratinocytes;3;CCL27;Keratinocytes-3
+Keratinocytes;3;SYT8;Keratinocytes-3
+Keratinocytes;3;SERPINB2;Keratinocytes-3
+Keratinocytes;3;AREG;Keratinocytes-3
+Keratinocytes;3;SFN;Keratinocytes-3
+Keratinocytes;3;CA2;Keratinocytes-3
+Keratinocytes;3;PMAIP1;Keratinocytes-3
+Keratinocytes;3;AQP3;Keratinocytes-3
+Keratinocytes;3;ERRFI1;Keratinocytes-3
+Keratinocytes;3;KLF5;Keratinocytes-3
+Keratinocytes;3;TACSTD2;Keratinocytes-3
+Keratinocytes;3;ARL4A;Keratinocytes-3
+Keratinocytes;3;POSTN;Keratinocytes-3
+Keratinocytes;3;SOX15;Keratinocytes-3
+Keratinocytes;3;FGFR3;Keratinocytes-3
+Keratinocytes;3;HOPX;Keratinocytes-3
+Keratinocytes;3;TOB1;Keratinocytes-3
+Keratinocytes;3;KLF4;Keratinocytes-3
+Keratinocytes;3;ATF3;Keratinocytes-3
+Keratinocytes;4;LYPD3;Keratinocytes-4
+Keratinocytes;4;SERPINB2;Keratinocytes-4
+Keratinocytes;4;AQP3;Keratinocytes-4
+Keratinocytes;4;CLDN1;Keratinocytes-4
+Keratinocytes;4;KRT10;Keratinocytes-4
+Keratinocytes;4;SFN;Keratinocytes-4
+Keratinocytes;4;KRT1;Keratinocytes-4
+Keratinocytes;4;SBSN;Keratinocytes-4
+Keratinocytes;4;FGFBP1;Keratinocytes-4
+Keratinocytes;4;KRT2;Keratinocytes-4
+Keratinocytes;4;S100A14;Keratinocytes-4
+Keratinocytes;4;SERPINB5;Keratinocytes-4
+Keratinocytes;4;DSC3;Keratinocytes-4
+Keratinocytes;4;DSP;Keratinocytes-4
+Keratinocytes;4;CLDN4;Keratinocytes-4
+Keratinocytes;4;TACSTD2;Keratinocytes-4
+Keratinocytes;4;IRF6;Keratinocytes-4
+Keratinocytes;4;GRHL3;Keratinocytes-4
+Keratinocytes;4;LGALS7B;Keratinocytes-4
+Keratinocytes;4;CD44;Keratinocytes-4
+Keratinocytes;4;KRTDAP;Keratinocytes-4
+Keratinocytes;4;PKP1;Keratinocytes-4
+Keratinocytes;4;DENND2C;Keratinocytes-4
+Keratinocytes;4;SLC38A2;Keratinocytes-4
+Keratinocytes;4;MTRNR2L12;Keratinocytes-4
+Keratinocytes;5;PTTG1;Keratinocytes-5
+Keratinocytes;5;UBE2C;Keratinocytes-5
+Keratinocytes;5;TK1;Keratinocytes-5
+Keratinocytes;5;CENPF;Keratinocytes-5
+Keratinocytes;5;KIAA0101;Keratinocytes-5
+Keratinocytes;5;NUSAP1;Keratinocytes-5
+Keratinocytes;5;TOP2A;Keratinocytes-5
+Keratinocytes;5;CDK1;Keratinocytes-5
+Keratinocytes;5;NMU;Keratinocytes-5
+Keratinocytes;5;CDKN3;Keratinocytes-5
+Keratinocytes;5;SMC4;Keratinocytes-5
+Keratinocytes;5;KRT5;Keratinocytes-5
+Keratinocytes;5;STMN1;Keratinocytes-5
+Keratinocytes;5;HMGB2;Keratinocytes-5
+Keratinocytes;5;S100A2;Keratinocytes-5
+Keratinocytes;5;CKS2;Keratinocytes-5
+Keratinocytes;5;S100A14;Keratinocytes-5
+Keratinocytes;5;KRT14;Keratinocytes-5
+Keratinocytes;5;HIST1H4C;Keratinocytes-5
+Keratinocytes;5;H2AFZ;Keratinocytes-5
+Keratinocytes;5;HMGB1;Keratinocytes-5
+Keratinocytes;5;TUBA1B;Keratinocytes-5
+Keratinocytes;5;KRT1;Keratinocytes-5
+Keratinocytes;5;MT2A;Keratinocytes-5
+Keratinocytes;5;MT1X;Keratinocytes-5
+Endothelial cells;1;ACKR1;Endothelial cells-1
+Endothelial cells;1;SELE;Endothelial cells-1
+Endothelial cells;1;TM4SF1;Endothelial cells-1
+Endothelial cells;1;IFI27;Endothelial cells-1
+Endothelial cells;1;CLDN5;Endothelial cells-1
+Endothelial cells;1;GNG11;Endothelial cells-1
+Endothelial cells;1;CD74;Endothelial cells-1
+Endothelial cells;1;AQP1;Endothelial cells-1
+Endothelial cells;1;FABP4;Endothelial cells-1
+Endothelial cells;1;RAMP3;Endothelial cells-1
+Endothelial cells;1;PLVAP;Endothelial cells-1
+Endothelial cells;1;GIMAP7;Endothelial cells-1
+Endothelial cells;1;ECSCR_duplicate;Endothelial cells-1
+Endothelial cells;1;PECAM1;Endothelial cells-1
+Endothelial cells;1;RBP7;Endothelial cells-1
+Endothelial cells;1;LMCD1;Endothelial cells-1
+Endothelial cells;1;NPDC1;Endothelial cells-1
+Endothelial cells;1;SPARCL1;Endothelial cells-1
+Endothelial cells;1;RAMP2;Endothelial cells-1
+Endothelial cells;1;EGFL7;Endothelial cells-1
+Endothelial cells;1;VWF;Endothelial cells-1
+Endothelial cells;1;IL6;Endothelial cells-1
+Endothelial cells;1;A2M;Endothelial cells-1
+Endothelial cells;1;HLA-DRB1;Endothelial cells-1
+Endothelial cells;1;G0S2;Endothelial cells-1
+Endothelial cells;2;FABP4;Endothelial cells-2
+Endothelial cells;2;CLDN5;Endothelial cells-2
+Endothelial cells;2;RBP7;Endothelial cells-2
+Endothelial cells;2;IFI27;Endothelial cells-2
+Endothelial cells;2;SLC9A3R2;Endothelial cells-2
+Endothelial cells;2;CD36;Endothelial cells-2
+Endothelial cells;2;A2M;Endothelial cells-2
+Endothelial cells;2;GNG11;Endothelial cells-2
+Endothelial cells;2;RAMP2;Endothelial cells-2
+Endothelial cells;2;AQP1;Endothelial cells-2
+Endothelial cells;2;RGS5;Endothelial cells-2
+Endothelial cells;2;TM4SF1;Endothelial cells-2
+Endothelial cells;2;CD74;Endothelial cells-2
+Endothelial cells;2;PECAM1;Endothelial cells-2
+Endothelial cells;2;BST2;Endothelial cells-2
+Endothelial cells;2;PLVAP;Endothelial cells-2
+Endothelial cells;2;GIMAP7;Endothelial cells-2
+Endothelial cells;2;CLEC14A;Endothelial cells-2
+Endothelial cells;2;SPARCL1;Endothelial cells-2
+Endothelial cells;2;EGFL7;Endothelial cells-2
+Endothelial cells;2;IGF2;Endothelial cells-2
+Endothelial cells;2;HLA-E;Endothelial cells-2
+Endothelial cells;2;ESAM;Endothelial cells-2
+Endothelial cells;2;SOX17;Endothelial cells-2
+Endothelial cells;2;EPAS1;Endothelial cells-2
+Pericyte;1;RERGL;Pericyte-1
+Pericyte;1;ACTA2;Pericyte-1
+Pericyte;1;TAGLN;Pericyte-1
+Pericyte;1;IL6;Pericyte-1
+Pericyte;1;MT1A;Pericyte-1
+Pericyte;1;C11orf96;Pericyte-1
+Pericyte;1;GEM;Pericyte-1
+Pericyte;1;TPM2;Pericyte-1
+Pericyte;1;CCL2;Pericyte-1
+Pericyte;1;MYL9;Pericyte-1
+Pericyte;1;LBH;Pericyte-1
+Pericyte;1;DSTN;Pericyte-1
+Pericyte;1;GADD45B;Pericyte-1
+Pericyte;1;ADAMTS1;Pericyte-1
+Pericyte;1;PLN;Pericyte-1
+Pericyte;1;ZNF331;Pericyte-1
+Pericyte;1;SORBS2;Pericyte-1
+Pericyte;1;MYH11;Pericyte-1
+Pericyte;1;ADIRF;Pericyte-1
+Pericyte;1;SNCG;Pericyte-1
+Pericyte;1;NET1;Pericyte-1
+Pericyte;1;CRISPLD2;Pericyte-1
+Pericyte;1;GLA;Pericyte-1
+Pericyte;1;CYCS;Pericyte-1
+Pericyte;1;EIF4A3;Pericyte-1
+Pericyte;2;RGS5;Pericyte-2
+Pericyte;2;RGS16;Pericyte-2
+Pericyte;2;NDUFA4L2;Pericyte-2
+Pericyte;2;C8orf4;Pericyte-2
+Pericyte;2;MT1A;Pericyte-2
+Pericyte;2;STEAP4;Pericyte-2
+Pericyte;2;NR2F2;Pericyte-2
+Pericyte;2;LHFP;Pericyte-2
+Pericyte;2;CALD1;Pericyte-2
+Pericyte;2;EPS8;Pericyte-2
+Pericyte;2;RERG;Pericyte-2
+Pericyte;2;TINAGL1;Pericyte-2
+Pericyte;2;07. Sep;Pericyte-2
+Pericyte;2;IGFBP7;Pericyte-2
+Pericyte;2;LGI4;Pericyte-2
+Pericyte;2;ANGPT2;Pericyte-2
+Pericyte;2;CPE;Pericyte-2
+Pericyte;2;ID4;Pericyte-2
+Pericyte;2;GEM;Pericyte-2
+Pericyte;2;CCL2;Pericyte-2
+Pericyte;2;CRISPLD2;Pericyte-2
+Pericyte;2;MT2A;Pericyte-2
+Pericyte;2;RASD1;Pericyte-2
+Pericyte;2;IL6;Pericyte-2
+Pericyte;2;CXCL2;Pericyte-2
+Lymphocytes;1;CXCR4;Lymphocytes-1
+Lymphocytes;1;LTB;Lymphocytes-1
+Lymphocytes;1;DUSP2;Lymphocytes-1
+Lymphocytes;1;CD52;Lymphocytes-1
+Lymphocytes;1;IL32;Lymphocytes-1
+Lymphocytes;1;CCL5;Lymphocytes-1
+Lymphocytes;1;CD69;Lymphocytes-1
+Lymphocytes;1;SRGN;Lymphocytes-1
+Lymphocytes;1;SAMSN1;Lymphocytes-1
+Lymphocytes;1;TRAC;Lymphocytes-1
+Lymphocytes;1;CREM;Lymphocytes-1
+Lymphocytes;1;CYTIP;Lymphocytes-1
+Lymphocytes;1;CD3D;Lymphocytes-1
+Lymphocytes;1;DUSP4;Lymphocytes-1
+Lymphocytes;1;PTPRC;Lymphocytes-1
+Lymphocytes;1;CORO1A;Lymphocytes-1
+Lymphocytes;1;TRBC1;Lymphocytes-1
+Lymphocytes;1;RGS1;Lymphocytes-1
+Lymphocytes;1;RGCC;Lymphocytes-1
+Lymphocytes;1;TRBC2;Lymphocytes-1
+Lymphocytes;1;RHOH;Lymphocytes-1
+Lymphocytes;1;CD2;Lymphocytes-1
+Lymphocytes;1;ACAP1;Lymphocytes-1
+Lymphocytes;1;ARHGDIB;Lymphocytes-1
+Lymphocytes;1;CD48;Lymphocytes-1
+Macrophage//dendritic cells;1;CXCL8;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;HLA-DRA;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;HLA-DPB1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;IL1B;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;CCL3;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;CXCL3;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;HLA-DPA1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;HLA-DRB1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;LYZ;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;HLA-DQA1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;C1QA;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;HLA-DQB1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;CCL3L3;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;CD74;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;AIF1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;FCER1A;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;CCL4;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;GPR183;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;PLAUR;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;CCL4L2;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;SRGN;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;TYROBP;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;INSIG1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;RNASE1;Macrophage//dendritic cells-1
+Macrophage//dendritic cells;1;G0S2;Macrophage//dendritic cells-1
+Epithelial cells;1;AQP5;Epithelial cells-1
+Epithelial cells;1;CA6;Epithelial cells-1
+Epithelial cells;1;KRT19;Epithelial cells-1
+Epithelial cells;1;KRT18;Epithelial cells-1
+Epithelial cells;1;C2orf82;Epithelial cells-1
+Epithelial cells;1;GAPDH;Epithelial cells-1
+Epithelial cells;1;CLDN10;Epithelial cells-1
+Epithelial cells;1;KRT15;Epithelial cells-1
+Epithelial cells;1;PPP1R1B;Epithelial cells-1
+Epithelial cells;1;SLC12A2;Epithelial cells-1
+Epithelial cells;1;PDCD4;Epithelial cells-1
+Epithelial cells;1;TPD52L1;Epithelial cells-1
+Epithelial cells;1;KRT8;Epithelial cells-1
+Epithelial cells;1;ZG16B;Epithelial cells-1
+Epithelial cells;1;DBI;Epithelial cells-1
+Epithelial cells;1;KRT7;Epithelial cells-1
+Epithelial cells;1;LDHA;Epithelial cells-1
+Epithelial cells;1;NDRG2;Epithelial cells-1
+Epithelial cells;1;TESC;Epithelial cells-1
+Epithelial cells;1;SFRP1;Epithelial cells-1
+Epithelial cells;1;NCALD;Epithelial cells-1
+Epithelial cells;1;ROPN1B;Epithelial cells-1
+Epithelial cells;1;ATP1B1;Epithelial cells-1
+Epithelial cells;1;CHCHD10;Epithelial cells-1
+Epithelial cells;1;ENO1;Epithelial cells-1
+Smooth muscle cells;1;DES;Smooth muscle cells-1
+Smooth muscle cells;1;ACTG2;Smooth muscle cells-1
+Smooth muscle cells;1;PCP4;Smooth muscle cells-1
+Smooth muscle cells;1;MYLK;Smooth muscle cells-1
+Smooth muscle cells;1;MYH11;Smooth muscle cells-1
+Smooth muscle cells;1;TPM2;Smooth muscle cells-1
+Smooth muscle cells;1;CNN1;Smooth muscle cells-1
+Smooth muscle cells;1;ACTA2;Smooth muscle cells-1
+Smooth muscle cells;1;TAGLN;Smooth muscle cells-1
+Smooth muscle cells;1;MYL9;Smooth muscle cells-1
+Smooth muscle cells;1;CSRP1;Smooth muscle cells-1
+Smooth muscle cells;1;ACTA1;Smooth muscle cells-1
+Smooth muscle cells;1;TPM1;Smooth muscle cells-1
+Smooth muscle cells;1;FLNA;Smooth muscle cells-1
+Smooth muscle cells;1;PPP1R14A;Smooth muscle cells-1
+Smooth muscle cells;1;SMTN;Smooth muscle cells-1
+Smooth muscle cells;1;PDLIM7;Smooth muscle cells-1
+Smooth muscle cells;1;SYNPO2;Smooth muscle cells-1
+Smooth muscle cells;1;CALD1;Smooth muscle cells-1
+Smooth muscle cells;1;ACTC1;Smooth muscle cells-1
+Smooth muscle cells;1;SLMAP;Smooth muscle cells-1
+Smooth muscle cells;1;LMOD1;Smooth muscle cells-1
+Smooth muscle cells;1;CKB;Smooth muscle cells-1
+Smooth muscle cells;1;PLN;Smooth muscle cells-1
+Smooth muscle cells;1;NEXN;Smooth muscle cells-1
+Neural cells;1;S100B;Neural cells-1
+Neural cells;1;MPZ;Neural cells-1
+Neural cells;1;GPM6B;Neural cells-1
+Neural cells;1;PLP1;Neural cells-1
+Neural cells;1;PMP22;Neural cells-1
+Neural cells;1;CDH19;Neural cells-1
+Neural cells;1;NRXN1;Neural cells-1
+Neural cells;1;SCN7A;Neural cells-1
+Neural cells;1;PCSK2;Neural cells-1
+Neural cells;1;GFRA3;Neural cells-1
+Neural cells;1;SEMA3B;Neural cells-1
+Neural cells;1;PMP2;Neural cells-1
+Neural cells;1;CADM1;Neural cells-1
+Neural cells;1;ART3;Neural cells-1
+Neural cells;1;NTM;Neural cells-1
+Neural cells;1;HSPA12A;Neural cells-1
+Neural cells;1;MATN2;Neural cells-1
+Neural cells;1;CRYAB;Neural cells-1
+Neural cells;1;SNCA;Neural cells-1
+Neural cells;1;CD9;Neural cells-1
+Neural cells;1;TMEM176B;Neural cells-1
+Neural cells;1;CLU;Neural cells-1
+Neural cells;1;FXYD1;Neural cells-1
+Neural cells;1;PRNP;Neural cells-1
+Neural cells;1;NDRG2;Neural cells-1
+Secterory epithelial cells;1;DCD;Secterory epithelial cells-1
+Secterory epithelial cells;1;SCGB2A2;Secterory epithelial cells-1
+Secterory epithelial cells;1;MUCL1;Secterory epithelial cells-1
+Secterory epithelial cells;1;SCGB1B2P;Secterory epithelial cells-1
+Secterory epithelial cells;1;PIP;Secterory epithelial cells-1
+Secterory epithelial cells;1;SCGB1D2;Secterory epithelial cells-1
+Secterory epithelial cells;1;AZGP1;Secterory epithelial cells-1
+Secterory epithelial cells;1;KRT19;Secterory epithelial cells-1
+Secterory epithelial cells;1;KRT7;Secterory epithelial cells-1
+Secterory epithelial cells;1;TSPAN8;Secterory epithelial cells-1
+Secterory epithelial cells;1;KRT18;Secterory epithelial cells-1
+Secterory epithelial cells;1;PLA2G2A;Secterory epithelial cells-1
+Secterory epithelial cells;1;OBP2B;Secterory epithelial cells-1
+Secterory epithelial cells;1;AQP5;Secterory epithelial cells-1
+Secterory epithelial cells;1;SCGB2A1;Secterory epithelial cells-1
+Secterory epithelial cells;1;CLDN3;Secterory epithelial cells-1
+Secterory epithelial cells;1;CRACR2B;Secterory epithelial cells-1
+Secterory epithelial cells;1;PPP1R1B;Secterory epithelial cells-1
+Secterory epithelial cells;1;EPCAM;Secterory epithelial cells-1
+Secterory epithelial cells;1;SERHL2;Secterory epithelial cells-1
+Secterory epithelial cells;1;HMGCS2;Secterory epithelial cells-1
+Secterory epithelial cells;1;STARD10;Secterory epithelial cells-1
+Secterory epithelial cells;1;XBP1;Secterory epithelial cells-1
+Secterory epithelial cells;1;DBI;Secterory epithelial cells-1
+Secterory epithelial cells;1;SPINT2;Secterory epithelial cells-1
+Melanocyte;1;TYRP1;Melanocyte-1
+Melanocyte;1;PMEL;Melanocyte-1
+Melanocyte;1;MLANA;Melanocyte-1
+Melanocyte;1;DCT;Melanocyte-1
+Melanocyte;1;MITF;Melanocyte-1
+Melanocyte;1;CAPN3;Melanocyte-1
+Melanocyte;1;BCAN;Melanocyte-1
+Melanocyte;1;PLP1;Melanocyte-1
+Melanocyte;1;MFSD12;Melanocyte-1
+Melanocyte;1;TYR;Melanocyte-1
+Melanocyte;1;TRPM1;Melanocyte-1
+Melanocyte;1;PCSK2;Melanocyte-1
+Melanocyte;1;GMPR;Melanocyte-1
+Melanocyte;1;MCOLN3;Melanocyte-1
+Melanocyte;1;SNCA;Melanocyte-1
+Melanocyte;1;QPCT;Melanocyte-1
+Melanocyte;1;PHACTR1;Melanocyte-1
+Melanocyte;1;CYB561A3;Melanocyte-1
+Melanocyte;1;NSG1;Melanocyte-1
+Melanocyte;1;RAB32;Melanocyte-1
+Melanocyte;1;FRZB;Melanocyte-1
+Melanocyte;1;CDC42EP3;Melanocyte-1
+Melanocyte;1;CD59;Melanocyte-1
+Melanocyte;1;APOE;Melanocyte-1
+Melanocyte;1;GPNMB;Melanocyte-1
+Mast cells;1;TPSAB1;Mast cells-1
+Mast cells;1;TPSB2;Mast cells-1
+Mast cells;1;CTSG;Mast cells-1
+Mast cells;1;HPGD;Mast cells-1
+Mast cells;1;HPGDS;Mast cells-1
+Mast cells;1;RGS13;Mast cells-1
+Mast cells;1;MS4A2;Mast cells-1
+Mast cells;1;IL1RL1;Mast cells-1
+Mast cells;1;FCER1G;Mast cells-1
+Mast cells;1;GATA2;Mast cells-1
+Mast cells;1;FCER1A;Mast cells-1
+Mast cells;1;CD69;Mast cells-1
+Mast cells;1;FTH1;Mast cells-1
+Mast cells;1;VWA5A;Mast cells-1
+Mast cells;1;SRGN;Mast cells-1
+Mast cells;1;ANXA1;Mast cells-1
+Mast cells;1;TYROBP;Mast cells-1
+Mast cells;1;LAPTM5;Mast cells-1
+Mast cells;1;BIRC3;Mast cells-1
+Mast cells;1;SELK;Mast cells-1
+Mast cells;1;GLUL;Mast cells-1
+Mast cells;1;PLIN2;Mast cells-1
+Mast cells;1;ARHGAP18;Mast cells-1
+Mast cells;1;SGK1;Mast cells-1
+Mast cells;1;ELF1;Mast cells-1
+Adipocyte;1;MGST1;Adipocyte-1
+Adipocyte;1;APOC1;Adipocyte-1
+Adipocyte;1;THRSP;Adipocyte-1
+Adipocyte;1;FADS2;Adipocyte-1
+Adipocyte;1;CIDEA;Adipocyte-1
+Adipocyte;1;FASN;Adipocyte-1
+Adipocyte;1;ACSBG1;Adipocyte-1
+Adipocyte;1;KRT79;Adipocyte-1
+Adipocyte;1;HSD11B1;Adipocyte-1
+Adipocyte;1;ALOX15B;Adipocyte-1
+Adipocyte;1;APMAP;Adipocyte-1
+Adipocyte;1;FADS1;Adipocyte-1
+Adipocyte;1;TMEM91;Adipocyte-1
+Adipocyte;1;SRD5A1;Adipocyte-1
+Adipocyte;1;APOE;Adipocyte-1
+Adipocyte;1;ACAT2;Adipocyte-1
+Adipocyte;1;CYB5A;Adipocyte-1
+Adipocyte;1;ELOVL5;Adipocyte-1
+Adipocyte;1;PMVK;Adipocyte-1
+Adipocyte;1;MSMO1;Adipocyte-1
+Adipocyte;1;FDPS;Adipocyte-1
+Adipocyte;1;ATP5G3;Adipocyte-1
+Adipocyte;1;LY6E;Adipocyte-1
+Adipocyte;1;ECH1;Adipocyte-1
+Adipocyte;1;PGRMC1;Adipocyte-1
+Cornified envelope;1;LOR;Cornified envelope-1
+Cornified envelope;1;SPRR2G;Cornified envelope-1
+Cornified envelope;1;ASPRV1;Cornified envelope-1
+Cornified envelope;1;LCE1C;Cornified envelope-1
+Cornified envelope;1;SPRR2E;Cornified envelope-1
+Cornified envelope;1;CST6;Cornified envelope-1
+Cornified envelope;1;CRCT1;Cornified envelope-1
+Cornified envelope;1;C1orf68;Cornified envelope-1
+Cornified envelope;1;LCE1B;Cornified envelope-1
+Cornified envelope;1;PSORS1C2;Cornified envelope-1
+Cornified envelope;1;LCE1E;Cornified envelope-1
+Cornified envelope;1;FLG2;Cornified envelope-1
+Cornified envelope;1;FLG;Cornified envelope-1
+Cornified envelope;1;LCE2B;Cornified envelope-1
+Cornified envelope;1;IL37;Cornified envelope-1
+Cornified envelope;1;CTSV;Cornified envelope-1
+Cornified envelope;1;KRT23;Cornified envelope-1
+Cornified envelope;1;LCE1A;Cornified envelope-1
+Cornified envelope;1;FAM25A;Cornified envelope-1
+Cornified envelope;1;WFDC12;Cornified envelope-1
+Cornified envelope;1;AZGP1;Cornified envelope-1
+Cornified envelope;1;LCE2D;Cornified envelope-1
+Cornified envelope;1;CALML5;Cornified envelope-1
+Cornified envelope;1;SBSN;Cornified envelope-1
+Cornified envelope;1;CTNNBIP1;Cornified envelope-1

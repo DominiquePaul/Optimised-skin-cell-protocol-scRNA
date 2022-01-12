@@ -1,0 +1,454 @@
+---
+title: "Cell Annotation"
+author: "Dominique Paul"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressPackageStartupMessages({
+  library(tidySingleCellExperiment)
+  library(CelliD)
+  library(BiocParallel)
+  library(parallel)
+  library(plyr)
+  library(dplyr)
+  library(stringr)
+  library(scater)
+  library(GSEABase)
+  library(AUCell)
+  library(hrbrthemes)
+  library(dbscan)
+  library(purrr)
+  library(openxlsx)
+})
+
+# Setting for parallel computing
+n_workers <- min(detectCores()-1, 16)
+RhpcBLASctl::blas_set_num_threads(n_workers)
+bpparam <- BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)
+
+# load utils functions
+source("../code/general_purpose_code.R")
+```
+
+
+
+
+# Load data
+
+```{r load-data}
+sce <- readRDS(file="../data/fresh_data/protocol_integration_analysis_sce_EOS4.rds")
+#/Users/dominiquepaul/xRobinson Group/01_Systemic Sclerosis/data/fresh_data/merged_SCE_data_sources_EOS2.rds
+# rownames(sce) <- rowData(sce)$ID # might need this for the analysis
+rownames(sce) <- rowData(sce)$Symbol
+colLabels(sce) <- colData(sce)$kgraph_clusters_harmony
+```
+
+```{r plot UMAP, fig.width=16, fig.height=10, warning=FALSE}
+plotReducedDim(sce, "UMAP",colour_by = "Sample", other_fields = c("Protocol"), point_size=0.25) + 
+  # scale_color_viridis_d() +
+  get_sample_colours(levels(sce$Sample))
+  facet_wrap(~Protocol) +
+  
+```
+
+
+
+# Load and add own labels for the clusters
+
+```{r load csv with cluster annotations}
+cluster_annotation_mapping <- read.xlsx("../metadata/cluster_annotation_map.xlsx", sheet="Integrated")
+kableExtra::kable(cluster_annotation_mapping)
+
+sce$manual_labels_coarse <- mapvalues(sce$kgraph_clusters_walktrap_harmony, cluster_annotation_mapping$Cluster.ID, cluster_annotation_mapping$Annotation)
+```
+
+## Manual labelling of mast cells
+
+```{r manual mast cell labeling}
+umap_values <- reducedDim(sce, "UMAP")
+mask <- as.vector((umap_values[,1] > 2) & (umap_values[,1] < 4) & (umap_values[,2] > -12.4) & (umap_values[,2] < -10))
+
+new_values <- as.vector(sce$manual_labels_coarse)
+new_values[mask] <- "Mast cells"
+sce$manual_labels_coarse <- factor(new_values)
+```
+
+
+# UMAPs coloured by cluster and cell type group {.tabset}
+
+```{r visualise UMAPs with manual labels, fig.width=16, fig.height=10, results="asis"}
+cat("\n\n## Cell type groups \n\n")
+plotReducedDim(sce, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse") +
+  labs(title="Manual labels for high-level clusters",
+       subtitle = "UMAP of fresh samples combined") +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce$manual_labels_coarse))
+
+cat("\n\n## Cell type annotations coloured by protocol \n\n")
+plotReducedDim(sce, "UMAP", colour_by="Protocol", text_by="manual_labels_coarse") +
+  labs(title="Manual labels for high-level clusters",
+       subtitle = "UMAP of fresh and control samples combined") +
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce$Protocol))
+```
+
+
+
+<!-- # Cell ID -->
+
+<!-- ```{r load panglao} -->
+<!-- panglao <- readr::read_tsv("https://panglaodb.se/markers/PanglaoDB_markers_27_Mar_2020.tsv.gz") -->
+
+<!-- panglao$organ %>% unique() -->
+
+<!-- # restricting the analysis to pancreas specific gene signatues -->
+<!-- panglao_sub <- panglao %>%  -->
+<!--   filter(organ %in% c("Skin", "Immune system"))#,"Epithelium","Blood",,"Vasculature")) -->
+
+<!-- # restricting to human specific genes -->
+<!-- panglao_sub <- panglao_sub %>%   -->
+<!--   filter(str_detect(species,"Hs")) -->
+
+<!-- # panglao_sub <- panglao_sub %>%  filter(`cell type` %in% c("Dendritic cells","B cells","Fibroblasts","Macrophages","Monocytes","Mast cells","Neutrophils","NK cells","T cells","Endothelial cells", "Neutrophils","Pericytes")) -->
+
+<!-- panglao_sub <- panglao_sub %>%   -->
+<!--   group_by(`cell type`) %>%   -->
+  <!-- # mutate(N=count( -->
+<!--   summarise(geneset = list(`official gene symbol`)) -->
+
+<!-- pancreas_gs <- setNames(panglao_sub$geneset, panglao_sub$`cell type`) -->
+
+<!-- # We get a list for each cell type and the corresponding marker genes -->
+<!-- # pancreas -->
+<!-- ``` -->
+
+<!-- ## MCA plot -->
+
+<!-- The Multi Correspondence Analysis -->
+
+<!-- MCA is a statistical technique close to PCA that provides a simultaneous representation of observations (e.g. cells) and variables (e.g. genes) in low-dimensional space. In the MCA biplot, analytical distances can be calculated not only between cells and between genes, but also between each cell and each gene in order to estimate its association. Thus, the closer a gene g is to a cell c, the more specific to such a cell it can be considered. Gene-to-cell distances can then be ranked for each individual cell, and the top-ranked genes may be regarded as a unique gene signature representing the identity card of the cell. -->
+
+<!-- The results of the MCA plot are used by the CelliD method to annotate the cells. -->
+
+<!-- ```{r runMCA, fig.width=14, fig.height=10} -->
+<!-- sce <- RunMCA(sce) # , slot = "reconstructed") -->
+<!-- plotReducedDim(sce, "MCA", colour_by = "Sample", point_size=0.5) -->
+<!-- ``` -->
+
+<!-- ## Cell annotation using Cell ID {.tabset} -->
+
+<!-- ```{r cell annotation, fig.width=20, fig.height=12, results="asis"} -->
+<!-- HGT_all_gs <- CelliD::RunCellHGT(sce, pathways = pancreas_gs, minSize = 5) -->
+
+<!-- all_gs_prediction <- rownames(HGT_all_gs)[apply(HGT_all_gs, 2, which.max)] -->
+<!-- all_gs_prediction_signif <- all_gs_prediction -->
+<!-- all_gs_prediction_signif <- ifelse(apply(HGT_all_gs, 2, max)>2, yes = all_gs_prediction, "unassigned") -->
+
+<!-- sce$main_celltype_cellid <- all_gs_prediction_signif -->
+
+<!-- plot_label_barplots(sce , "main_celltype_cellid", tabset="###") -->
+
+<!-- cat("\n\n### Raw tabular data \n\n") -->
+<!-- table(sce$main_celltype_cellid, sce$Sample) -->
+<!-- ``` -->
+
+<!-- # AUC Cell -->
+
+<!-- ## Labels Blaz {.tabset} -->
+
+<!-- ```{r labels Blaz, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Cell markers skin tissue sum sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Markers" -->
+<!-- annotations_name <- "labels_blaz" -->
+
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+
+<!-- # plots -->
+<!-- plot_label_barplots(sce , "labels_blaz", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_blaz", tabset="###") -->
+<!-- ``` -->
+
+
+<!-- ## Raynolds {.tabset} -->
+
+<!-- ```{r labels Raynolds, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Raynolds et al skin tissue n=19/cell markers reorganized BB sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Gene" -->
+<!-- annotations_name <- "labels_raynolds" -->
+
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+
+<!-- plot_label_barplots(sce , "labels_raynolds", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_raynolds", tabset="###") -->
+<!-- ``` -->
+
+<!-- ## He et al. (coarse labels) {.tabset} -->
+
+<!-- ```{r He et al. coarse labels, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/He et al atopic dermatitis/He et al cell markers organized BB.csv" -->
+<!-- group_colname <- "cluster_coarse" -->
+<!-- gene_colname <- "gene" -->
+<!-- annotations_name <- "labels_he_et_al_coarse" -->
+
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+
+<!-- plot_label_barplots(sce , "labels_he_et_al_coarse", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_he_et_al_coarse", tabset="###") -->
+<!-- ``` -->
+
+
+<!-- ## He et al. (fine labels) {.tabset} -->
+
+<!-- ```{r He et al. fine labels, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/He et al atopic dermatitis/He et al cell markers organized BB.csv" -->
+<!-- group_colname <- "cluster_fine" -->
+<!-- gene_colname <- "gene" -->
+<!-- annotations_name <- "labels_he_et_al_fine" -->
+
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+
+<!-- plot_label_barplots(sce , "labels_he_et_al_fine", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_he_et_al_fine", tabset="###") -->
+<!-- ``` -->
+
+<!-- ## Tabib (2018) {.tabset} -->
+
+<!-- ```{r Tabib 2018, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Tabib et al healty skin n=6/Tabib 2018 cell markers sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Marker" -->
+<!-- annotations_name <- "labels_tabib_2018" -->
+
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+
+<!-- plot_label_barplots(sce , "labels_tabib_2018", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_tabib_2018", tabset="###") -->
+<!-- ``` -->
+
+<!-- ## Xue {.tabset} -->
+
+<!-- ```{r Xue, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Xue et al healthy skin n=10/Xue cell markers organized BB sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Marker" -->
+<!-- annotations_name <- "labels_xue" -->
+
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+
+<!-- plot_label_barplots(sce , "labels_xue", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_xue", tabset="###") -->
+<!-- ``` -->
+
+
+
+
+
+```{r db-scan, eval=F, results='asis'}
+cat("\n\n## DB-Scan \n\n")
+
+# dbscan clustering
+set.seed(100)
+dbscan_cluster <- dbscan::dbscan(reducedDim(sce, "UMAP"), 0.3)
+sce$dbscan_cluster <- factor(dbscan_cluster$cluster)
+
+ctab <- table(sce$celltype_score_adjusted, sce$dbscan_cluster)
+cgmatch <- data.frame(dbscan_cluster = colnames(ctab), celltype_AUCell_corrected = rownames(ctab)[apply(ctab, 2, function(x) which.max(x))])
+
+scematch <- match(sce$dbscan_cluster, cgmatch$dbscan_cluster)
+sce$celltype_score_adjusted_corrected <-  cgmatch$celltype_AUCell_corrected[scematch]
+
+plotReducedDim(sce, "UMAP", colour_by = "celltype_score_adjusted", text_by = "dbscan_cluster")
+```
+
+# UMAP Density
+
+```{r UMAP density function, warnings=F}
+sample_cols <- function(samples, n_split=5, palette = rainbow){
+  n_samples <- length(samples)
+  splitind <- split(seq_len(n_samples), ceiling(seq(0.01, n_split-0.01, length.out = n_samples)))
+  colind <- unlist(purrr::map(seq_len(ceiling(n_samples/n_split)),
+                              ~ purrr::map(seq_len(n_split),
+                                           function(i)splitind[[i]][.x])))
+  colind <- colind[!is.na(colind)]
+  colors_used <- palette(n_samples)[colind]
+}
+
+
+
+plotUmapDensity <- function(sce, colour_by="Protocol", facet_by="Sample"){
+  
+  colors_used <- sample_cols(unique(sce[[colour_by]]),
+                           n_split=ifelse(length(unique(sce[[colour_by]])) > 5, 5, length(unique(sce[[colour_by]]))),
+                           palette = rainbow)
+  
+  suppressWarnings(suppressMessages(
+    plotReducedDim(sce, "UMAP", colour_by = colour_by, other_fields = c(facet_by)) +
+      scale_color_manual(values=colors_used) + 
+      ggplot2::facet_wrap(vars(!!sym(facet_by))) + 
+      geom_density2d(color="black", n=500) +
+      labs(colour=colour_by)
+      # get_protocol_colours(levels(sce$Protocol))
+  ))
+}
+
+```
+
+```{r Plot umap densities, fig.width=14, fig.height=10, warnings=F, eval=F}
+suppressWarnings(suppressMessages(plotUmapDensity(sce)))
+```
+
+
+We define two functions which plot (1) a UMAP coloured by the selected annotation and (2) plot a bar chart faceted by a given annotation on the y-axis. Essentially, both functions use the same set of colours. We want to be able to call them in different code chunks though as to adjust the plot size.
+
+```{r UMAP proportions functions}
+plotUMAPwithFixedColours <- function(sce, column, aggr_by="Sample", fill_lab=column, point_size=1){
+  options(warn = -1)
+  colors_used <- sample_cols(unique(sce[[column]]), 
+                             n_split=ifelse(length(unique(sce[[column]])) > 5, 5, length(unique(sce[[column]]))), 
+                             palette = rainbow)
+  
+  pl1 <- plotReducedDim(sce,"UMAP",  
+                        colour_by=column, 
+                        text_by=column,
+                        point_size=point_size)+  
+                      theme(legend.position = c(1.01,0.7), 
+                            legend.background = element_rect(color="grey",fill = "white"))+
+    scale_color_manual(values=colors_used) +
+    theme(legend.position = "none") +
+    labs(fill=fill_lab) + 
+    theme_ipsum_rc() +
+    get_cell_colours(levels(sce$manual_labels_coarse))
+  
+  cat("\n\nColoured UMAP\n\n")
+  print(pl1)
+
+}
+
+
+plotUmapProportions <- function(sce, column, aggr_by="Sample", facet_by="Protocol", split_rows=TRUE, fill_lab=column){
+  options(warn = -1)
+  colors_used <- sample_cols(unique(sce[[column]]), 
+                             n_split=ifelse(length(unique(sce[[column]])) > 5, 5, length(unique(sce[[column]]))), 
+                             palette = rainbow)
+  
+  
+  if(is.null(facet_by)){
+    propdf <- table(colData(sce)[[column]], sce[[aggr_by]]) %>% 
+      as.data.frame() %>% 
+      dplyr::rename(!!column := Var1,
+                    !!aggr_by := Var2,
+                    Abundance = Freq) %>% 
+      dplyr::group_by(!!sym(aggr_by)) %>% 
+      dplyr::filter(Abundance > 0) %>% 
+      dplyr::mutate(Proportion = Abundance/sum(Abundance))
+  } else {
+    propdf <- table(colData(sce)[[column]], 
+                    sce[[facet_by]], sce[[aggr_by]]) %>% 
+      as.data.frame() %>% 
+      dplyr::rename(!!column := Var1,
+                    !!facet_by := Var2,
+                    !!aggr_by := Var3,
+                    Abundance = Freq) %>% 
+      dplyr::group_by(!!sym(aggr_by)) %>% 
+      dplyr::filter(Abundance > 0) %>% 
+      dplyr::mutate(Proportion = Abundance/sum(Abundance))
+  }
+
+  
+  pl2 <- propdf %>% 
+    ggplot(aes(x = !!sym(aggr_by), y = Proportion, fill=!!sym(column))) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45,hjust=1),
+          strip.text.y = element_text(angle=0,size=7)) +
+    labs(x="",fill=fill_lab)+
+    scale_fill_manual(values=colors_used) +
+    theme_ipsum_rc() +
+    get_cell_colours(levels(sce$manual_labels_coarse))
+  
+  if(is.null(facet_by) & split_rows){
+    pl2 <- pl2 + facet_grid(rows=vars(!!sym(column)),
+               scales = "free_x", space="free")
+  } else if(!is.null(facet_by) & !split_rows){
+    pl2 <- pl2 + facet_grid(cols=vars(!!sym(facet_by)),
+               scales = "free_x", space="free")
+  } else if(!is.null(facet_by) & split_rows) {
+    pl2 <- pl2 + facet_grid(rows=vars(!!sym(column)),cols=vars(!!sym(facet_by)),
+               scales = "free_x", space="free")
+  }
+  options(warn = 0)
+  
+  print(pl2)
+  
+}
+```
+
+# UMAP proportions
+
+## UMAP plot {.tabset}
+
+```{r plot UMAP prior to proportions, fig.width=16, fig.height=10, results="asis"}
+# other labels
+# annotation_col_names <- c("labels_blaz", "labels_raynolds", "labels_he_et_al_coarse", "labels_he_et_al_fine", "labels_tabib_2018", "labels_xue")
+annotation_col_names <- c("manual_labels_coarse")
+
+for (annotation in annotation_col_names){
+  # cat(paste0("\n\n### ", annotation, "\n\n"))
+  plotUMAPwithFixedColours(sce, annotation, point_size=0.25)
+}
+```
+
+## Proportions by cell annotation {.tabset}
+
+```{r plot UMAP proportions, fig.width=14, fig.height=22, results="asis"}
+for (annotation in annotation_col_names){
+  # cat(paste0("\n\n### ", annotation,"\n\n"))
+  suppressWarnings(plotUmapProportions(sce, annotation, "Protocol", NULL, TRUE))
+}
+```
+
+# Boxplots (own labels)
+
+To compare the numbers of cell types across the protocols, we plot boxplots of the cell type annotations in each of their samples. 
+
+```{r boxplots, fig.width=14, fig.height=10}
+for (annotation in annotation_col_names){
+  # cat(paste0("\n\n### ", annotation, "\n\n"))
+# Generate a data frame with the columns (1) cell type name (2) protocol (3) Sample name (4) abundance of the cell type in that sample (i.e. a count) and (5) the proportion of that cell type in the given sample
+  propdf <- table(colData(sce)[,annotation], sce$Protocol, sce$Sample) %>%
+    as.data.frame() %>%
+    dplyr::rename(Labels = Var1,
+                  Protocol = Var2,
+                  Sample = Var3,
+                  Abundance = Freq) %>%
+    dplyr::group_by(Sample) %>%
+    dplyr::filter(Abundance > 0) %>%
+    dplyr::mutate(Proportion = Abundance/sum(Abundance))
+  
+  # Plot the boxplots grouped by cell type on the x-axis and subdivided (and coloured) by protocol as separate boxplots next to each other
+  print(propdf %>% 
+    ggplot(aes(x = Labels, y = Proportion, color=Protocol)) +
+      geom_boxplot() +
+      geom_point(size = 3) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 45,hjust=1)) +
+      labs(x="")) +
+      get_protocol_colours(propdf$Protocol)
+}
+```
+
+
+
+# Save data 
+
+```{r save data}
+rownames(sce) <- rowData(sce)$Symbol
+saveRDS(sce, file = "../data/fresh_data/protocol_integration_analysis_sce_EOS5.rds")
+```
+

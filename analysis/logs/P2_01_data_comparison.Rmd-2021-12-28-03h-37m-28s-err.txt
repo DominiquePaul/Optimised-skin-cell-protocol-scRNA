@@ -1,0 +1,55 @@
+Error in parse_block(g[-1], g[1], params.src, markdown_mode) : 
+  Duplicate chunk label 'log10 counts by sample', which has been used for the chunk:
+# Fresh only before QC
+cat(paste0("\n\n### Fresh samples only - before QC \n\n"))
+sce_fresh %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_fresh)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_fresh)$Sample))
+
+# Fresh only after QC
+cat(paste0("\n\n### Fresh samples only - after QC \n\n"))
+sce_fresh[, !sce_fresh$to_be_dropped] %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_fresh)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_fresh)$Sample))
+  
+
+# Fresh and culture before QC
+cat(paste0("\n\n### Fresh and cultured samples - before QC\n\n"))
+sce_all %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_all)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_all)$Sample))
+
+# Fresh and culture after QC
+cat(paste0("\n\n### Fresh and cultured samples - after QC\n\n"))
+sce_all[, !sce_all$to_be_dropped] %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_all)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_all)$Sample))
+  

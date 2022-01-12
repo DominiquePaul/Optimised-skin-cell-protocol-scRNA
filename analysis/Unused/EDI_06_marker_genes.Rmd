@@ -1,0 +1,206 @@
+---
+title: "Marker Genes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressMessages({
+  library(tidySingleCellExperiment)
+  library(ggplot2)
+  library(hrbrthemes)
+  library(openxlsx)
+  library(scater)
+  library(scran)
+  library(pheatmap)
+  library(ggplotify)
+  library(viridis)
+})
+
+
+# load utils functions
+source("../code/general_purpose_code.R")
+```
+
+# Reload the data
+
+```{r Reload the data}
+sce <- readRDS(file="../data/fresh_data/protocol_integration_analysis_sce_EOS5.rds")
+
+colLabels(sce) <- sce$kgraph_clusters_walktrap_harmony
+```
+
+# UMAP coloured by clusters and protocol {.tabset}
+
+```{r Visualisation of clusters, fig.width=16, fig.height=10, results="asis"}
+cat("\n\n## UMAP coloured by cluster \n\n")
+plotReducedDim(sce, "UMAP", colour_by="label", text_by="label", point_size=0.5) +
+  labs(title="UMAP plot coloured by clusters") +
+  theme_ipsum_rc()
+
+cat("\n\n## UMAP coloured by Protocol \n\n")
+plotReducedDim(sce, "UMAP", colour_by="Protocol", point_size=0.5) +
+  labs(title="UMAP plot coloured by protocol") + 
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce$Protocol))
+```
+
+```{r prepare sheet to save data to}
+wb <- createWorkbook()
+addWorksheet(wb, "Intro")
+writeData(wb, "Intro", data.frame("Marker genes obtained using only the highly-variable genes"), colNames=FALSE)
+```
+
+
+# Marker Genes for unsupervised clusters
+
+Marker genes can help us identify clusters as specific cell types and also discover smaller changes between subclusters (e.g. changes in activation or differentiation state)
+
+
+## Marker genes for each cluster using the t-test {.tabset}
+
+```{r Marker Genes upregulated t-test, fig.height=10, fig.width=7, results="asis"}
+sce_marker_genes <- sce[rowData(sce)$is_hvg,]
+rownames(sce_marker_genes) <- rowData(sce_marker_genes)$Symbol
+
+markers.all.up <- findMarkers(sce_marker_genes, 
+                              test.type="t",
+                              direction="up", 
+                              block=sce_marker_genes$Sample)
+
+for (i in 1:length(unique(colLabels(sce_marker_genes)))){
+  
+  cat(paste0("### Cluster ", i, "\n"))
+  
+  interesting.all.up <- markers.all.up[[i]]
+  interesting.all.up <- interesting.all.up[interesting.all.up$Top <=10,]
+  logFCs <- getMarkerEffects(interesting.all.up, prefix="logFC")
+  logFCs[is.na(logFCs)] <- 0 # set all NAs to 0
+  
+  # write to excel
+  sheet_name <- paste0("ttest_pairs_cluster_", i)
+  addWorksheet(wb, sheet_name)
+  writeData(wb, sheet_name, logFCs, rowNames=TRUE)
+  
+  pheatmap(logFCs, breaks=seq(-3, 3, length.out=101),
+           main=paste0("Cluster ",i, ": Marker genes, corrected for batch effects \n (upregulated only)")) + 
+    theme_ipsum_rc()
+  
+  cat("\n\n")
+}
+```
+
+## Heatmap for t-test results
+
+```{r pheatmap for t-test results, fig.width=16, fig.height=40}
+top_genes_ttest <- lapply(markers.all.up, function(marker_set){
+  marker_set %>%
+    as.data.frame() %>%
+    filter(Top <= 5) %>%
+    rownames()
+  }) %>% 
+  unlist(use.names=F) %>% 
+  unique()
+
+# Matrix to plot the heatmap of expression values. 
+# To avoid a too big plot we only keep every 10th cell
+sce_plot <- sce_marker_genes[top_genes_ttest, seq(1, dim(sce_marker_genes)[2], 20)]
+# We sort by cluster
+sce_plot <- sce_plot[,order(sce_plot$label)]
+# Anotations
+column_annotations <- data.frame("Cluster"=factor(sce_plot$label), row.names=colnames(sce_plot))
+# clip heatmap values to ensure that colour contrast is high
+sce_plot <- assay(sce_plot, "logcounts")
+sce_plot[sce_plot >=3] = 3
+
+as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, silent=TRUE,
+         color=inferno(50))) +
+  labs(title="Gene signatures per cluster identified via t-test",
+       subtitle="Top 5 differentially expressed genes per cluster; values are log-counts clipped at 3") +
+  theme_ipsum_rc()+ 
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),legend.position="none",
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank())
+```
+
+
+## Marker genes for each cluster using the Wilcox {.tabset}
+
+The Wilcoxon test makes pairwise comparisons between to groups (clusters) which is proportional to the area und the curve (AUC). The scores represent the likelihood of a random cell of another cluster having a higher expression than the reference cluster. Scores of 0 and 1 indicate that the distributions are completely separated.
+
+```{r marker genes wilcox upregulated, fig.height=10, fig.width=7, results="asis"}
+markers.all.up <- findMarkers(sce_marker_genes, 
+                              test.type="wilcox",
+                              pval.type="any",
+                              direction="up", 
+                              block=sce_marker_genes$Sample)
+
+for (i in 1:length(unique(colLabels(sce_marker_genes)))){
+  
+  cat(paste0("### Cluster ", i, "\n"))
+  
+  interesting.all.up <- markers.all.up[[i]]
+  interesting.all.up <- interesting.all.up[interesting.all.up$Top <=10,]
+  logFCs <- getMarkerEffects(interesting.all.up, prefix="AUC")
+  logFCs[is.na(logFCs)] <- 0 # set all NAs to 0
+  
+   # write to excel
+  sheet_name <- paste0("wilcox_pairs_cluster_", i)
+  addWorksheet(wb, sheet_name)
+  writeData(wb, sheet_name, logFCs, rowNames=TRUE)
+  
+  pheatmap(logFCs, breaks=seq(0, 1, length.out=101),
+           main=paste0("Cluster ",i, ": Marker genes, corrected for batch effects \n (upregulated only)")) + 
+    theme_ipsum_rc()
+  
+  cat("\n\n")
+}
+```
+
+## Heatmap for Wilcoxon test results
+
+```{r pheatmap for wilcox results, fig.width=16, fig.height=40}
+top_genes_wilcox <- lapply(markers.all.up, function(marker_set){
+  marker_set %>%
+    as.data.frame() %>%
+    filter(Top <= 5) %>%
+    rownames()
+}) %>% 
+  unlist(use.names=F) %>% 
+  unique()
+
+# Matrix to plot the heatmap of expression values. 
+# To avoid a too big plot we only keep every 10th cell
+sce_plot <- sce_marker_genes[top_genes_wilcox, seq(1, dim(sce_marker_genes)[2], 20)]
+# We sort by cluster
+sce_plot <- sce_plot[,order(sce_plot$label)]
+# Anotations
+column_annotations <- data.frame("Cluster"=factor(sce_plot$label), row.names=colnames(sce_plot))
+# clip heatmap values to ensure that colour contrast is high
+sce_plot <- assay(sce_plot, "logcounts")
+sce_plot[sce_plot >=3] = 3
+
+as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, silent=TRUE,
+         color=inferno(50))) +
+  labs(title="Gene signatures per cluster identified via wilcox test",
+       subtitle="Top 5 differentially expressed genes per cluster; values are log-counts clipped at 3") +
+  theme_ipsum_rc()+ 
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),legend.position="none",
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank())
+```
+
+
+```{r save marker genes to excel}
+filename_marker_results <- "../docs/output/EDI_marker_results_hvg_genes.xlsx"
+saveWorkbook(wb, file = filename_marker_results, overwrite = TRUE)
+```
