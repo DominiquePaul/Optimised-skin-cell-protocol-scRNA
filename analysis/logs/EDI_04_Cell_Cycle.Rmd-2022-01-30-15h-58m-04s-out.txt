@@ -1,0 +1,101 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
+  ordinary text without R code
+
+  |                                                                              |......                                                                |   8%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |........                                                              |  12%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  16%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |..............                                                        |  20%
+  ordinary text without R code
+
+  |                                                                              |.................                                                     |  24%
+label: load-data
+  |                                                                              |....................                                                  |  28%
+  ordinary text without R code
+
+  |                                                                              |......................                                                |  32%
+label: get cell cycle genes
+  |                                                                              |.........................                                             |  36%
+  ordinary text without R code
+
+  |                                                                              |............................                                          |  40%
+label: cell cycle scoring with seurat (with options) 
+List of 1
+ $ warning: logi FALSE
+
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  48%
+label: plot UMAP (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |....................................                                  |  52%
+  ordinary text without R code
+
+  |                                                                              |.......................................                               |  56%
+label: visualise-phases-umap by protocol (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |..........................................                            |  60%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  64%
+label: visualise-phases-umap by phase (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |................................................                      |  68%
+  ordinary text without R code
+
+  |                                                                              |..................................................                    |  72%
+label: average doublet score 1 (with options) 
+List of 4
+ $ results   : chr "asis"
+ $ warning   : logi FALSE
+ $ fig.width : num 12
+ $ fig.height: num 10
+
+  |                                                                              |.....................................................                 |  76%
+  ordinary text without R code
+
+  |                                                                              |........................................................              |  80%
+label: average doublet score 2 (with options) 
+List of 4
+ $ results   : chr "asis"
+ $ warning   : logi FALSE
+ $ fig.width : num 12
+ $ fig.height: num 10
+
+  |                                                                              |...........................................................           |  84%
+  ordinary text without R code
+
+  |                                                                              |..............................................................        |  88%
+label: save data
+  |                                                                              |................................................................      |  92%
+  ordinary text without R code
+
+  |                                                                              |...................................................................   |  96%
+label: session-info-chunk-inserted-by-workflowr
+  |                                                                              |......................................................................| 100%
+  ordinary text without R code
+
+
+/Applications/RStudio.app/Contents/MacOS/pandoc/pandoc +RTS -K512m -RTS EDI_04_Cell_Cycle.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output EDI_04_Cell_Cycle.html --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --variable bs3=TRUE --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --include-before-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpdjKioS/rmarkdown-str844921864204.html --variable navbar=1 --variable theme=cosmo --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpdjKioS/rmarkdown-str8449755825cd.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=hide --variable code_menu=1 --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpdjKioS/header84496e19f1ea.html --include-after-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpdjKioS/footer84496959721e.html 

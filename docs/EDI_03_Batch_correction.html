@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dominique Paul" />
+
+
+<title>Batch Correction</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Protocol Paper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Batch Correction</h1>
+<h4 class="author">Dominique Paul</h4>
+<h4 class="date">11/1/2021</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-01-30
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211228code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211228)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211228code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211228)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    Metadata/.DS_Store
+    Ignored:    Metadata/cell_annotation_markers/.DS_Store
+    Ignored:    Paper/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.RData
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Unused/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/seeds/.DS_Store
+    Ignored:    data/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/EDI_02_Normalisation_HVG_DimRed.Rmd
+    Untracked:  analysis/EDI_03_Batch_correction.Rmd
+    Untracked:  analysis/EDI_04_Cell_Cycle.Rmd
+    Untracked:  analysis/EDI_05_Annotation.Rmd
+    Untracked:  analysis/EDI_06_marker_genes.Rmd
+    Untracked:  analysis/EDI_07_DA.Rmd
+    Untracked:  analysis/EDI_08_Subclustering.Rmd
+    Untracked:  analysis/P2_03_Fresh_only_subclustering.Rmd
+    Untracked:  analysis/P2_03_FvC_Annotations.Rmd
+    Untracked:  analysis/P2_04_FvC_gene_expression_plot.Rmd
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-30-13h-02m-39s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-30-13h-02m-39s-out.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-err.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-out.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-err.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-out.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-err.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-out.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-err.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-out.txt
+
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   analysis/EDI_01_Loading_and_Preprocessing.Rmd
+    Modified:   analysis/P2_01_data_comparison.Rmd
+    Deleted:    analysis/Protocol paper/.Rprofile
+    Deleted:    analysis/Protocol paper/.gitattributes
+    Deleted:    analysis/Protocol paper/.gitignore
+    Deleted:    analysis/Protocol paper/Protocol paper.Rproj
+    Deleted:    analysis/Protocol paper/README.md
+    Deleted:    analysis/Protocol paper/_workflowr.yml
+    Deleted:    analysis/Protocol paper/analysis/_site.yml
+    Deleted:    analysis/Protocol paper/analysis/about.Rmd
+    Deleted:    analysis/Protocol paper/analysis/index.Rmd
+    Deleted:    analysis/Protocol paper/analysis/license.Rmd
+    Deleted:    analysis/Protocol paper/code/README.md
+    Deleted:    analysis/Protocol paper/docs/.nojekyll
+    Deleted:    analysis/Protocol paper/output/README.md
+    Deleted:    analysis/Unused/EDI_02_Normalisation_HVG_DimRed.Rmd
+    Deleted:    analysis/Unused/EDI_03_Batch_correction.Rmd
+    Deleted:    analysis/Unused/EDI_04_Cell_Cycle.Rmd
+    Deleted:    analysis/Unused/EDI_05_Annotation.Rmd
+    Deleted:    analysis/Unused/EDI_06_marker_genes.Rmd
+    Deleted:    analysis/Unused/EDI_07_DA.Rmd
+    Deleted:    analysis/Unused/EDI_08_Subclustering.Rmd
+    Deleted:    analysis/Unused/P2_03_Subclustering.Rmd
+    Deleted:    analysis/Unused/P2_04_Annotated_Fresh_v_Culture.Rmd
+    Deleted:    analysis/Unused/P2_05_gene_expression_plot.Rmd
+    Modified:   analysis/admin.rmd
+    Modified:   analysis/index.Rmd
+    Deleted:    code/CF_readin_with_UMIs.Rmd
+    Deleted:    code/code_snippets.Rmd
+    Modified:   code/general_purpose_code.R
+    Deleted:    code/rename_protocols.r
+    Deleted:    code/test_muscat.Rmd
+    Deleted:    code/utils_muscat.r
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<pre class="r"><code>sce &lt;- readRDS(file=&quot;../data/EOS_Files/EDI_EOS2_sce.rds&quot;)</code></pre>
+</div>
+<div id="batch-correction" class="section level1">
+<h1>Batch Correction</h1>
+<p>The data comes from different experiments and very locations on different subjects. It is therefore not safe to assume (as many batch correction methods do) that the composition of the samples is roughly the same. We use the fastMNN method for batch correction as it imposes no assumptions about the source and similarity of the data.</p>
+<div id="pre-batch-correction" class="section level2 tabset">
+<h2 class="tabset">Pre-batch correction</h2>
+<pre class="r"><code># Before batch correction
+cat(&quot;\n\n### UMAP uncorrected by sample \n\n&quot;)</code></pre>
+<div id="umap-uncorrected-by-sample" class="section level3">
+<h3>UMAP uncorrected by sample</h3>
+<pre class="r"><code>print(plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;Sample&quot;, point_size=0.5) +
+  ggtitle(&quot;UMAP prior to batch correction&quot;) +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_sample_colours(levels(sce$Sample))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/pre-batch%20correction-1.png" width="1344" style="display: block; margin: auto;" /><img src="figure/EDI_03_Batch_correction.Rmd/pre-batch%20correction-2.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n### UMAP uncorrected by protocol \n\n&quot;)</code></pre>
+</div>
+<div id="umap-uncorrected-by-protocol" class="section level3">
+<h3>UMAP uncorrected by protocol</h3>
+<pre class="r"><code>print(plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;Protocol&quot;, point_size=0.5) +
+  ggtitle(&quot;UMAP prior to batch correction&quot;) +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_protocol_colours(levels(sce$Protocol))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/pre-batch%20correction-3.png" width="1344" style="display: block; margin: auto;" /><img src="figure/EDI_03_Batch_correction.Rmd/pre-batch%20correction-4.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="batch-correction-with-harmony" class="section level2 tabset">
+<h2 class="tabset">Batch correction with harmony</h2>
+<pre class="r"><code>meta_data &lt;- colData(sce) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::select(c(Protocol, Sample))
+
+reducedDim(sce, &quot;harmony&quot;) &lt;- harmony::HarmonyMatrix(data_mat=logcounts(sce),
+                                                  meta_data= meta_data,
+                                                  vars_use=c(&quot;Protocol&quot;, &quot;Sample&quot;),
+                                                  do_pca = TRUE, verbose=FALSE
+                                                  )
+
+sce &lt;- runUMAP(sce, dimred=&quot;harmony&quot;, subset_row=rowData(sce)$is_hvg,
+                       n_neighbors=50, min_dist = 0.1, name=&quot;UMAP&quot;)
+
+cat(&quot;\n\n### UMAP corrected by sample\n\n&quot;)</code></pre>
+<div id="umap-corrected-by-sample" class="section level3">
+<h3>UMAP corrected by sample</h3>
+<pre class="r"><code>print(plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;Sample&quot;, point_size=0.25) +
+  ggtitle(&quot;UMAP post batch correction - Harmony&quot;) +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_sample_colours(levels(sce$Sample))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/batch%20correction%20harmony-1.png" width="1728" style="display: block; margin: auto;" /><img src="figure/EDI_03_Batch_correction.Rmd/batch%20correction%20harmony-2.png" width="1728" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n### UMAP corrected by protocol\n\n&quot;)</code></pre>
+</div>
+<div id="umap-corrected-by-protocol" class="section level3">
+<h3>UMAP corrected by protocol</h3>
+<pre class="r"><code>print(plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;Protocol&quot;, point_size=0.25) +
+  ggtitle(&quot;UMAP post batch correction - Harmony&quot;) +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_protocol_colours(levels(sce$Protocol))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/batch%20correction%20harmony-3.png" width="1728" style="display: block; margin: auto;" /><img src="figure/EDI_03_Batch_correction.Rmd/batch%20correction%20harmony-4.png" width="1728" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="compare-batch-integration-methods-using-cellmixs" class="section level2">
+<h2>Compare batch integration methods using CellMixS</h2>
+<p>CellMixS tests each cell for whether the distribution of distances - specific to each batch - to the k nearest cells are from the same distribution. A high CMS score means that the batches are very well mixed. A low score indicates the presence of strong differences between the batches or bad integration. Differences in the number of cells per batch are considered.</p>
+<p>CMS scores are p.values for the alternative hypothesis that the batch-specific distributions of cells are not from the same distribution. A stronger spike in small p-values indicates stronger batch effects. A even or roughly uniform distribution of p-values indicates that the batches are perfectly mixed. In our case the samples are from different experiments and different patients. We do expect differences between the samples but expect a batch integration method to result in smoothing.</p>
+<pre class="r"><code>bpstart(bpparam)
+sce &lt;- CellMixS::cms(sce, k=500, 
+                     group = &quot;Sample&quot;,
+                     dim_red = &quot;harmony&quot;,
+                     res_name=&quot;sample_harmony&quot;,
+                     BPPARAM = bpparam)
+bpstop(bpparam)
+
+bpstart(bpparam)
+sce &lt;- CellMixS::cms(sce, k=500, 
+                     group = &quot;Protocol&quot;,
+                     dim_red = &quot;harmony&quot;,
+                     res_name=&quot;protocol_harmony&quot;,
+                     BPPARAM = bpparam)
+bpstop(bpparam)
+
+
+CellMixS::visHist(sce, metric = &quot;cms.sample_&quot;,  n_col = 2) +
+  theme_ipsum_rc() +
+  labs(title=&quot;CellMixS evaluation by sample&quot;)</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/cellmixs%20harmony-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>CellMixS::visHist(sce, metric = &quot;cms.protocol_&quot;,  n_col = 2) +
+  theme_ipsum_rc() +
+  labs(title=&quot;CellMixS evaluation by protocol&quot;)</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/cellmixs%20harmony-2.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="clustering" class="section level1">
+<h1>Clustering</h1>
+<p>Two step clustering based on Harmony integration</p>
+<pre class="r"><code>tic(&quot;kgraph_clusters harmony&quot;)
+set.seed(100)
+bpstart(bpparam)
+kgraph_clusters &lt;- clusterRows(reducedDim(sce, &quot;harmony&quot;),
+    TwoStepParam(
+        first=KmeansParam(centers=10000, nstart = 5, iter.max = 100),
+        second=NNGraphParam(k=15, cluster.fun=&quot;louvain&quot;, BPPARAM=bpparam)
+    )
+)
+bpstop(bpparam)
+toc(log=TRUE)</code></pre>
+<pre><code>kgraph_clusters harmony: 173.599 sec elapsed</code></pre>
+<pre class="r"><code>tic(&quot;kgraph_clusters_walktrap harmony&quot;)
+set.seed(100)
+bpstart(bpparam)
+kgraph_clusters_walktrap &lt;- clusterRows(reducedDim(sce, &quot;harmony&quot;),
+    TwoStepParam(
+        first=KmeansParam(centers=10000, nstart = 5, iter.max = 100),
+        second=NNGraphParam(k=15, cluster.fun=&quot;walktrap&quot;, BPPARAM=bpparam)
+    )
+)
+bpstop(bpparam)
+toc(log=TRUE)</code></pre>
+<pre><code>kgraph_clusters_walktrap harmony: 209.651 sec elapsed</code></pre>
+<pre class="r"><code>table(kgraph_clusters)</code></pre>
+<pre><code>kgraph_clusters
+    1     2     3     4     5     6     7     8     9    10    11 
+ 3495 10439   612  1735  9348  4220  8142  7382   851  6848  3549 </code></pre>
+<pre class="r"><code>colData(sce)$kgraph_clusters_harmony &lt;- factor(kgraph_clusters)
+colData(sce)$kgraph_clusters_walktrap_harmony &lt;- factor(kgraph_clusters_walktrap)</code></pre>
+</div>
+<div id="umap-visualisation" class="section level1 tabset">
+<h1 class="tabset">UMAP Visualisation</h1>
+<pre class="r"><code>cat(&quot;\n## K-Graph \n\n&quot;)</code></pre>
+<div id="k-graph" class="section level2">
+<h2>K-Graph</h2>
+<pre class="r"><code>plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;kgraph_clusters_harmony&quot;, text_by=&quot;kgraph_clusters_harmony&quot;, point_size=0.5) +
+  ggtitle(&quot;Two step k-means clusters&quot;) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/umap%20visualisation-1.png" width="1728" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n## K-Graph by Protocol\n\n&quot;)</code></pre>
+</div>
+<div id="k-graph-by-protocol" class="section level2">
+<h2>K-Graph by Protocol</h2>
+<pre class="r"><code>plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;kgraph_clusters_harmony&quot;, other_fields=&quot;Protocol&quot;, point_size=0.25) +
+  ggtitle(&quot;Two step k-means clusters&quot;) +
+  facet_wrap(~Protocol) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/umap%20visualisation-2.png" width="1728" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n## K-Graph Walktrap \n\n&quot;)</code></pre>
+</div>
+<div id="k-graph-walktrap" class="section level2">
+<h2>K-Graph Walktrap</h2>
+<pre class="r"><code>plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;kgraph_clusters_walktrap_harmony&quot;, text_by=&quot;kgraph_clusters_walktrap_harmony&quot;, point_size=0.5) +
+  ggtitle(&quot;Two step walktrap clusters&quot;) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/umap%20visualisation-3.png" width="1728" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n## K-Graph Walktrap by protocol\n\n&quot;)</code></pre>
+</div>
+<div id="k-graph-walktrap-by-protocol" class="section level2">
+<h2>K-Graph Walktrap by protocol</h2>
+<pre class="r"><code>plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;kgraph_clusters_walktrap_harmony&quot;, other_fields=&quot;Protocol&quot;, point_size=0.25) +
+  ggtitle(&quot;Two step walktrap clusters&quot;) +
+  facet_wrap(~Protocol) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/umap%20visualisation-4.png" width="1728" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="frequencies-of-clusters-per-sample" class="section level1">
+<h1>Frequencies of clusters per Sample</h1>
+<p>Tabular overviews of the relative and absolute cell counts between the cluster annotations and the samples.</p>
+<pre class="r"><code>plot_label_barplots(sce, &quot;kgraph_clusters_harmony&quot;, tabset=&quot;###&quot;)</code></pre>
+<div id="relative-counts-by-sample" class="section level3">
+<h3>Relative counts by Sample</h3>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/Harmony%20barplots-1.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+<div id="absolute-counts-by-sample" class="section level3">
+<h3>Absolute counts by Sample</h3>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/Harmony%20barplots-2.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_label_barplots(sce, &quot;kgraph_clusters_walktrap_harmony&quot;, tabset=&quot;###&quot;)</code></pre>
+</div>
+<div id="relative-counts-by-sample-1" class="section level3">
+<h3>Relative counts by Sample</h3>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/Harmony%20barplots-3.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+<div id="absolute-counts-by-sample-1" class="section level3">
+<h3>Absolute counts by Sample</h3>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/Harmony%20barplots-4.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="silhouette-plot-comparison" class="section level1 tabset">
+<h1 class="tabset">Silhouette plot comparison</h1>
+<p>The silhouette width is a general-purpose method for evaluating the separation between clusters but requires calculating the average distance between pairs of observations within or between clusters. This function instead approximates the average distance with the root-mean-squared-distance, which can be computed very efficiently for large datasets. The approximated averages are then used to compute the silhouette width using the usual definition.</p>
+<pre class="r"><code>plot_silhouette &lt;- function(sce, cluster_name){
+  sce_temp &lt;- sce
+  # Performing the calculations on the PC coordinates, like before.
+  sil.approx &lt;- approxSilhouette(reducedDim(sce_temp, &quot;harmony&quot;), clusters=colData(sce_temp)[[cluster_name]])
+  
+  sil.data &lt;- as.data.frame(sil.approx)
+  sil.data$closest &lt;- factor(ifelse(sil.data$width &gt; 0, colData(sce_temp)[[cluster_name]], sil.data$other))
+  sil.data$cluster &lt;- factor(colData(sce_temp)[[cluster_name]])
+  
+  ggplot(sil.data, aes(x=cluster, y=width, colour=closest)) + 
+      ggbeeswarm::geom_quasirandom(method=&quot;smiley&quot;) +
+    labs(title=paste0(cluster_name, &quot; silhouette plot&quot;))
+}
+
+cat(&quot;\n## Kgraph clusters \n\n&quot;)</code></pre>
+<div id="kgraph-clusters" class="section level2">
+<h2>Kgraph clusters</h2>
+<pre class="r"><code>plot_silhouette(sce, &quot;kgraph_clusters_harmony&quot;)</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/silhouette%20plot%20harmony-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n## Kgraph clusters walktrap \n\n&quot;)</code></pre>
+</div>
+<div id="kgraph-clusters-walktrap" class="section level2">
+<h2>Kgraph clusters walktrap</h2>
+<pre class="r"><code>plot_silhouette(sce, &quot;kgraph_clusters_walktrap_harmony&quot;)</code></pre>
+<p><img src="figure/EDI_03_Batch_correction.Rmd/silhouette%20plot%20harmony-2.png" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n## fastMNN {.tabset}\n\n&quot;)
+
+
+plot_silhouette &lt;- function(sce, cluster_name){
+  sce_temp &lt;- sce
+  # Performing the calculations on the PC coordinates, like before.
+  sil.approx &lt;- approxSilhouette(reducedDim(sce_temp, &quot;corrected&quot;), clusters=colData(sce_temp)[[cluster_name]])
+  
+  sil.data &lt;- as.data.frame(sil.approx)
+  sil.data$closest &lt;- factor(ifelse(sil.data$width &gt; 0, colData(sce_temp)[[cluster_name]], sil.data$other))
+  sil.data$cluster &lt;- factor(colData(sce_temp)[[cluster_name]])
+  
+  ggplot(sil.data, aes(x=cluster, y=width, colour=closest)) + 
+      ggbeeswarm::geom_quasirandom(method=&quot;smiley&quot;) +
+    labs(title=paste0(cluster_name, &quot; silhouette plot&quot;))
+}
+
+cat(&quot;\n### Kgraph clusters \n\n&quot;)
+plot_silhouette(sce, &quot;kgraph_clusters_fastMNN&quot;)
+
+cat(&quot;\n### Kgraph clusters walktrap \n\n&quot;)
+plot_silhouette(sce, &quot;kgraph_clusters_walktrap_fastMNN&quot;)</code></pre>
+</div>
+</div>
+<div id="save-data" class="section level1">
+<h1>Save data</h1>
+<pre class="r"><code>file_path &lt;- &quot;../data/EOS_Files/EDI_EOS3_sce.rds&quot;
+saveRDS(sce, file = file_path)
+upload_file_to_iSEE(file_path)</code></pre>
+<pre><code>Command executed: 
+
+scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/EDI_EOS3_sce.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/EDI_EOS3_sce___2022-01-30.rds</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] stringr_1.4.0                  openxlsx_4.2.5                
+ [3] RColorBrewer_1.1-2             CellMixS_1.10.0               
+ [5] kSamples_1.2-9                 SuppDists_1.1-9.5             
+ [7] tictoc_1.0.1                   igraph_1.2.10                 
+ [9] dplyr_1.0.7                    bluster_1.4.0                 
+[11] scran_1.22.1                   batchelor_1.10.0              
+[13] hrbrthemes_0.8.6               scater_1.22.0                 
+[15] ggplot2_3.3.5                  scuttle_1.4.0                 
+[17] tidySingleCellExperiment_1.4.0 SingleCellExperiment_1.16.0   
+[19] SummarizedExperiment_1.24.0    Biobase_2.54.0                
+[21] GenomicRanges_1.46.1           GenomeInfoDb_1.30.0           
+[23] IRanges_2.28.0                 S4Vectors_0.32.3              
+[25] BiocGenerics_0.40.0            MatrixGenerics_1.6.0          
+[27] matrixStats_0.61.0             BiocParallel_1.28.3           
+
+loaded via a namespace (and not attached):
+  [1] workflowr_1.7.0           systemfonts_1.0.3        
+  [3] plyr_1.8.6                lazyeval_0.2.2           
+  [5] digest_0.6.29             htmltools_0.5.2          
+  [7] viridis_0.6.2             fansi_1.0.2              
+  [9] magrittr_2.0.1            ScaledMatrix_1.2.0       
+ [11] cluster_2.1.2             limma_3.50.0             
+ [13] extrafont_0.17            extrafontdb_1.0          
+ [15] colorspace_2.0-2          ggrepel_0.9.1            
+ [17] xfun_0.29                 crayon_1.4.2             
+ [19] RCurl_1.98-1.5            jsonlite_1.7.3           
+ [21] glue_1.6.0                gtable_0.3.0             
+ [23] zlibbioc_1.40.0           XVector_0.34.0           
+ [25] DelayedArray_0.20.0       BiocSingular_1.10.0      
+ [27] Rttf2pt1_1.3.8            scales_1.1.1             
+ [29] DBI_1.1.2                 edgeR_3.36.0             
+ [31] Rcpp_1.0.8                viridisLite_0.4.0        
+ [33] dqrng_0.3.0               rsvd_1.0.5               
+ [35] ResidualMatrix_1.4.0      metapod_1.2.0            
+ [37] htmlwidgets_1.5.4         httr_1.4.2               
+ [39] ellipsis_0.3.2            pkgconfig_2.0.3          
+ [41] farver_2.1.0              sass_0.4.0               
+ [43] uwot_0.1.11               locfit_1.5-9.4           
+ [45] utf8_1.2.2                tidyselect_1.1.1         
+ [47] labeling_0.4.2            rlang_0.4.12             
+ [49] later_1.3.0               munsell_0.5.0            
+ [51] tools_4.1.0               cli_3.1.0                
+ [53] generics_0.1.1            ggridges_0.5.3           
+ [55] evaluate_0.14             fastmap_1.1.0            
+ [57] yaml_2.2.1                RhpcBLASctl_0.21-247.1   
+ [59] knitr_1.37                fs_1.5.2                 
+ [61] zip_2.2.0                 purrr_0.3.4              
+ [63] sparseMatrixStats_1.6.0   compiler_4.1.0           
+ [65] rstudioapi_0.13           beeswarm_0.4.0           
+ [67] plotly_4.10.0             tibble_3.1.6             
+ [69] statmod_1.4.36            bslib_0.3.1              
+ [71] stringi_1.7.6             highr_0.9                
+ [73] RSpectra_0.16-0           gdtools_0.2.3            
+ [75] lattice_0.20-45           Matrix_1.4-0             
+ [77] vctrs_0.3.8               pillar_1.6.4             
+ [79] lifecycle_1.0.1           jquerylib_0.1.4          
+ [81] RcppAnnoy_0.0.19          BiocNeighbors_1.12.0     
+ [83] data.table_1.14.2         cowplot_1.1.1            
+ [85] bitops_1.0-7              irlba_2.3.5              
+ [87] httpuv_1.6.4              R6_2.5.1                 
+ [89] promises_1.2.0.1          gridExtra_2.3            
+ [91] vipor_0.4.5               codetools_0.2-18         
+ [93] assertthat_0.2.1          rprojroot_2.0.2          
+ [95] withr_2.4.3               harmony_0.1.0            
+ [97] GenomeInfoDbData_1.2.7    grid_4.1.0               
+ [99] beachmat_2.10.0           tidyr_1.1.4              
+[101] rmarkdown_2.11            DelayedMatrixStats_1.16.0
+[103] git2r_0.29.0              ggbeeswarm_0.6.0         </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

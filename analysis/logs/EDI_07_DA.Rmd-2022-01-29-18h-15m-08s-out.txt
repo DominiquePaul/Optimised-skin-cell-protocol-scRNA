@@ -1,0 +1,133 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   3%
+  ordinary text without R code
+
+  |                                                                              |....                                                                  |   6%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |......                                                                |   8%
+  ordinary text without R code
+
+  |                                                                              |........                                                              |  11%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |..........                                                            |  14%
+  ordinary text without R code
+
+  |                                                                              |............                                                          |  17%
+label: load-data
+  |                                                                              |..............                                                        |  19%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  22%
+label: code setup
+  |                                                                              |..................                                                    |  25%
+label: design matrix and basic plots
+  |                                                                              |...................                                                   |  28%
+  ordinary text without R code
+
+  |                                                                              |.....................                                                 |  31%
+label: Fresh vs. Tabib
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |.........................                                             |  36%
+label: Fresh vs. He
+  |                                                                              |...........................                                           |  39%
+  ordinary text without R code
+
+  |                                                                              |.............................                                         |  42%
+label: Fresh vs. Sole-Boldo
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |.................................                                     |  47%
+label: all contrasts
+  |                                                                              |...................................                                   |  50%
+  ordinary text without R code
+
+  |                                                                              |.....................................                                 |  53%
+label: plot abundances (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  58%
+label: plot abundances v2 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 10
+
+  |                                                                              |...........................................                           |  61%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  64%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 16
+
+  |                                                                              |...............................................                       |  67%
+  ordinary text without R code
+
+  |                                                                              |.................................................                     |  69%
+label: unnamed-chunk-2 (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 16
+
+  |                                                                              |...................................................                   |  72%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  75%
+label: visualise UMAPs (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |......................................................                |  78%
+  ordinary text without R code
+
+  |                                                                              |........................................................              |  81%
+label: figure 11.1 (with options) 
+List of 3
+ $ fig.width : num 10
+ $ fig.height: num 12
+ $ warnings  : logi FALSE
+
+  |                                                                              |..........................................................            |  83%
+  ordinary text without R code
+
+  |                                                                              |............................................................          |  86%
+label: supplementary figure 11.2 (with options) 
+List of 3
+ $ fig.width : num 20
+ $ fig.height: num 24
+ $ warnings  : logi FALSE
+
+  |                                                                              |..............................................................        |  89%
+  ordinary text without R code
+
+  |                                                                              |................................................................      |  92%
+label: EDI supplemental (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |..................................................................    |  94%
+  ordinary text without R code
+
+  |                                                                              |....................................................................  |  97%
+label: session-info-chunk-inserted-by-workflowr
+  |                                                                              |......................................................................| 100%
+  ordinary text without R code
+
+
+/Applications/RStudio.app/Contents/MacOS/pandoc/pandoc +RTS -K512m -RTS EDI_07_DA.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output EDI_07_DA.html --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --variable bs3=TRUE --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --include-before-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFzJlAc/rmarkdown-str133587ddfed40.html --variable navbar=1 --variable theme=cosmo --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFzJlAc/rmarkdown-str133587851454f.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=hide --variable code_menu=1 --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFzJlAc/header133581f9d833f.html --include-after-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFzJlAc/footer133581e13ad50.html 

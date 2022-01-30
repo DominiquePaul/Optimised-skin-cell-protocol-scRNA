@@ -1,0 +1,359 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   1%
+   inline R code fragments
+
+  |                                                                              |.                                                                     |   2%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |..                                                                    |   3%
+  ordinary text without R code
+
+  |                                                                              |...                                                                   |   4%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |....                                                                  |   5%
+  ordinary text without R code
+
+  |                                                                              |....                                                                  |   6%
+label: load tabib data (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |.....                                                                 |   7%
+  ordinary text without R code
+
+  |                                                                              |......                                                                |   8%
+label: load Sole-Boldo data (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |......                                                                |   9%
+  ordinary text without R code
+
+  |                                                                              |.......                                                               |  10%
+label: load He data (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |........                                                              |  11%
+  ordinary text without R code
+
+  |                                                                              |........                                                              |  12%
+label: load fresh skin samples (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |.........                                                             |  13%
+  ordinary text without R code
+
+  |                                                                              |..........                                                            |  14%
+label: reads per stage function
+  |                                                                              |...........                                                           |  15%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  16%
+label: reads per stage 1 (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |............                                                          |  17%
+  ordinary text without R code
+
+  |                                                                              |.............                                                         |  18%
+label: filter-crude (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |.............                                                         |  19%
+  ordinary text without R code
+
+  |                                                                              |..............                                                        |  20%
+label: reads per stage 2 (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |...............                                                       |  21%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  22%
+label: find-common-genes (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |................                                                      |  23%
+  ordinary text without R code
+
+  |                                                                              |.................                                                     |  24%
+label: reduce to one sce (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |..................                                                    |  25%
+  ordinary text without R code
+
+  |                                                                              |..................                                                    |  26%
+label: reads per stage 3 (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |...................                                                   |  27%
+  ordinary text without R code
+
+  |                                                                              |....................                                                  |  28%
+label: Save RDS (with options) 
+List of 1
+ $ eval: logi TRUE
+
+  |                                                                              |.....................                                                 |  29%
+  ordinary text without R code
+
+  |                                                                              |.....................                                                 |  30%
+label: Read in rds
+  |                                                                              |......................                                                |  31%
+  ordinary text without R code
+
+  |                                                                              |.......................                                               |  32%
+label: how many cells before preprocessing
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |........................                                              |  34%
+label: droplet detection
+  |                                                                              |.........................                                             |  35%
+   inline R code fragments
+
+  |                                                                              |.........................                                             |  36%
+label: print doublet stats
+  |                                                                              |..........................                                            |  37%
+  ordinary text without R code
+
+  |                                                                              |...........................                                           |  38%
+label: drop doublets
+  |                                                                              |............................                                          |  39%
+  ordinary text without R code
+
+  |                                                                              |............................                                          |  40%
+label: reads per stage 4
+  |                                                                              |.............................                                         |  41%
+  ordinary text without R code
+
+  |                                                                              |..............................                                        |  42%
+label: Add QC metrics
+  |                                                                              |..............................                                        |  43%
+  ordinary text without R code
+
+  |                                                                              |...............................                                       |  44%
+label: plots prior to qc (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 7
+ $ results   : chr "asis"
+
+  |                                                                              |................................                                      |  45%
+  ordinary text without R code
+
+  |                                                                              |.................................                                     |  46%
+label: preprocessing
+  |                                                                              |.................................                                     |  47%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  48%
+label: plots for QC: Mitochondrial content 1 (with options) 
+List of 3
+ $ fig.height: num 10
+ $ fig.width : num 14
+ $ warnings  : logi FALSE
+
+  |                                                                              |...................................                                   |  49%
+  ordinary text without R code
+
+  |                                                                              |...................................                                   |  51%
+label: plots for QC: Mitochondrial content 2 (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 16
+ $ warnings  : logi FALSE
+
+  |                                                                              |....................................                                  |  52%
+  ordinary text without R code
+
+  |                                                                              |.....................................                                 |  53%
+label: plotting QC differences (with options) 
+List of 3
+ $ fig.width : num 12
+ $ fig.height: num 8
+ $ results   : chr "asis"
+
+  |                                                                              |.....................................                                 |  54%
+  ordinary text without R code
+
+  |                                                                              |......................................                                |  55%
+label: plots for QC: Mitochondrial content after filtering 1 (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 14
+ $ results   : chr "asis"
+
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |........................................                              |  57%
+label: plots for QC: Mitochondrial content after filtering 2 (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 16
+ $ results   : chr "asis"
+
+  |                                                                              |........................................                              |  58%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  59%
+label: plots for QC: log total expressions vs. mito (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 16
+ $ results   : chr "asis"
+
+  |                                                                              |..........................................                            |  60%
+  ordinary text without R code
+
+  |                                                                              |..........................................                            |  61%
+label: number after QC (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 8
+ $ results   : chr "asis"
+
+  |                                                                              |...........................................                           |  62%
+  ordinary text without R code
+
+  |                                                                              |............................................                          |  63%
+label: remove marked cells
+  |                                                                              |.............................................                         |  64%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  65%
+label: reads per stage 5
+  |                                                                              |..............................................                        |  66%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: violin plots after qc (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 7
+ $ results   : chr "asis"
+
+  |                                                                              |...............................................                       |  68%
+  ordinary text without R code
+
+  |                                                                              |................................................                      |  69%
+label: prepare data for barplots
+  |                                                                              |.................................................                     |  70%
+  ordinary text without R code
+
+  |                                                                              |.................................................                     |  71%
+label: number of cells by sample (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |..................................................                    |  72%
+  ordinary text without R code
+
+  |                                                                              |...................................................                   |  73%
+label: number of cells by protocol (with options) 
+List of 2
+ $ fig.width : num 10
+ $ fig.height: num 10
+
+  |                                                                              |....................................................                  |  74%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  75%
+label: ANOVA test
+  |                                                                              |.....................................................                 |  76%
+  ordinary text without R code
+
+  |                                                                              |......................................................                |  77%
+label: plot log total expression density by protocol (with options) 
+List of 2
+ $ fig.width : num 12
+ $ fig.height: num 7
+
+  |                                                                              |......................................................                |  78%
+  ordinary text without R code
+
+  |                                                                              |.......................................................               |  79%
+label: KS test
+  |                                                                              |........................................................              |  80%
+  ordinary text without R code
+
+  |                                                                              |.........................................................             |  81%
+label: log10 counts by protocol
+  |                                                                              |.........................................................             |  82%
+  ordinary text without R code
+
+  |                                                                              |..........................................................            |  83%
+label: log10 counts by sample (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |...........................................................           |  84%
+  ordinary text without R code
+
+  |                                                                              |...........................................................           |  85%
+label: log-number of genes by protcol
+  |                                                                              |............................................................          |  86%
+  ordinary text without R code
+
+  |                                                                              |.............................................................         |  87%
+label: log number genes density by sample (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |..............................................................        |  88%
+  ordinary text without R code
+
+  |                                                                              |..............................................................        |  89%
+label: supplementary figure (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 26
+
+  |                                                                              |...............................................................       |  90%
+  ordinary text without R code
+
+  |                                                                              |................................................................      |  91%
+label: reads per analysis evaluation
+  |                                                                              |................................................................      |  92%
+  ordinary text without R code
+
+  |                                                                              |.................................................................     |  93%
+label: plot unnormalised read information (with options) 
+List of 3
+ $ fig.width : num 12
+ $ fig.height: num 8
+ $ results   : chr "asis"
+
+  |                                                                              |..................................................................    |  94%
+  ordinary text without R code
+
+  |                                                                              |..................................................................    |  95%
+label: plot normalised read information (with options) 
+List of 3
+ $ fig.width : num 12
+ $ fig.height: num 8
+ $ results   : chr "asis"
+
+  |                                                                              |...................................................................   |  96%
+  ordinary text without R code
+
+  |                                                                              |....................................................................  |  97%
+label: save data
+

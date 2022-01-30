@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dominique Paul" />
+
+
+<title>Normalisation, HVGs, Dimensionality Reduction</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Protocol Paper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Normalisation, HVGs, Dimensionality Reduction</h1>
+<h4 class="author">Dominique Paul</h4>
+<h4 class="date">11/1/2021</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-01-30
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211228code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211228)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211228code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211228)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    Metadata/.DS_Store
+    Ignored:    Metadata/cell_annotation_markers/.DS_Store
+    Ignored:    Paper/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.RData
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Unused/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/seeds/.DS_Store
+    Ignored:    data/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/EDI_02_Normalisation_HVG_DimRed.Rmd
+    Untracked:  analysis/EDI_03_Batch_correction.Rmd
+    Untracked:  analysis/EDI_04_Cell_Cycle.Rmd
+    Untracked:  analysis/EDI_05_Annotation.Rmd
+    Untracked:  analysis/EDI_06_marker_genes.Rmd
+    Untracked:  analysis/EDI_07_DA.Rmd
+    Untracked:  analysis/EDI_08_Subclustering.Rmd
+    Untracked:  analysis/P2_03_Fresh_only_subclustering.Rmd
+    Untracked:  analysis/P2_03_FvC_Annotations.Rmd
+    Untracked:  analysis/P2_04_FvC_gene_expression_plot.Rmd
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-out.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-err.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-out.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-err.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-out.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-err.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-out.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-err.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-out.txt
+
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   analysis/EDI_01_Loading_and_Preprocessing.Rmd
+    Modified:   analysis/P2_01_data_comparison.Rmd
+    Deleted:    analysis/Protocol paper/.Rprofile
+    Deleted:    analysis/Protocol paper/.gitattributes
+    Deleted:    analysis/Protocol paper/.gitignore
+    Deleted:    analysis/Protocol paper/Protocol paper.Rproj
+    Deleted:    analysis/Protocol paper/README.md
+    Deleted:    analysis/Protocol paper/_workflowr.yml
+    Deleted:    analysis/Protocol paper/analysis/_site.yml
+    Deleted:    analysis/Protocol paper/analysis/about.Rmd
+    Deleted:    analysis/Protocol paper/analysis/index.Rmd
+    Deleted:    analysis/Protocol paper/analysis/license.Rmd
+    Deleted:    analysis/Protocol paper/code/README.md
+    Deleted:    analysis/Protocol paper/docs/.nojekyll
+    Deleted:    analysis/Protocol paper/output/README.md
+    Deleted:    analysis/Unused/EDI_02_Normalisation_HVG_DimRed.Rmd
+    Deleted:    analysis/Unused/EDI_03_Batch_correction.Rmd
+    Deleted:    analysis/Unused/EDI_04_Cell_Cycle.Rmd
+    Deleted:    analysis/Unused/EDI_05_Annotation.Rmd
+    Deleted:    analysis/Unused/EDI_06_marker_genes.Rmd
+    Deleted:    analysis/Unused/EDI_07_DA.Rmd
+    Deleted:    analysis/Unused/EDI_08_Subclustering.Rmd
+    Deleted:    analysis/Unused/P2_03_Subclustering.Rmd
+    Deleted:    analysis/Unused/P2_04_Annotated_Fresh_v_Culture.Rmd
+    Deleted:    analysis/Unused/P2_05_gene_expression_plot.Rmd
+    Modified:   analysis/admin.rmd
+    Modified:   analysis/index.Rmd
+    Deleted:    code/CF_readin_with_UMIs.Rmd
+    Deleted:    code/code_snippets.Rmd
+    Modified:   code/general_purpose_code.R
+    Deleted:    code/rename_protocols.r
+    Deleted:    code/test_muscat.Rmd
+    Deleted:    code/utils_muscat.r
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<pre class="r"><code>sce &lt;- readRDS(file = &quot;../data/EOS_Files/EDI_EOS1_sce.rds&quot;)</code></pre>
+</div>
+<div id="normalisation-via-sc-transform" class="section level1">
+<h1>Normalisation via SC Transform</h1>
+<pre class="r"><code>sce &lt;- logNormCounts(sce)
+
+sce_seurat &lt;- as.Seurat(sce, counts=&quot;counts&quot;, data=&quot;logcounts&quot;)
+
+seurat_normalized = sce_seurat %&gt;%
+  Seurat::SCTransform(verbose = FALSE, assay=&quot;originalexp&quot;, min_cells=1)
+
+
+sct_HVGs &lt;- seurat_normalized@assays$SCT@var.features
+
+assay(sce, &quot;corrected&quot;) &lt;- seurat_normalized@assays$SCT@counts
+assay(sce, &quot;logcounts&quot;) &lt;- seurat_normalized@assays$SCT@data
+rowData(sce)[, &quot;sct_HVG&quot;] &lt;- FALSE
+rowData(sce)[sct_HVGs, &quot;sct_HVG&quot;] &lt;- TRUE
+
+
+# Run PCA
+set.seed(100)
+sce &lt;- runPCA(sce, subset_row=rowData(sce)$sct_HVG)
+
+plotReducedDim(sce, &quot;PCA&quot;, colour_by=I(sce$log_total), point_size=0.1) +
+  labs(title=&quot;Correlation between library size and principal components&quot;,
+       subtitle=&quot;Coloured by library size factors with colouring capped at 5&quot;) +
+  scale_colour_gradientn(#limits = c(0,5),  
+                         colours=c(&quot;navyblue&quot;, &quot;darkmagenta&quot;, &quot;darkorange1&quot;),) +
+  theme_ipsum_rc()</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_02_Normalisation_HVG_DimRed.Rmd/sctransform-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Check for correlation of PCA with log_total
+cor.test(reducedDim(sce, &quot;PCA&quot;)[,&quot;PC1&quot;], sce$log_total)</code></pre>
+<pre><code>
+    Pearson&#39;s product-moment correlation
+
+data:  reducedDim(sce, &quot;PCA&quot;)[, &quot;PC1&quot;] and sce$log_total
+t = 32.056, df = 56619, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.1254126 0.1415926
+sample estimates:
+      cor 
+0.1335115 </code></pre>
+<pre class="r"><code>cor.test(reducedDim(sce, &quot;PCA&quot;)[,&quot;PC2&quot;], sce$log_total)</code></pre>
+<pre><code>
+    Pearson&#39;s product-moment correlation
+
+data:  reducedDim(sce, &quot;PCA&quot;)[, &quot;PC2&quot;] and sce$log_total
+t = -32.514, df = 56619, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.1434630 -0.1272912
+sample estimates:
+       cor 
+-0.1353861 </code></pre>
+</div>
+<div id="identification-of-highly-variable-genes" class="section level1">
+<h1>Identification of highly variable genes</h1>
+<p>Gene selection is important for the downstream analysis, such as clustering and dimensionality reduction. A too high number of genes can slow down computation speed and by including genes which aren’t interesting from a biological perspective we, more importantly, add more noise to the analysis. In general, there is a trade-off between retaining biological signals and increasing the noise form irrelevant genes.</p>
+<p>We model the mean and the variance for each gene. Subsequently a trend is fitted to the data. Based on this trend we identify which genes strongly deviate from the trend and calculate the statistical significance: the p-value transformed into an false discovery rate (FDR) of the given result. We mark all genes with an FDR value 0.05 as a highly variable gene.</p>
+<div id="show-highly-variable-genes" class="section level2">
+<h2>Show highly variable genes</h2>
+<pre class="r"><code>dec.sce &lt;- modelGeneVar(sce, block=sce$Sample)</code></pre>
+<pre><code>Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values
+
+Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique &#39;x&#39; values</code></pre>
+<pre class="r"><code>#fit.vs &lt;- metadata(dec.sce)
+
+hvg_sub &lt;- getTopHVGs(dec.sce, fdr.threshold=0.05)
+
+mean_var_comb_sub &lt;- purrr::map(unique(sce$Sample), ~ {
+ dec.sce$per.block[[.x]] %&gt;% 
+  as_tibble %&gt;% 
+  mutate(row_names = rownames(dec.sce$per.block[[.x]]),
+         is_hvg = row_names %in% hvg_sub,
+         Sample = .x)
+  }) %&gt;% 
+  purrr::reduce(rbind)
+
+mean_var_comb_sub %&gt;% 
+  ggplot() +
+    geom_point(aes(x = mean, y = total, color= is_hvg)) +
+    geom_line(aes(x=mean, y= tech)) +
+    labs(y=&quot;Variance&quot;,x=&quot;Mean expression&quot;) +
+    facet_wrap(~Sample) +
+    scale_color_manual(values=c(&quot;orange&quot;,&quot;black&quot;)) +
+    labs(x=&quot;Mean of log-expression&quot;, 
+         y=&quot;Variance of log-expression&quot;,
+         title=&quot;Variance of the expression values as a function of the mean&quot;)</code></pre>
+<p><img src="figure/EDI_02_Normalisation_HVG_DimRed.Rmd/gene%20variation%20with%20adjusted%20data%20-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rowData(sce)$is_hvg &lt;- FALSE
+rowData(sce)[hvg_sub,]$is_hvg &lt;- TRUE</code></pre>
+</div>
+</div>
+<div id="section" class="section level1 unnumbered">
+<h1 class="unnumbered"></h1>
+<div id="tabular-overview-of-highly-variable-genes" class="section level2">
+<h2>Tabular overview of highly variable genes</h2>
+<pre class="r"><code># Ordering by most interesting genes for inspection.
+dec.sce[order(dec.sce$bio, decreasing=TRUE),] %&gt;%
+       as.data.frame() %&gt;%
+       dplyr::select(c(&quot;mean&quot;, &quot;total&quot;, &quot;tech&quot;, &quot;bio&quot;, &quot;p.value&quot;, &quot;FDR&quot;)) %&gt;%
+  head(n=10) %&gt;%
+  kable(digits=5) %&gt;%
+  kable_styling(full_width=TRUE)</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+total
+</th>
+<th style="text-align:right;">
+tech
+</th>
+<th style="text-align:right;">
+bio
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+FDR
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+DCN.ENSG00000011465
+</td>
+<td style="text-align:right;">
+1.07235
+</td>
+<td style="text-align:right;">
+2.04420
+</td>
+<td style="text-align:right;">
+0.37045
+</td>
+<td style="text-align:right;">
+1.67375
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CFD.ENSG00000197766
+</td>
+<td style="text-align:right;">
+0.92844
+</td>
+<td style="text-align:right;">
+1.72388
+</td>
+<td style="text-align:right;">
+0.36193
+</td>
+<td style="text-align:right;">
+1.36195
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KRT14.ENSG00000186847
+</td>
+<td style="text-align:right;">
+0.73412
+</td>
+<td style="text-align:right;">
+1.62827
+</td>
+<td style="text-align:right;">
+0.32970
+</td>
+<td style="text-align:right;">
+1.29858
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CXCL14.ENSG00000145824
+</td>
+<td style="text-align:right;">
+1.02147
+</td>
+<td style="text-align:right;">
+1.54997
+</td>
+<td style="text-align:right;">
+0.39062
+</td>
+<td style="text-align:right;">
+1.15935
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CD74.ENSG00000019582
+</td>
+<td style="text-align:right;">
+0.80733
+</td>
+<td style="text-align:right;">
+1.46861
+</td>
+<td style="text-align:right;">
+0.37290
+</td>
+<td style="text-align:right;">
+1.09571
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IGFBP7.ENSG00000163453
+</td>
+<td style="text-align:right;">
+1.30778
+</td>
+<td style="text-align:right;">
+1.35347
+</td>
+<td style="text-align:right;">
+0.41941
+</td>
+<td style="text-align:right;">
+0.93406
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VIM.ENSG00000026025
+</td>
+<td style="text-align:right;">
+1.94604
+</td>
+<td style="text-align:right;">
+1.24699
+</td>
+<td style="text-align:right;">
+0.33996
+</td>
+<td style="text-align:right;">
+0.90703
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COL1A2.ENSG00000164692
+</td>
+<td style="text-align:right;">
+0.70861
+</td>
+<td style="text-align:right;">
+1.16405
+</td>
+<td style="text-align:right;">
+0.35510
+</td>
+<td style="text-align:right;">
+0.80895
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HLA-DRA.ENSG00000204287
+</td>
+<td style="text-align:right;">
+0.59336
+</td>
+<td style="text-align:right;">
+1.12031
+</td>
+<td style="text-align:right;">
+0.34263
+</td>
+<td style="text-align:right;">
+0.77768
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COL1A1.ENSG00000108821
+</td>
+<td style="text-align:right;">
+0.60894
+</td>
+<td style="text-align:right;">
+1.06503
+</td>
+<td style="text-align:right;">
+0.32822
+</td>
+<td style="text-align:right;">
+0.73681
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="dimension-reduction" class="section level1">
+<h1>Dimension reduction</h1>
+<p>We create a principal components dimensionality reduction of our data. We then use <code>maxLikGlobalDimEst</code> from the <code>intrinsicDimension</code> package to choose a number of dimensions that captures a big part of the variety in the data and at the same reduces the complexity of further operations. We use these reduced dimensions to calculate a UMAP (Uniform Manifold Approximation) dimensionality reduction.</p>
+<p>However, in the next script we run the batch integration which we can then use for a much better UMAP.</p>
+<pre class="r"><code># run PCA
+set.seed(100)
+sce_tmp &lt;- runPCA(sce, name = &quot;PCA&quot;, subset_row=rowData(sce)$is_hvg)
+
+# subset dimensions for reduced representation
+ndims &lt;- intrinsicDimension::maxLikGlobalDimEst(as.matrix(reducedDim(sce_tmp, &quot;PCA&quot;)), k=20)
+reducedDim(sce_tmp,&quot;PCA_reduced&quot;) &lt;- reducedDim(sce_tmp,&quot;PCA&quot;)[,seq_len(ceiling(ndims$dim.est))]
+
+# run UMAP
+set.seed(100)
+sce_tmp &lt;- runUMAP(sce_tmp, name = &quot;UMAP&quot;, dimred = &quot;PCA_reduced&quot;, subset_row=rowData(sce_tmp)$is_hvg, n_neighbors=50, min_dist = 0.1)
+
+
+# add all reduced dimensions to the original sce object
+reducedDim(sce, &quot;PCA&quot;) &lt;- reducedDim(sce_tmp, &quot;PCA&quot;)
+reducedDim(sce, &quot;PCA_reduced&quot;) &lt;- reducedDim(sce_tmp, &quot;PCA&quot;)[,seq_len(ceiling(ndims$dim.est))]
+reducedDim(sce, &quot;UMAP&quot;) &lt;- reducedDim(sce_tmp,&quot;UMAP&quot;)
+
+cor.test(reducedDim(sce, &quot;PCA&quot;)[,&quot;PC1&quot;], sce$log_total)</code></pre>
+<pre><code>
+    Pearson&#39;s product-moment correlation
+
+data:  reducedDim(sce, &quot;PCA&quot;)[, &quot;PC1&quot;] and sce$log_total
+t = 36.456, df = 56619, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.1433863 0.1594822
+sample estimates:
+      cor 
+0.1514443 </code></pre>
+</div>
+<div id="plot-pca-and-umap-no-batch-correction-yet" class="section level1">
+<h1>Plot PCA and UMAP (no batch correction yet)</h1>
+<p>The data is not yet batch-corrected, so we don’t expect any interesting biological differences to be reflected in the first reduced dimension plots.</p>
+<div id="pca" class="section level2 tabset">
+<h2 class="tabset">PCA</h2>
+<pre class="r"><code># by Sample
+cat(&quot;\n\n### PCA by sample \n&quot;)</code></pre>
+<div id="pca-by-sample" class="section level3">
+<h3>PCA by sample</h3>
+<pre class="r"><code>set.seed(100)
+shuffle &lt;- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], &quot;PCA&quot;, colour_by = &quot;Sample&quot;) +
+  labs(title=&quot;PCA coloured by sample&quot;) +
+  theme_ipsum_rc() +
+  get_sample_colours(levels(sce$Sample))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_02_Normalisation_HVG_DimRed.Rmd/PCA%20plot-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># by protocol
+cat(&quot;\n\n### PCA by protocol \n&quot;)</code></pre>
+</div>
+<div id="pca-by-protocol" class="section level3">
+<h3>PCA by protocol</h3>
+<pre class="r"><code>set.seed(100)
+shuffle &lt;- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], &quot;PCA&quot;, colour_by = &quot;Protocol&quot;) +
+  labs(title=&quot;PCA coloured by protocol&quot;) +
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce$Protocol))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_02_Normalisation_HVG_DimRed.Rmd/PCA%20plot-2.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="umap" class="section level2 tabset">
+<h2 class="tabset">UMAP</h2>
+<p>We see that the UMAP clearly does not filter for biological features like cell types before applying any batch correction.</p>
+<pre class="r"><code># by sample
+cat(&quot;\n\n### UMAP by sample \n&quot;)</code></pre>
+<div id="umap-by-sample" class="section level3">
+<h3>UMAP by sample</h3>
+<pre class="r"><code>set.seed(100)
+shuffle &lt;- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], &quot;UMAP&quot;, colour_by = &quot;Sample&quot;, point_size=0.5) +
+  labs(color=&quot;Sample&quot;,
+       title=&quot;UMAP (uncorrected) coloured by Sample&quot;) +
+  theme_ipsum_rc() +
+  get_sample_colours(levels(sce$Sample))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_02_Normalisation_HVG_DimRed.Rmd/UMAP-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># by protocol
+cat(&quot;\n\n### UMAP by protocol \n&quot;)</code></pre>
+</div>
+<div id="umap-by-protocol" class="section level3">
+<h3>UMAP by protocol</h3>
+<pre class="r"><code>set.seed(100)
+shuffle &lt;- sample(seq_len(dim(sce)[2]))
+plotReducedDim(sce[,shuffle], &quot;UMAP&quot;, colour_by = &quot;Protocol&quot;, point_size=0.5) +
+  labs(title=&quot;UMAP (uncorrected) coloured by Protocol&quot;, color=&quot;Protocol&quot;) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/EDI_02_Normalisation_HVG_DimRed.Rmd/UMAP-2.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  get_protocol_colours(levels(sce$Protocol))</code></pre>
+<p>&lt;ggproto object: Class ScaleDiscrete, Scale, gg&gt; aesthetics: colour axis_order: function break_info: function break_positions: function breaks: waiver call: call clone: function dimension: function drop: TRUE expand: waiver get_breaks: function get_breaks_minor: function get_labels: function get_limits: function guide: legend is_discrete: function is_empty: function labels: waiver limits: Fresh He_et_al Sole_Boldo_et_al Tabib_et_al make_sec_title: function make_title: function map: function map_df: function n.breaks.cache: NULL na.translate: TRUE na.value: grey50 name: Protocol palette: function palette.cache: NULL position: left range: &lt;ggproto object: Class RangeDiscrete, Range, gg&gt; range: NULL reset: function train: function super: &lt;ggproto object: Class RangeDiscrete, Range, gg&gt; rescale: function reset: function scale_name: manual train: function train_df: function transform: function transform_df: function super: &lt;ggproto object: Class ScaleDiscrete, Scale, gg&gt;</p>
+</div>
+</div>
+</div>
+<div id="save-data-and-upload-to-isee" class="section level1">
+<h1>Save data and upload to iSEE</h1>
+<pre class="r"><code>file_path &lt;- &quot;../data/EOS_Files/EDI_EOS2_sce.rds&quot;
+saveRDS(sce, file = file_path)
+upload_file_to_iSEE(file_path)</code></pre>
+<pre><code>Command executed: 
+
+scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/EDI_EOS2_sce.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/EDI_EOS2_sce___2022-01-30.rds</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] stringr_1.4.0                  openxlsx_4.2.5                
+ [3] dplyr_1.0.7                    RColorBrewer_1.1-2            
+ [5] SeuratObject_4.0.4             Seurat_4.0.6                  
+ [7] intrinsicDimension_1.2.0       yaImpute_1.0-32               
+ [9] kableExtra_1.3.4               hrbrthemes_0.8.6              
+[11] scater_1.22.0                  ggplot2_3.3.5                 
+[13] BiocParallel_1.28.3            scran_1.22.1                  
+[15] scuttle_1.4.0                  tidySingleCellExperiment_1.4.0
+[17] SingleCellExperiment_1.16.0    SummarizedExperiment_1.24.0   
+[19] Biobase_2.54.0                 GenomicRanges_1.46.1          
+[21] GenomeInfoDb_1.30.0            IRanges_2.28.0                
+[23] S4Vectors_0.32.3               BiocGenerics_0.40.0           
+[25] MatrixGenerics_1.6.0           matrixStats_0.61.0            
+
+loaded via a namespace (and not attached):
+  [1] utf8_1.2.2                reticulate_1.22          
+  [3] tidyselect_1.1.1          htmlwidgets_1.5.4        
+  [5] grid_4.1.0                Rtsne_0.15               
+  [7] munsell_0.5.0             ScaledMatrix_1.2.0       
+  [9] codetools_0.2-18          ica_1.0-2                
+ [11] statmod_1.4.36            future_1.23.0            
+ [13] miniUI_0.1.1.1            withr_2.4.3              
+ [15] colorspace_2.0-2          highr_0.9                
+ [17] knitr_1.37                rstudioapi_0.13          
+ [19] ROCR_1.0-11               tensor_1.5               
+ [21] Rttf2pt1_1.3.8            listenv_0.8.0            
+ [23] labeling_0.4.2            git2r_0.29.0             
+ [25] GenomeInfoDbData_1.2.7    polyclip_1.10-0          
+ [27] farver_2.1.0              rprojroot_2.0.2          
+ [29] parallelly_1.30.0         vctrs_0.3.8              
+ [31] generics_0.1.1            xfun_0.29                
+ [33] R6_2.5.1                  ggbeeswarm_0.6.0         
+ [35] rsvd_1.0.5                locfit_1.5-9.4           
+ [37] bitops_1.0-7              spatstat.utils_2.3-0     
+ [39] DelayedArray_0.20.0       assertthat_0.2.1         
+ [41] promises_1.2.0.1          scales_1.1.1             
+ [43] beeswarm_0.4.0            gtable_0.3.0             
+ [45] beachmat_2.10.0           globals_0.14.0           
+ [47] goftest_1.2-3             workflowr_1.7.0          
+ [49] rlang_0.4.12              systemfonts_1.0.3        
+ [51] splines_4.1.0             extrafontdb_1.0          
+ [53] lazyeval_0.2.2            spatstat.geom_2.3-1      
+ [55] abind_1.4-5               yaml_2.2.1               
+ [57] reshape2_1.4.4            httpuv_1.6.4             
+ [59] extrafont_0.17            tools_4.1.0              
+ [61] ellipsis_0.3.2            spatstat.core_2.3-2      
+ [63] jquerylib_0.1.4           ggridges_0.5.3           
+ [65] Rcpp_1.0.8                plyr_1.8.6               
+ [67] sparseMatrixStats_1.6.0   zlibbioc_1.40.0          
+ [69] purrr_0.3.4               RCurl_1.98-1.5           
+ [71] rpart_4.1-15              deldir_1.0-6             
+ [73] pbapply_1.5-0             viridis_0.6.2            
+ [75] cowplot_1.1.1             zoo_1.8-9                
+ [77] ggrepel_0.9.1             cluster_2.1.2            
+ [79] fs_1.5.2                  magrittr_2.0.1           
+ [81] RSpectra_0.16-0           data.table_1.14.2        
+ [83] scattermore_0.7           lmtest_0.9-39            
+ [85] RANN_2.6.1                fitdistrplus_1.1-6       
+ [87] patchwork_1.1.1           mime_0.12                
+ [89] evaluate_0.14             xtable_1.8-4             
+ [91] RhpcBLASctl_0.21-247.1    gridExtra_2.3            
+ [93] compiler_4.1.0            tibble_3.1.6             
+ [95] KernSmooth_2.23-20        crayon_1.4.2             
+ [97] htmltools_0.5.2           mgcv_1.8-38              
+ [99] later_1.3.0               tidyr_1.1.4              
+[101] DBI_1.1.2                 MASS_7.3-54              
+[103] Matrix_1.4-0              cli_3.1.0                
+[105] metapod_1.2.0             igraph_1.2.10            
+[107] pkgconfig_2.0.3           spatstat.sparse_2.1-0    
+[109] plotly_4.10.0             xml2_1.3.3               
+[111] svglite_2.0.0             vipor_0.4.5              
+[113] bslib_0.3.1               dqrng_0.3.0              
+[115] webshot_0.5.2             XVector_0.34.0           
+[117] rvest_1.0.2               digest_0.6.29            
+[119] sctransform_0.3.2         RcppAnnoy_0.0.19         
+[121] spatstat.data_2.1-2       rmarkdown_2.11           
+[123] leiden_0.3.9              uwot_0.1.11              
+[125] edgeR_3.36.0              DelayedMatrixStats_1.16.0
+[127] gdtools_0.2.3             shiny_1.7.1              
+[129] nlme_3.1-153              lifecycle_1.0.1          
+[131] jsonlite_1.7.3            BiocNeighbors_1.12.0     
+[133] viridisLite_0.4.0         limma_3.50.0             
+[135] fansi_1.0.2               pillar_1.6.4             
+[137] lattice_0.20-45           fastmap_1.1.0            
+[139] httr_1.4.2                survival_3.2-13          
+[141] glue_1.6.0                zip_2.2.0                
+[143] png_0.1-7                 bluster_1.4.0            
+[145] stringi_1.7.6             sass_0.4.0               
+[147] BiocSingular_1.10.0       irlba_2.3.5              
+[149] future.apply_1.8.1       </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dominique Paul" />
+
+<meta name="date" content="2022-01-30" />
+
+<title>Cell Annotation</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Protocol Paper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Cell Annotation</h1>
+<h4 class="author">Dominique Paul</h4>
+<h4 class="date">2022-01-30</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-01-30
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211228code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211228)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211228code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211228)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    Metadata/.DS_Store
+    Ignored:    Metadata/cell_annotation_markers/.DS_Store
+    Ignored:    Paper/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.RData
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Unused/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/seeds/.DS_Store
+    Ignored:    data/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/EDI_02_Normalisation_HVG_DimRed.Rmd
+    Untracked:  analysis/EDI_03_Batch_correction.Rmd
+    Untracked:  analysis/EDI_04_Cell_Cycle.Rmd
+    Untracked:  analysis/EDI_05_Annotation.Rmd
+    Untracked:  analysis/EDI_06_marker_genes.Rmd
+    Untracked:  analysis/EDI_07_DA.Rmd
+    Untracked:  analysis/EDI_08_Subclustering.Rmd
+    Untracked:  analysis/P2_03_Fresh_only_subclustering.Rmd
+    Untracked:  analysis/P2_03_FvC_Annotations.Rmd
+    Untracked:  analysis/P2_04_FvC_gene_expression_plot.Rmd
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-out.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-err.txt
+    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-out.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-err.txt
+    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-out.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-30-13h-02m-39s-err.txt
+    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-30-13h-02m-39s-out.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-err.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-out.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-err.txt
+    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-out.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-err.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-out.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-30-15h-58m-04s-err.txt
+    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-30-15h-58m-04s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-30-16h-01m-54s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-30-16h-01m-54s-out.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-err.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-out.txt
+
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   analysis/EDI_01_Loading_and_Preprocessing.Rmd
+    Modified:   analysis/P2_01_data_comparison.Rmd
+    Deleted:    analysis/Protocol paper/.Rprofile
+    Deleted:    analysis/Protocol paper/.gitattributes
+    Deleted:    analysis/Protocol paper/.gitignore
+    Deleted:    analysis/Protocol paper/Protocol paper.Rproj
+    Deleted:    analysis/Protocol paper/README.md
+    Deleted:    analysis/Protocol paper/_workflowr.yml
+    Deleted:    analysis/Protocol paper/analysis/_site.yml
+    Deleted:    analysis/Protocol paper/analysis/about.Rmd
+    Deleted:    analysis/Protocol paper/analysis/index.Rmd
+    Deleted:    analysis/Protocol paper/analysis/license.Rmd
+    Deleted:    analysis/Protocol paper/code/README.md
+    Deleted:    analysis/Protocol paper/docs/.nojekyll
+    Deleted:    analysis/Protocol paper/output/README.md
+    Deleted:    analysis/Unused/EDI_02_Normalisation_HVG_DimRed.Rmd
+    Deleted:    analysis/Unused/EDI_03_Batch_correction.Rmd
+    Deleted:    analysis/Unused/EDI_04_Cell_Cycle.Rmd
+    Deleted:    analysis/Unused/EDI_05_Annotation.Rmd
+    Deleted:    analysis/Unused/EDI_06_marker_genes.Rmd
+    Deleted:    analysis/Unused/EDI_07_DA.Rmd
+    Deleted:    analysis/Unused/EDI_08_Subclustering.Rmd
+    Deleted:    analysis/Unused/P2_03_Subclustering.Rmd
+    Deleted:    analysis/Unused/P2_04_Annotated_Fresh_v_Culture.Rmd
+    Deleted:    analysis/Unused/P2_05_gene_expression_plot.Rmd
+    Modified:   analysis/admin.rmd
+    Modified:   analysis/index.Rmd
+    Deleted:    code/CF_readin_with_UMIs.Rmd
+    Deleted:    code/code_snippets.Rmd
+    Modified:   code/general_purpose_code.R
+    Deleted:    code/rename_protocols.r
+    Deleted:    code/test_muscat.Rmd
+    Deleted:    code/utils_muscat.r
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<pre class="r"><code>sce &lt;- readRDS(file=&quot;../data/EOS_Files/EDI_EOS4_sce.rds&quot;)
+rownames(sce) &lt;- rowData(sce)$Symbol
+colLabels(sce) &lt;- colData(sce)$kgraph_clusters_harmony</code></pre>
+<pre class="r"><code>plotReducedDim(sce, &quot;UMAP&quot;,colour_by = &quot;Sample&quot;, other_fields = c(&quot;Protocol&quot;), point_size=0.25) + 
+  get_sample_colours(levels(sce$Sample)) +
+  facet_wrap(~Protocol)</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_05_Annotation.Rmd/plot%20UMAP-1.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="load-and-add-own-labels-for-the-clusters" class="section level1">
+<h1>Load and add own labels for the clusters</h1>
+<pre class="r"><code>cluster_annotation_mapping &lt;- read.xlsx(&quot;../metadata/cluster_annotation_map.xlsx&quot;, sheet=&quot;Integrated&quot;)
+kableExtra::kable(cluster_annotation_mapping)</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Cluster.ID
+</th>
+<th style="text-align:left;">
+Annotation
+</th>
+<th style="text-align:left;">
+UMAP
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+Lymphatic endothelial
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+Keratinocytes
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+Pericytes/VSMC
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+T cells
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+Macrophages/DC
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+Fibroblasts
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+Vascular endothelial
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+Vascular endothelial
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+Sweat gland cells
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+Melanocytes/Schwann cells/Neuronal cells
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+Fibroblasts
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+Keratinocytes
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+Vascular endothelial
+</td>
+<td style="text-align:left;">
+Integrated dataset, k=32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+add manually
+</td>
+<td style="text-align:left;">
+Mast cells
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>sce$manual_labels_coarse &lt;- mapvalues(sce$kgraph_clusters_walktrap_harmony, cluster_annotation_mapping$Cluster.ID, cluster_annotation_mapping$Annotation)</code></pre>
+<pre><code>The following `from` values were not present in `x`: add manually</code></pre>
+<div id="manual-labelling-of-mast-cells" class="section level2">
+<h2>Manual labelling of mast cells</h2>
+<pre class="r"><code>umap_values &lt;- reducedDim(sce, &quot;UMAP&quot;)
+mask &lt;- as.vector((umap_values[,1] &gt; 2) &amp; (umap_values[,1] &lt; 4) &amp; (umap_values[,2] &gt; -12.4) &amp; (umap_values[,2] &lt; -10))
+
+new_values &lt;- as.vector(sce$manual_labels_coarse)
+new_values[mask] &lt;- &quot;Mast cells&quot;
+sce$manual_labels_coarse &lt;- factor(new_values)</code></pre>
+</div>
+</div>
+<div id="umaps-coloured-by-cluster-and-cell-type-group" class="section level1 tabset">
+<h1 class="tabset">UMAPs coloured by cluster and cell type group</h1>
+<pre class="r"><code>cat(&quot;\n\n## Cell type groups \n\n&quot;)</code></pre>
+<div id="cell-type-groups" class="section level2">
+<h2>Cell type groups</h2>
+<pre class="r"><code>plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;manual_labels_coarse&quot;, text_by=&quot;manual_labels_coarse&quot;) +
+  labs(title=&quot;Manual labels for high-level clusters&quot;,
+       subtitle = &quot;UMAP of fresh samples combined&quot;) +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce$manual_labels_coarse))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_05_Annotation.Rmd/visualise%20UMAPs%20with%20manual%20labels-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n## Cell type annotations coloured by protocol \n\n&quot;)</code></pre>
+</div>
+<div id="cell-type-annotations-coloured-by-protocol" class="section level2">
+<h2>Cell type annotations coloured by protocol</h2>
+<pre class="r"><code>plotReducedDim(sce, &quot;UMAP&quot;, colour_by=&quot;Protocol&quot;, text_by=&quot;manual_labels_coarse&quot;) +
+  labs(title=&quot;Manual labels for high-level clusters&quot;,
+       subtitle = &quot;UMAP of fresh and control samples combined&quot;) +
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce$Protocol))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_05_Annotation.Rmd/visualise%20UMAPs%20with%20manual%20labels-2.png" width="1536" style="display: block; margin: auto;" /></p>
+<!-- # Cell ID -->
+<!-- ```{r load panglao} -->
+<!-- panglao <- readr::read_tsv("https://panglaodb.se/markers/PanglaoDB_markers_27_Mar_2020.tsv.gz") -->
+<!-- panglao$organ %>% unique() -->
+<!-- # restricting the analysis to pancreas specific gene signatues -->
+<!-- panglao_sub <- panglao %>%  -->
+<!--   filter(organ %in% c("Skin", "Immune system"))#,"Epithelium","Blood",,"Vasculature")) -->
+<!-- # restricting to human specific genes -->
+<!-- panglao_sub <- panglao_sub %>%   -->
+<!--   filter(str_detect(species,"Hs")) -->
+<!-- # panglao_sub <- panglao_sub %>%  filter(`cell type` %in% c("Dendritic cells","B cells","Fibroblasts","Macrophages","Monocytes","Mast cells","Neutrophils","NK cells","T cells","Endothelial cells", "Neutrophils","Pericytes")) -->
+<!-- panglao_sub <- panglao_sub %>%   -->
+<!--   group_by(`cell type`) %>%   -->
+<p><!-- # mutate(N=count( --> <!--   summarise(geneset = list(`official gene symbol`)) --></p>
+<!-- pancreas_gs <- setNames(panglao_sub$geneset, panglao_sub$`cell type`) -->
+<!-- # We get a list for each cell type and the corresponding marker genes -->
+<!-- # pancreas -->
+<!-- ``` -->
+<!-- ## MCA plot -->
+<!-- The Multi Correspondence Analysis -->
+<!-- MCA is a statistical technique close to PCA that provides a simultaneous representation of observations (e.g. cells) and variables (e.g. genes) in low-dimensional space. In the MCA biplot, analytical distances can be calculated not only between cells and between genes, but also between each cell and each gene in order to estimate its association. Thus, the closer a gene g is to a cell c, the more specific to such a cell it can be considered. Gene-to-cell distances can then be ranked for each individual cell, and the top-ranked genes may be regarded as a unique gene signature representing the identity card of the cell. -->
+<!-- The results of the MCA plot are used by the CelliD method to annotate the cells. -->
+<!-- ```{r runMCA, fig.width=14, fig.height=10} -->
+<!-- sce <- RunMCA(sce) # , slot = "reconstructed") -->
+<!-- plotReducedDim(sce, "MCA", colour_by = "Sample", point_size=0.5) -->
+<!-- ``` -->
+<!-- ## Cell annotation using Cell ID {.tabset} -->
+<!-- ```{r cell annotation, fig.width=20, fig.height=12, results="asis"} -->
+<!-- HGT_all_gs <- CelliD::RunCellHGT(sce, pathways = pancreas_gs, minSize = 5) -->
+<!-- all_gs_prediction <- rownames(HGT_all_gs)[apply(HGT_all_gs, 2, which.max)] -->
+<!-- all_gs_prediction_signif <- all_gs_prediction -->
+<!-- all_gs_prediction_signif <- ifelse(apply(HGT_all_gs, 2, max)>2, yes = all_gs_prediction, "unassigned") -->
+<!-- sce$main_celltype_cellid <- all_gs_prediction_signif -->
+<!-- plot_label_barplots(sce , "main_celltype_cellid", tabset="###") -->
+<!-- cat("\n\n### Raw tabular data \n\n") -->
+<!-- table(sce$main_celltype_cellid, sce$Sample) -->
+<!-- ``` -->
+<!-- # AUC Cell -->
+<!-- ## Labels Blaz {.tabset} -->
+<!-- ```{r labels Blaz, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Cell markers skin tissue sum sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Markers" -->
+<!-- annotations_name <- "labels_blaz" -->
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+<!-- # plots -->
+<!-- plot_label_barplots(sce , "labels_blaz", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_blaz", tabset="###") -->
+<!-- ``` -->
+<!-- ## Raynolds {.tabset} -->
+<!-- ```{r labels Raynolds, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Raynolds et al skin tissue n=19/cell markers reorganized BB sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Gene" -->
+<!-- annotations_name <- "labels_raynolds" -->
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+<!-- plot_label_barplots(sce , "labels_raynolds", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_raynolds", tabset="###") -->
+<!-- ``` -->
+<!-- ## He et al. (coarse labels) {.tabset} -->
+<!-- ```{r He et al. coarse labels, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/He et al atopic dermatitis/He et al cell markers organized BB.csv" -->
+<!-- group_colname <- "cluster_coarse" -->
+<!-- gene_colname <- "gene" -->
+<!-- annotations_name <- "labels_he_et_al_coarse" -->
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+<!-- plot_label_barplots(sce , "labels_he_et_al_coarse", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_he_et_al_coarse", tabset="###") -->
+<!-- ``` -->
+<!-- ## He et al. (fine labels) {.tabset} -->
+<!-- ```{r He et al. fine labels, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/He et al atopic dermatitis/He et al cell markers organized BB.csv" -->
+<!-- group_colname <- "cluster_fine" -->
+<!-- gene_colname <- "gene" -->
+<!-- annotations_name <- "labels_he_et_al_fine" -->
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+<!-- plot_label_barplots(sce , "labels_he_et_al_fine", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_he_et_al_fine", tabset="###") -->
+<!-- ``` -->
+<!-- ## Tabib (2018) {.tabset} -->
+<!-- ```{r Tabib 2018, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Tabib et al healty skin n=6/Tabib 2018 cell markers sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Marker" -->
+<!-- annotations_name <- "labels_tabib_2018" -->
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+<!-- plot_label_barplots(sce , "labels_tabib_2018", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_tabib_2018", tabset="###") -->
+<!-- ``` -->
+<!-- ## Xue {.tabset} -->
+<!-- ```{r Xue, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../data/skin_tissue/marker_gene_datasets/Xue et al healthy skin n=10/Xue cell markers organized BB sorted.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Marker" -->
+<!-- annotations_name <- "labels_xue" -->
+<!-- sce <- annotate_with_other_labels(sce, csv_name, group_colname, gene_colname, annotations_name, tabset="###", visualisations=c("barchart", "UMAP", "UMAP_faceted")) -->
+<!-- plot_label_barplots(sce , "labels_xue", level2=NA, tabset="###") -->
+<!-- plot_label_barplots(sce , "labels_xue", tabset="###") -->
+<!-- ``` -->
+</div>
+</div>
+<div id="umap-density" class="section level1">
+<h1>UMAP Density</h1>
+<pre class="r"><code>sample_cols &lt;- function(samples, n_split=5, palette = rainbow){
+  n_samples &lt;- length(samples)
+  splitind &lt;- split(seq_len(n_samples), ceiling(seq(0.01, n_split-0.01, length.out = n_samples)))
+  colind &lt;- unlist(purrr::map(seq_len(ceiling(n_samples/n_split)),
+                              ~ purrr::map(seq_len(n_split),
+                                           function(i)splitind[[i]][.x])))
+  colind &lt;- colind[!is.na(colind)]
+  colors_used &lt;- palette(n_samples)[colind]
+}
+
+
+
+plotUmapDensity &lt;- function(sce, colour_by=&quot;Protocol&quot;, facet_by=&quot;Sample&quot;){
+  
+  colors_used &lt;- sample_cols(unique(sce[[colour_by]]),
+                           n_split=ifelse(length(unique(sce[[colour_by]])) &gt; 5, 5, length(unique(sce[[colour_by]]))),
+                           palette = rainbow)
+  
+  suppressWarnings(suppressMessages(
+    plotReducedDim(sce, &quot;UMAP&quot;, colour_by = colour_by, other_fields = c(facet_by)) +
+      scale_color_manual(values=colors_used) + 
+      ggplot2::facet_wrap(vars(!!sym(facet_by))) + 
+      geom_density2d(color=&quot;black&quot;, n=500) +
+      labs(colour=colour_by)
+      # get_protocol_colours(levels(sce$Protocol))
+  ))
+}</code></pre>
+<pre class="r"><code>suppressWarnings(suppressMessages(plotUmapDensity(sce)))</code></pre>
+<p>We define two functions which plot (1) a UMAP coloured by the selected annotation and (2) plot a bar chart faceted by a given annotation on the y-axis. Essentially, both functions use the same set of colours. We want to be able to call them in different code chunks though as to adjust the plot size.</p>
+<pre class="r"><code>plotUMAPwithFixedColours &lt;- function(sce, column, aggr_by=&quot;Sample&quot;, fill_lab=column, point_size=1){
+  options(warn = -1)
+  colors_used &lt;- sample_cols(unique(sce[[column]]), 
+                             n_split=ifelse(length(unique(sce[[column]])) &gt; 5, 5, length(unique(sce[[column]]))), 
+                             palette = rainbow)
+  
+  pl1 &lt;- plotReducedDim(sce,&quot;UMAP&quot;,  
+                        colour_by=column, 
+                        text_by=column,
+                        point_size=point_size)+  
+                      theme(legend.position = c(1.01,0.7), 
+                            legend.background = element_rect(color=&quot;grey&quot;,fill = &quot;white&quot;))+
+    scale_color_manual(values=colors_used) +
+    theme(legend.position = &quot;none&quot;) +
+    labs(fill=fill_lab) + 
+    theme_ipsum_rc() +
+    get_cell_colours(levels(sce$manual_labels_coarse))
+  
+  cat(&quot;\n\nColoured UMAP\n\n&quot;)
+  print(pl1)
+
+}
+
+
+plotUmapProportions &lt;- function(sce, column, aggr_by=&quot;Sample&quot;, facet_by=&quot;Protocol&quot;, split_rows=TRUE, fill_lab=column){
+  options(warn = -1)
+  colors_used &lt;- sample_cols(unique(sce[[column]]), 
+                             n_split=ifelse(length(unique(sce[[column]])) &gt; 5, 5, length(unique(sce[[column]]))), 
+                             palette = rainbow)
+  
+  
+  if(is.null(facet_by)){
+    propdf &lt;- table(colData(sce)[[column]], sce[[aggr_by]]) %&gt;% 
+      as.data.frame() %&gt;% 
+      dplyr::rename(!!column := Var1,
+                    !!aggr_by := Var2,
+                    Abundance = Freq) %&gt;% 
+      dplyr::group_by(!!sym(aggr_by)) %&gt;% 
+      dplyr::filter(Abundance &gt; 0) %&gt;% 
+      dplyr::mutate(Proportion = Abundance/sum(Abundance))
+  } else {
+    propdf &lt;- table(colData(sce)[[column]], 
+                    sce[[facet_by]], sce[[aggr_by]]) %&gt;% 
+      as.data.frame() %&gt;% 
+      dplyr::rename(!!column := Var1,
+                    !!facet_by := Var2,
+                    !!aggr_by := Var3,
+                    Abundance = Freq) %&gt;% 
+      dplyr::group_by(!!sym(aggr_by)) %&gt;% 
+      dplyr::filter(Abundance &gt; 0) %&gt;% 
+      dplyr::mutate(Proportion = Abundance/sum(Abundance))
+  }
+
+  
+  pl2 &lt;- propdf %&gt;% 
+    ggplot(aes(x = !!sym(aggr_by), y = Proportion, fill=!!sym(column))) +
+    geom_bar(stat = &quot;identity&quot;) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45,hjust=1),
+          strip.text.y = element_text(angle=0,size=7)) +
+    labs(x=&quot;&quot;,fill=fill_lab)+
+    scale_fill_manual(values=colors_used) +
+    theme_ipsum_rc() +
+    get_cell_colours(levels(sce$manual_labels_coarse))
+  
+  if(is.null(facet_by) &amp; split_rows){
+    pl2 &lt;- pl2 + facet_grid(rows=vars(!!sym(column)),
+               scales = &quot;free_x&quot;, space=&quot;free&quot;)
+  } else if(!is.null(facet_by) &amp; !split_rows){
+    pl2 &lt;- pl2 + facet_grid(cols=vars(!!sym(facet_by)),
+               scales = &quot;free_x&quot;, space=&quot;free&quot;)
+  } else if(!is.null(facet_by) &amp; split_rows) {
+    pl2 &lt;- pl2 + facet_grid(rows=vars(!!sym(column)),cols=vars(!!sym(facet_by)),
+               scales = &quot;free_x&quot;, space=&quot;free&quot;)
+  }
+  options(warn = 0)
+  
+  print(pl2)
+  
+}</code></pre>
+</div>
+<div id="umap-proportions" class="section level1">
+<h1>UMAP proportions</h1>
+<div id="umap-plot" class="section level2 tabset">
+<h2 class="tabset">UMAP plot</h2>
+<pre class="r"><code># other labels
+# annotation_col_names &lt;- c(&quot;labels_blaz&quot;, &quot;labels_raynolds&quot;, &quot;labels_he_et_al_coarse&quot;, &quot;labels_he_et_al_fine&quot;, &quot;labels_tabib_2018&quot;, &quot;labels_xue&quot;)
+annotation_col_names &lt;- c(&quot;manual_labels_coarse&quot;)
+
+for (annotation in annotation_col_names){
+  # cat(paste0(&quot;\n\n### &quot;, annotation, &quot;\n\n&quot;))
+  plotUMAPwithFixedColours(sce, annotation, point_size=0.25)
+}</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.
+Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p>Coloured UMAP</p>
+<p><img src="figure/EDI_05_Annotation.Rmd/plot%20UMAP%20prior%20to%20proportions-1.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="proportions-by-cell-annotation" class="section level2 tabset">
+<h2 class="tabset">Proportions by cell annotation</h2>
+<pre class="r"><code>for (annotation in annotation_col_names){
+  # cat(paste0(&quot;\n\n### &quot;, annotation,&quot;\n\n&quot;))
+  suppressWarnings(plotUmapProportions(sce, annotation, &quot;Protocol&quot;, NULL, TRUE))
+}</code></pre>
+<p><img src="figure/EDI_05_Annotation.Rmd/plot%20UMAP%20proportions-1.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="boxplots-own-labels" class="section level1">
+<h1>Boxplots (own labels)</h1>
+<p>To compare the numbers of cell types across the protocols, we plot boxplots of the cell type annotations in each of their samples.</p>
+<pre class="r"><code>for (annotation in annotation_col_names){
+  # cat(paste0(&quot;\n\n### &quot;, annotation, &quot;\n\n&quot;))
+# Generate a data frame with the columns (1) cell type name (2) protocol (3) Sample name (4) abundance of the cell type in that sample (i.e. a count) and (5) the proportion of that cell type in the given sample
+  propdf &lt;- table(colData(sce)[,annotation], sce$Protocol, sce$Sample) %&gt;%
+    as.data.frame() %&gt;%
+    dplyr::rename(Labels = Var1,
+                  Protocol = Var2,
+                  Sample = Var3,
+                  Abundance = Freq) %&gt;%
+    dplyr::group_by(Sample) %&gt;%
+    dplyr::filter(Abundance &gt; 0) %&gt;%
+    dplyr::mutate(Proportion = Abundance/sum(Abundance))
+  
+  # Plot the boxplots grouped by cell type on the x-axis and subdivided (and coloured) by protocol as separate boxplots next to each other
+  print(propdf %&gt;% 
+    ggplot(aes(x = Labels, y = Proportion, color=Protocol)) +
+      geom_boxplot() +
+      geom_point(size = 3) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 45,hjust=1)) +
+      labs(x=&quot;&quot;)) +
+      get_protocol_colours(propdf$Protocol)
+}</code></pre>
+<p><img src="figure/EDI_05_Annotation.Rmd/boxplots-1.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+<div id="save-data" class="section level1">
+<h1>Save data</h1>
+<pre class="r"><code>rownames(sce) &lt;- rowData(sce)$Symbol
+saveRDS(sce, file = &quot;../data/EOS_Files/EDI_EOS5_sce.rds&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] RColorBrewer_1.1-2             openxlsx_4.2.5                
+ [3] purrr_0.3.4                    dbscan_1.1-8                  
+ [5] hrbrthemes_0.8.6               AUCell_1.16.0                 
+ [7] GSEABase_1.56.0                graph_1.72.0                  
+ [9] annotate_1.72.0                XML_3.99-0.8                  
+[11] AnnotationDbi_1.56.2           scater_1.22.0                 
+[13] ggplot2_3.3.5                  scuttle_1.4.0                 
+[15] stringr_1.4.0                  dplyr_1.0.7                   
+[17] plyr_1.8.6                     BiocParallel_1.28.3           
+[19] CelliD_1.2.0                   SeuratObject_4.0.4            
+[21] Seurat_4.0.6                   tidySingleCellExperiment_1.4.0
+[23] SingleCellExperiment_1.16.0    SummarizedExperiment_1.24.0   
+[25] Biobase_2.54.0                 GenomicRanges_1.46.1          
+[27] GenomeInfoDb_1.30.0            IRanges_2.28.0                
+[29] S4Vectors_0.32.3               BiocGenerics_0.40.0           
+[31] MatrixGenerics_1.6.0           matrixStats_0.61.0            
+
+loaded via a namespace (and not attached):
+  [1] utf8_1.2.2                R.utils_2.11.0           
+  [3] reticulate_1.22           tidyselect_1.1.1         
+  [5] RSQLite_2.2.9             htmlwidgets_1.5.4        
+  [7] grid_4.1.0                Rtsne_0.15               
+  [9] munsell_0.5.0             ScaledMatrix_1.2.0       
+ [11] codetools_0.2-18          ica_1.0-2                
+ [13] umap_0.2.7.0              future_1.23.0            
+ [15] miniUI_0.1.1.1            withr_2.4.3              
+ [17] colorspace_2.0-2          highr_0.9                
+ [19] knitr_1.37                rstudioapi_0.13          
+ [21] ROCR_1.0-11               tensor_1.5               
+ [23] Rttf2pt1_1.3.8            listenv_0.8.0            
+ [25] labeling_0.4.2            git2r_0.29.0             
+ [27] GenomeInfoDbData_1.2.7    polyclip_1.10-0          
+ [29] farver_2.1.0              bit64_4.0.5              
+ [31] rprojroot_2.0.2           parallelly_1.30.0        
+ [33] vctrs_0.3.8               generics_0.1.1           
+ [35] xfun_0.29                 R6_2.5.1                 
+ [37] ggbeeswarm_0.6.0          rsvd_1.0.5               
+ [39] bitops_1.0-7              spatstat.utils_2.3-0     
+ [41] cachem_1.0.6              fgsea_1.20.0             
+ [43] DelayedArray_0.20.0       RcppArmadillo_0.10.7.5.0 
+ [45] assertthat_0.2.1          promises_1.2.0.1         
+ [47] scales_1.1.1              beeswarm_0.4.0           
+ [49] gtable_0.3.0              beachmat_2.10.0          
+ [51] globals_0.14.0            goftest_1.2-3            
+ [53] workflowr_1.7.0           tictoc_1.0.1             
+ [55] rlang_0.4.12              systemfonts_1.0.3        
+ [57] splines_4.1.0             extrafontdb_1.0          
+ [59] lazyeval_0.2.2            spatstat.geom_2.3-1      
+ [61] yaml_2.2.1                reshape2_1.4.4           
+ [63] abind_1.4-5               httpuv_1.6.4             
+ [65] extrafont_0.17            tools_4.1.0              
+ [67] kableExtra_1.3.4          ellipsis_0.3.2           
+ [69] spatstat.core_2.3-2       jquerylib_0.1.4          
+ [71] ggridges_0.5.3            Rcpp_1.0.8               
+ [73] sparseMatrixStats_1.6.0   zlibbioc_1.40.0          
+ [75] RCurl_1.98-1.5            rpart_4.1-15             
+ [77] openssl_1.4.6             deldir_1.0-6             
+ [79] pbapply_1.5-0             viridis_0.6.2            
+ [81] cowplot_1.1.1             zoo_1.8-9                
+ [83] ggrepel_0.9.1             cluster_2.1.2            
+ [85] fs_1.5.2                  magrittr_2.0.1           
+ [87] data.table_1.14.2         RSpectra_0.16-0          
+ [89] scattermore_0.7           lmtest_0.9-39            
+ [91] RANN_2.6.1                fitdistrplus_1.1-6       
+ [93] patchwork_1.1.1           mime_0.12                
+ [95] evaluate_0.14             xtable_1.8-4             
+ [97] gridExtra_2.3             compiler_4.1.0           
+ [99] tibble_3.1.6              KernSmooth_2.23-20       
+[101] crayon_1.4.2              R.oo_1.24.0              
+[103] htmltools_0.5.2           mgcv_1.8-38              
+[105] later_1.3.0               tidyr_1.1.4              
+[107] DBI_1.1.2                 MASS_7.3-54              
+[109] Matrix_1.4-0              cli_3.1.0                
+[111] R.methodsS3_1.8.1         igraph_1.2.10            
+[113] pkgconfig_2.0.3           plotly_4.10.0            
+[115] spatstat.sparse_2.1-0     xml2_1.3.3               
+[117] svglite_2.0.0             vipor_0.4.5              
+[119] bslib_0.3.1               webshot_0.5.2            
+[121] XVector_0.34.0            rvest_1.0.2              
+[123] digest_0.6.29             sctransform_0.3.2        
+[125] RcppAnnoy_0.0.19          Biostrings_2.62.0        
+[127] spatstat.data_2.1-2       rmarkdown_2.11           
+[129] leiden_0.3.9              fastmatch_1.1-3          
+[131] uwot_0.1.11               gdtools_0.2.3            
+[133] DelayedMatrixStats_1.16.0 shiny_1.7.1              
+[135] lifecycle_1.0.1           nlme_3.1-153             
+[137] jsonlite_1.7.3            BiocNeighbors_1.12.0     
+[139] viridisLite_0.4.0         askpass_1.1              
+[141] fansi_1.0.2               pillar_1.6.4             
+[143] lattice_0.20-45           KEGGREST_1.34.0          
+[145] fastmap_1.1.0             httr_1.4.2               
+[147] survival_3.2-13           glue_1.6.0               
+[149] zip_2.2.0                 png_0.1-7                
+[151] bit_4.0.4                 stringi_1.7.6            
+[153] sass_0.4.0                blob_1.2.2               
+[155] BiocSingular_1.10.0       memoise_2.0.1            
+[157] irlba_2.3.5               future.apply_1.8.1       </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

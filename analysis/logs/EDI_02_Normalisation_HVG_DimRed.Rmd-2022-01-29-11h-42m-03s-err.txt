@@ -1,0 +1,4 @@
+Warning: Invalid name supplied, making object name syntactically valid. New object name is Seurat..SCTransform.originalexp; see ?make.names for more details on syntax validity
+
+Output created: /Users/dominiquepaul/xRobinson Group/02_Protocol/docs/EDI_02_Normalisation_HVG_DimRed.html
+There were 50 or more warnings (use warnings() to see the first 50)

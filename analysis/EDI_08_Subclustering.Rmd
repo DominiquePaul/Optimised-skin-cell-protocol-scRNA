@@ -1,0 +1,573 @@
+---
+title: "Subclustering of Integrated Data"
+author: "Dominique Paul"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressPackageStartupMessages({
+  library(hrbrthemes)
+  library(openxlsx)
+  library(scater)
+  library(scran)
+  library(ggplotify)
+  library(pheatmap)
+  library(BiocParallel)
+  library(ggrepel)
+  library(ggplot2)
+  require(plyr)
+  library(dplyr)
+  library(viridis)
+  library(BiocParallel)
+  library(RhpcBLASctl)
+  library(kableExtra)
+  library(parallel)
+})
+
+
+n_workers <- min(detectCores()-1, 16)
+RhpcBLASctl::blas_set_num_threads(n_workers)
+bpparam <- BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)
+
+source("../code/general_purpose_code.R")
+```
+
+# Load data for fresh samples combined
+
+<!-- In this analysis we focus on subclustering the data for the combined two samples of the "new" protocol. -->
+In this analysis we focus on subclustering the data for the combined two samples of the "new" protocol as well as the SSc controls.
+
+```{r load data}
+sce_integrated <- readRDS(file="../data/EOS_Files/EDI_EOS5_sce.rds")
+```
+
+
+# UMAPs coloured by cluster and cell type group {.tabset}
+
+We take a look at the UMAPs to check that the mapping is indeed as we expect.
+
+```{r visualise UMAPs, fig.width=16, fig.height=10, results="asis"}
+cat("\n\n## Clusters \n\n")
+plotReducedDim(sce_integrated, "UMAP", colour_by="label", text_by="label") +
+  labs(title="Unsupervised cluster labels",
+       subtitle = "UMAP of all integrated datasets") +
+  theme_ipsum_rc()
+
+cat("\n\n## Cell type groups \n\n")
+plotReducedDim(sce_integrated, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse") +
+  labs(title="Manual labels for high-level clusters",
+       subtitle = "UMAP of all integrated datasets") +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse))
+```
+
+# Subclustering
+
+We now look at each cell type group individually. We recluster the cells and identify the marker genes of said plots.
+
+```{r subclustering, results="asis"}
+
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+
+  ##### Create subclustering #####
+
+  # create the subset
+  sce_subset <- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+
+  # recluster the cells
+  set.seed(100)
+  snn.graph <- buildSNNGraph(sce_subset, k=50, use.dimred="harmony")
+  clusters <- igraph::cluster_walktrap(snn.graph)$membership
+  colData(sce_integrated)[sce_integrated$manual_labels_coarse == cell_type, "subcluster_id_k50"] <- clusters
+
+
+
+  ##### Re-calculate UMAP #####
+  set.seed(100)
+  sce_subset <- runUMAP(sce_subset, dimred = 'harmony', subset_row=rowData(sce_subset)$is_hvg, min_dist = 0.1)
+  umap_for_cell_type <- reducedDim(sce_subset, "UMAP")
+  column_name <- paste0("UMAP_", cell_type)
+
+  # copy from another dimension reduction. This is a workaround to set a
+  # dimension reduction for only some of the cells
+  reducedDim(sce_integrated, column_name) <- reducedDim(sce_integrated, "UMAP")
+  # set all values to 0 first
+  reducedDim(sce_integrated, column_name)[,c(1,2)] <- NA
+  # Set new values
+  attr(reducedDim(sce_integrated, column_name), "scaled:center") <- attr(umap_for_cell_type, "scaled:center")
+  reducedDim(sce_integrated, column_name)[rownames(umap_for_cell_type),] <- umap_for_cell_type
+}
+
+# transform column into factor values
+sce_integrated$subcluster_id_k50_long <- factor(paste0(sce_integrated$manual_labels_coarse, "_", sce_integrated$subcluster_id_k50))
+sce_integrated$subcluster_id_k50 <- factor(sce_integrated$subcluster_id_k50)
+
+# We also create a separate column for each of the cell types. We do this to easily analyse the results in iSee
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  colData(sce_integrated)[,cell_type] <- colData(sce_integrated)[,"subcluster_id_k50"]
+  colData(sce_integrated)[sce_integrated$manual_labels_coarse != cell_type, cell_type] <- NA
+  colData(sce_integrated)[, cell_type] <- factor(as.numeric(colData(sce_integrated)[, cell_type]))
+}
+
+
+cat("\n\n## Original UMAP dimensions {.tabset} \n\n")
+
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+
+  # create tab for markdown
+  cat("\n\n### ", cell_type, "\n\n")
+
+  # plot the UMAP of the subcluster
+  print(plotReducedDim(sce_integrated[,sce_integrated$manual_labels_coarse == cell_type], "UMAP",
+                 colour_by = "subcluster_id_k50", text_by="subcluster_id_k50") +
+          theme_ipsum_rc() +
+    labs(title=cell_type,
+         subtitle="k=50"))
+}
+
+cat("\n\n## Re-calculated UMAPs {.tabset} \n\n")
+
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+
+  # create tab for markdown
+  cat("\n\n### ", cell_type, "\n\n")
+  column_name <- paste0("UMAP_", cell_type)
+
+  # plot the UMAP of the subcluster
+  print(plotReducedDim(sce_integrated[,sce_integrated$manual_labels_coarse == cell_type], column_name,
+                 colour_by = "subcluster_id_k50", text_by="subcluster_id_k50") +
+          theme_ipsum_rc() +
+    labs(title=paste0("Recalculated UMAP for ", cell_type),
+         subtitle="k=50"))
+}
+```
+
+
+# Absolute cell abundance {.tabset}
+
+```{r absolute cell abundance, results="asis", fig.width=12, fig.height=8}
+# Samples combined
+cat(paste0("\n\n##", " Samples combined \n\n"))
+as.data.frame(colData(sce_integrated)) %>%
+  dplyr::group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+  geom_bar(colour="black", stat="identity") +
+  theme_ipsum_rc() +
+  labs(title="Annotated cell type counts",
+        subtitle="For both samples combined",
+        x="", y="Number of cells") +
+  theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse), type="fill")
+
+
+#TODO: Stratified cell abundances by protocol
+plt_data <- as.data.frame(colData(sce_integrated)) %>%
+  dplyr::group_by(Protocol, manual_labels_coarse) %>%
+  dplyr::summarise(counts=n())
+  
+for (protocol_name in unique(plt_data$Protocol)){
+  cat(paste0("\n\n## ", protocol_name, "\n\n"))
+  plt_data_subset <- plt_data[plt_data$Protocol==protocol_name,]
+  
+  print(ggplot(plt_data_subset, aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+  geom_bar(colour="black", stat="identity") +
+  theme_ipsum_rc() +
+  labs(title="Annotated cell type counts",
+        subtitle="For both samples combined",
+        x="", y="Number of cells") +
+  theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse), type="fill"))
+}
+```
+
+
+# Relative cell abundance
+
+```{r fig.width=14, fig.height=10}
+data_combined <- as.data.frame(colData(sce_integrated)) %>%
+  dplyr::group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>%
+  mutate(Sample="Samples combined") %>%
+  mutate(Protocol="Samples combined") %>%
+  dplyr::select(manual_labels_coarse, Sample, Protocol, counts)
+
+data_by_protocol <- as.data.frame(colData(sce_integrated)) %>%
+  dplyr::group_by(manual_labels_coarse, Protocol) %>%
+  dplyr::summarise(counts=n())
+
+rbind(data_combined[,-2], data_by_protocol) %>%
+  ggplot(aes(x=Protocol, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour="black", stat="identity", position="fill") +
+   scale_y_continuous(labels = scales::percent) +
+   theme_ipsum_rc() +
+   labs(title="Relative frequency of cell types",
+        x="", y="Number of cells") +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(unique(data_combined$manual_labels_coarse), type="fill")
+
+data_by_sample <- as.data.frame(colData(sce_integrated)) %>%
+  dplyr::group_by(manual_labels_coarse, Sample) %>%
+  dplyr::summarise(counts=n())
+
+rbind(data_combined[,-3], data_by_sample) %>%
+  ggplot(aes(x=Sample, y=counts, fill=manual_labels_coarse)) +
+  geom_bar(colour="black", stat="identity", position="fill") +
+  scale_y_continuous(labels = scales::percent) +
+  theme_ipsum_rc() +
+  labs(title="Relative frequency of cell types",
+       x="", y="Number of cells") +
+  theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(unique(data_combined$manual_labels_coarse), type="fill")
+```
+
+# Plot subcluster sizes per cell type {.tabset}
+
+```{r subcluster sizes, fig.width=16, fig.height=10, results="asis"}
+# plot bar charts for cell types
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  
+  cat("\n\n## ", cell_type, "\n\n")
+
+  sce_subset <- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+
+  data_complete <- as.data.frame(colData(sce_subset)) %>%
+    dplyr::group_by(subcluster_id_k50) %>%
+    dplyr::summarise(n_cells=n()) %>%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3)) %>%
+    mutate(Sample="Samples combined") %>%
+    dplyr::select(Sample, subcluster_id_k50, n_cells, share)
+
+
+  data_stratified <- as.data.frame(colData(sce_subset)) %>%
+    dplyr::group_by(Sample, subcluster_id_k50) %>%
+    dplyr::summarise(n_cells=n()) %>%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3))
+
+  print(ggplot(rbind(data_complete, data_stratified),
+               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+          geom_bar(stat="identity") +
+          facet_grid(subcluster_id_k50 ~ .) +
+          theme_ipsum_rc() +
+          theme(axis.text.x = element_text(angle = 45,hjust=1),
+                strip.text.y = element_text(angle=0,size=7)) +
+          labs(title=cell_type,
+               subtitle="Bars show fraction of cells for given cell type and sample"))
+      
+  
+  print(ggplot(rbind(data_complete, data_stratified),
+               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+          geom_bar(stat="identity", position="fill") +
+          theme_ipsum_rc() +
+          theme(axis.text.x = element_text(angle = 45,hjust=1),
+                strip.text.y = element_text(angle=0,size=7)) +
+          labs(title=cell_type,
+               subtitle="Bars show fraction of cells for given cell type and sample"))
+}
+```
+
+# {-}
+
+## Marker genes per subcluster {.tabset}
+
+To identify the differentiated cell types within each cluster we analyse the marker genes using three methods (as before):
+
+1. Welch t-test: fast-computed and good statistical properties for large numbers of cells
+    1. We test for marker genes that test significant against ANY other cluster
+    1. We test for marker genes that test singnificant against ALL other clusters
+2. Wilcoxon test: directly assesses separation between the expression distributions of clusters
+3. Entropy and f-stat method
+
+
+```{r prepare excel, fig.width=10, fig.height=7, results="asis"}
+wb <- createWorkbook()
+addWorksheet(wb, "Intro")
+writeData(wb, "Intro", data.frame("Marker genes for the subclusters of the integrated datasets"),
+          colNames=F)
+
+# prepare a theme for adjusting the pheatmap plot
+reduced_ipsum_rc_theme <- theme_ipsum_rc() +
+  theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank(),
+            axis.title.y=element_blank(),
+            axis.text.y=element_blank(),
+            axis.ticks.y=element_blank(),
+            panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# We will run three t-tests with very similar function calls.
+# We thus define the workflow as a function, allowing the changes to be made via parameter changes
+run_marker_gene_analysis <- function(test_name, type_comparison, worksheet_prefix, tabset="###"){
+
+  prefix <- ifelse(test_name=="t", "logFC", "AUC")
+  heatmap_lower_limit <- ifelse(test_name=="t", -3, 0)
+  heatmap_upper_limit <- ifelse(test_name=="t", 3, 1)
+
+  marker_results_per_cell_type <- list()
+
+  for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+    # create tab for markdown
+    cat(paste0("\n\n", tabset, " ", cell_type, " {.tabset} \n\n"))
+    # create the subset
+    sce_subset <- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+    sce_subset$subcluster_id_k50 <- factor(sce_subset$subcluster_id_k50)
+
+    # get the marker genes for each cluster
+    all.markers <- findMarkers(sce_subset, test.type=test_name,
+                               pval.type=type_comparison,
+                               groups=sce_subset$subcluster_id_k50,
+                               direction="up", block=sce_subset$Sample)
+
+    marker_results_per_cell_type[[cell_type]] <- all.markers
+
+    for (marker_num in names(all.markers)){
+      # create tab for markdown
+      cat(paste0("\n\n#", tabset, " Cluster ", marker_num, " \n\n"))
+
+      # subset marker genes object for a given cluster
+      all_cluster_markers <- all.markers[[marker_num]]
+      # we only look at union of the top 5 markers per pairwise comparison
+      if (type_comparison=="any"){
+        cluster_markers <- all_cluster_markers[all_cluster_markers$Top <= 5,]  
+      } else {
+        cluster_markers <- all_cluster_markers[1:25,]
+      }
+
+      cluster_markers_logFCs <- getMarkerEffects(cluster_markers, prefix = prefix)
+      cluster_markers_logFCs[is.na(cluster_markers_logFCs)] <- 0
+
+      # Create pheatmap plot per cluster
+      if (dim(cluster_markers_logFCs)[2] == 1){
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T,
+                                 cluster_cols=FALSE)) +
+        labs(title=paste0("Cluster ",marker_num),
+             subtitle="Pairwise comparisons - comparison with only remaining subcluster") +
+        reduced_ipsum_rc_theme)
+      } else {
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T, cluster_cols=FALSE)) +
+                labs(title=paste0("Cluster ", marker_num), subtitle="Pairwise comparisons") +
+                reduced_ipsum_rc_theme)
+      }
+
+      # write to excel
+      cell_type_short <- ifelse(nchar(cell_type) > 10, substr(cell_type, 1, 10), cell_type)
+      sheet_name <- paste0("F_", worksheet_prefix, "_", cell_type_short,"_c", marker_num)
+      addWorksheet(wb, sheet_name)
+      cluster_markers_excel_out <- cbind("Gene"=rownames(all_cluster_markers), all_cluster_markers)
+      writeData(wb, sheet_name, cluster_markers_excel_out, rowNames = TRUE)
+    }
+  }
+  return(marker_results_per_cell_type)
+}
+
+
+# Function to plot UMAPs of subclusters for top n genes
+plot_umap_feature_plots <- function(markers, n=10, tabset="###"){
+  for (cell_type in names(markers)){
+    subset_sce <- sce_integrated[, sce_integrated$manual_labels_coarse == cell_type]
+    cat(paste0("\n\n", tabset, " ", cell_type, "  {.tabset} \n\n"))
+
+    for (marker_num in names(markers[[cell_type]])){
+      # set tabs
+      cat(paste0("\n\n#", tabset, " Cluster ", marker_num, " {.tabset} \n\n"))
+      all_genes <- rownames(markers[[cell_type]][[marker_num]])
+
+      for (i in 1:n){
+        gene_name <- all_genes[[i]]
+        cat(paste0("\n\n##", tabset, " ", gene_name , " \n\n"))
+        x_mu <- mean(reducedDim(subset_sce, "UMAP")[,1])
+        x_var <- var(reducedDim(subset_sce, "UMAP")[,1])
+        y_mu <- mean(reducedDim(subset_sce, "UMAP")[,2])
+        y_var <- var(reducedDim(subset_sce, "UMAP")[,2])
+
+        print(plotReducedDim(subset_sce, dimred="UMAP", colour_by=gene_name, point_size=0.5) +
+                labs(title=gene_name, subtitle=paste0(cell_type, " - Marker gene number ", i, "of subcluster ", marker_num)) +
+                xlim(x_mu-2*x_var, x_mu+x_var*2) +
+                ylim(y_mu-2*y_var, y_mu+y_var*2) +
+                theme_ipsum_rc())
+      }
+    }
+  }
+}
+
+```
+
+
+### t-test testing for significance against any other cluster {.tabset}
+
+Testing with the comparison type "any" we select marker genes which are significant in ANY comparison with another cluster. If we should have overclustered and the same cell type is split into two clusters, then marker genes of this cell type would not show up if we would be using the "all" comparison method. The marker genes which define the cell type split into two clusters would show as significant in all comparisons, except the two sister-clusters, and woud thus not show.
+
+```{r t-test any, results="asis"}
+all_markers_ttest_any <- run_marker_gene_analysis(test_name = "t", type_comparison = "any", worksheet_prefix = "ttest_any", tabset="####")
+```
+
+## UMAPs for each cell type coloured by expression values for top marker genes {.tabset}
+
+We visualise the re-calculated UMAPs for each cluster and colour the cells by the expression values (logscale) of the top marker genes of each subclusters
+
+```{r feature plots, fig.width=10, fig.height=7, results="asis", warnings=FALSE}
+plot_umap_feature_plots(all_markers_ttest_any, n=5, tabset="###")
+```
+
+## {-}
+
+### t-test testing for significance against all other clusters {.tabset}
+
+While the "all" comparison method has some disadvantages as stated above, can be highly effective when it does work. The method only reports a small set of markers that are highly specific to the cluster of interest.
+
+```{r t-test all, results="asis"}
+all_markers_ttest_all <- run_marker_gene_analysis(test_name = "t", type_comparison = "all", worksheet_prefix = "ttest_all", tabset="####")
+```
+
+### Wilcoxon {.tabset}
+
+The wilcox directly measures the difference of the expression value distributions of two clusters. It tells us how strong the overlap between the gene expression values for two clusters is. It thus directly measures what we are interested in: the separation of two clusters. The resulting value is proportional to the area-under-the-curve and can be understood as the probability of a random cell in the focus cluster having a higher expression value than the clusters being compared to. 0 means that the expression values of a cell in the cluster are strictly lower than any cell in the other cluster. 1 means that the value of any cell in the cluster is higher than any cell in the cluster it is being compared to. While this test allows us to examine the 'clarity' of separation, the t-test shows us the size of this difference.
+
+
+```{r wilcox any, resuts="asis"}
+all_markers_wilcox_any <- run_marker_gene_analysis(test_name = "wilcox", type_comparison = "any", worksheet_prefix = "wilcox_any", tabset="####")
+```
+
+
+<!-- ### Entropy f-stat method {.tabset} -->
+
+```{r fstat-entropy-method, results="asis", fig.width=16, fig.height=10, eval=F}
+# define the entropy function which we will apply to our SCE object on a per gene  basis
+shannon_entropy <- function(x, e=1e-10){
+  x <- x+e
+  p <- (x)/sum(x)
+  -sum((p)*log(p))
+}
+
+# Calculating the entropy and f-statistics takes very long. We split the calculation
+# and printing of the results into two parts as there were issues with duplicates
+# during printing and this made debugging easier
+bpstart(bpparam)
+fstats <- lapply(unique(sce_integrated$manual_labels_coarse), function(cell_type){
+  # cat(paste0("\n\n#### ", cell_type, " {.tabset} \n\n"))
+
+  # create the subset
+  sce_subset <- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+  sce_subset$subcluster_id_k50 <- factor(sce_subset$subcluster_id_k50)
+
+  aggr_sce <- aggregateAcrossCells(sce_subset, sce_subset$subcluster_id_k50)
+
+  # We compute the datarframe containing:
+  # (1) the gene name as symbol
+  # (2) the entropy of the expression values for a given gene and
+  # (3) the f-statistic of the analysis of variance test of the log-experession values vs. the subclusters
+  entropy_fstat_sce <- BiocParallel::bplapply(
+    seq_along(rownames(aggr_sce)),
+    function(.x){
+      data.frame(
+        gene=rowData(sce_subset)$Symbol[.x],
+        entropy=shannon_entropy(counts(aggr_sce[.x,])),
+        fstat=summary(aov(logcounts(sce_subset)[.x,]~sce_subset$subcluster_id_k50))[[1]]$`F value`[1]
+      )},
+    BPPARAM=bpparam) %>%
+      purrr::reduce(rbind)
+
+  # We compare the normalised values of the f-statistic and the entropy.
+  entropy_fstat_sce <-  entropy_fstat_sce %>%
+    dplyr::mutate(entropy_norm = (entropy + 1e3) / max(entropy + 1e3, na.rm=TRUE),
+                  fstat_norm = (fstat + 1e3) / max(fstat + 1e3, na.rm=TRUE),
+                  ent_fstat_ratio = fstat_norm / entropy_norm)
+  
+  entropy_fstat_sce
+})
+bpstop(bpparam)
+
+names(fstats) <- unique(sce_integrated$manual_labels_coarse)
+  
+# Show the f-statistic vs the entropy in a plot for all genes
+# Also, show violin plots for the top 50 genes
+
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  # Create a tab for the markdown view in workflowr
+  cat(paste0("\n\n#### ", cell_type, " {.tabset} \n\n"))
+     
+  entropy_fstat_sce <- fstats[[cell_type]]
+  
+  # we select the top 50 markers as defined via the fstat_norm / entropy_norm metric
+  topmarkers_order <- order(entropy_fstat_sce$ent_fstat_ratio, decreasing=TRUE)
+  topmarkers <- unique(entropy_fstat_sce[topmarkers_order[1:50],])
+
+  # Save the values to our excel
+  cell_type_short <- ifelse(nchar(cell_type) > 10, substr(cell_type, 1, 10), cell_type)
+  sheet_name <- paste0("F_entropy_", cell_type_short)
+  addWorksheet(wb, sheet_name)
+  writeData(wb, sheet_name, entropy_fstat_sce[topmarkers_order,], rowNames = TRUE)
+
+  # Plot the f-statistic against the entropy
+  cat("\n\n##### Entropy plot \n\n")
+  print(ggplot(entropy_fstat_sce) +
+    geom_point(aes(x=log(fstat), y=entropy), show.legend = F, colour="#02C39A") +
+    labs(x="log(F-statistic)", y="Entropy", title="Entropy vs. F-statistic of cluster separation") +
+    ggrepel::geom_text_repel(data=topmarkers,
+                             aes(x=log(fstat), y=entropy, label=gene, size=4),
+                             show.legend=F,
+                             max.overlaps = 30))
+}
+  
+```
+
+<!-- ### Violin plots for genes in f-stat method {.tabset} -->
+
+```{r violin plots for genes in f-stat method, fig.width=16, fig.height=10, eval=F}
+
+# Violin plots by cell type
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  # Create a tab for the markdown view in workflowr
+  cat(paste0("\n\n#### ", cell_type, " {.tabset} \n\n"))
+     
+  entropy_fstat_sce <- fstats[[cell_type]]
+  
+  # we select the top 50 markers as defined via the fstat_norm / entropy_norm metric
+  topmarkers_order <- order(entropy_fstat_sce$ent_fstat_ratio, decreasing=TRUE)
+  topmarkers <- unique(entropy_fstat_sce[topmarkers_order[1:50],])
+  entropy_fstat_sce
+
+  # Plot violin plots with the subclusters on the x-axis and the expression values per cell on the y-axis
+  # We do this for the top 50 genes as identified by the fstat_norm / entropy_norm metric
+  genes_to_plot <-  unique(entropy_fstat_sce$gene[topmarkers_order[1:50]])
+  
+  # only get the cells for the given cell type
+  sce_subset <- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+  rownames(sce_subset) <- rowData(sce_subset)$Symbol
+  
+  # If we change from ensemble_gene_id to gene_symbol there are some duplicates.
+  # We remove them to avoid errors with the plotting function
+  sce_subset <- sce_subset[unique(rownames(sce_subset)),]
+  entropy_fstat_sce <- entropy_fstat_sce[!duplicated(entropy_fstat_sce$gene),]
+  
+
+  for(i in seq_along(genes_to_plot)){
+    cat("\n\n##### ", genes_to_plot[i], "\n\n")
+    print(plotExpression(sce_subset,  
+                   entropy_fstat_sce$gene[entropy_fstat_sce$gene == genes_to_plot[i]],
+                   x = "subcluster_id_k50", point_size=0.5))
+  }
+}
+
+```
+
+# Save Files
+
+## Save Excel
+
+```{r save excel, class.source="fold-show"}
+filename <- "../docs/output/EDI_subclustering_markers_genes.xlsx"
+saveWorkbook(wb, filename, overwrite=TRUE)
+```
+
+# Save SCE object
+
+```{r save sce object, class.source="fold-show"}
+# save main sce file and upload to iSEE
+file_path_sce <- "../data/EOS_Files/EDI_EOS8_sce.rds"
+saveRDS(sce_integrated, file=file_path_sce)
+upload_file_to_iSEE(file_path_sce)
+```

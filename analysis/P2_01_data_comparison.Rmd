@@ -1616,7 +1616,7 @@ file_path_fresh <- "../data/EOS_files/Fresh_EOS1_sce.rds"
 saveRDS(sce_fresh_filtered, file=file_path_fresh)
 upload_file_to_iSEE(file_path_fresh)
 
-# Frsh and cultured samples
+# Fresh and cultured samples
 file_path_all <- "../data/EOS_files/FvC_EOS1_sce.rds"
 saveRDS(sce_all_filtered, file=file_path_all)
 upload_file_to_iSEE(file_path_all)

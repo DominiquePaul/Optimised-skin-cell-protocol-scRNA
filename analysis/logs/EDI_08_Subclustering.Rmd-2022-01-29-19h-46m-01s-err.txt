@@ -1,0 +1,1 @@
+Error in library(detectCores) : there is no package called 'detectCores'

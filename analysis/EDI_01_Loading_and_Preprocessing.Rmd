@@ -276,7 +276,6 @@ rowData(sce_tabib)$Symbol <- rowData(sce_fresh)$Symbol
 ```
 
 ## Merge datasets to one single cell object
-
 The Tabib et al. dataset was stored as a `DelayedMatrix` This means that the data is operated on disk and not loaded into memory, keeping memory requirements low. Some methods, such as `cbind`, cannot work with a mix of `DelayedMatrix` and `dgCMatrix` data types, so we convert the Tabib et al. data to `dcGMatrix`.
 
 ```{r reduce to one sce, eval=T}
@@ -286,6 +285,9 @@ sce <- purrr::reduce(list(sce_tabib, sce_boldo, sce_he, sce_fresh), cbind, depar
 
 # change the level order. This is changes the order for plotting later on
 sce$Protocol <- factor(sce$Protocol, levels=c("Fresh", "Sole_Boldo_et_al", "He_et_al","Tabib_et_al"))
+
+# change the rownames to also include the gene symbol (instead of only the ensembl gene id)
+rownames(sce) <- paste0(rowData(sce)$Symbol, ".", rowData(sce)$ID)
 ```
 
 ```{r reads per stage 3, eval=T}
@@ -299,25 +301,25 @@ The above steps take some time to run. We save the merged single cell experiment
 
 ```{r Save RDS, eval=T}
 # save SCE
-saveRDS(sce, file = paste0("../data/fresh_data/merged_SCE_data_sources.rds"))
+saveRDS(sce, file = paste0("../data/EOS_Files/EDI_01_merged_SCE_data_sources.rds"))
 
 # Save reads per stage information
 reads_per_analysis_stage <- rbind(reads_per_analysis_stage1, reads_per_analysis_stage2, reads_per_analysis_stage3)
-saveRDS(reads_per_analysis_stage, file = "../data/fresh_data/EDI_reads_per_stage.rds")
+saveRDS(reads_per_analysis_stage, file = "../data/EOS_Files/EDI_01_reads_per_stage.rds")
 
 # Save reads per stage information
 cells_per_analysis_stage <- rbind(cells_per_analysis_stage1, cells_per_analysis_stage2, cells_per_analysis_stage3)
-saveRDS(cells_per_analysis_stage, file = "../data/fresh_data/EDI_cells_per_stage.rds")
+saveRDS(cells_per_analysis_stage, file = "../data/EOS_Files/EDI_01_cells_per_stage.rds")
 ```
 
 
 ```{r Read in rds}
 # load SCE
-sce <- readRDS(file = paste0("../data/fresh_data/merged_SCE_data_sources.rds"))
+sce <- readRDS(file = paste0("../data/EOS_Files/EDI_01_merged_SCE_data_sources.rds"))
 
 # load reads per stage information
-reads_per_analysis_stage <- readRDS(file = paste0("../data/fresh_data/EDI_reads_per_stage.rds"))
-cells_per_analysis_stage <- readRDS(file = paste0("../data/fresh_data/EDI_cells_per_stage.rds"))
+reads_per_analysis_stage <- readRDS(file = paste0("../data/EOS_Files/EDI_01_reads_per_stage.rds"))
+cells_per_analysis_stage <- readRDS(file = paste0("../data/EOS_Files/EDI_01_cells_per_stage.rds"))
 ```
 
 How many cells do we have per sample?
@@ -384,9 +386,6 @@ cells_per_analysis_stage4 <- get_total_cells_per_sample(sce, "04_Doublet_detecti
 ## Add quality control metrics
 
 ```{r Add QC metrics}
-# change the rownames to the gene symbol (instead of the enembl gene id). This makes the data easier to read.
-rownames(sce) <- rowData(sce)$Symbol
-
 is_mitochondrial <- grepl("^(MT-)[^.]*", rownames(sce), ignore.case = TRUE)
 
 sce <- scuttle::addPerCellQC(sce, 
@@ -544,7 +543,9 @@ cat("\n\n### Detected genes \n\n")
 plt <- plotColData(sce, x="Sample", y="detected", colour_by="to_be_dropped") +
   labs(title="Number of genes detected by cell",
        y="Number of genes") +
-  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank())
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  theme_ipsum_rc()
+
 suppressWarnings(plt)
 
 # Mitochondrial percentage
@@ -552,8 +553,8 @@ cat("\n\n### Mitochondrial percentage \n\n")
 plt <- plotColData(sce, x="Sample", y="subsets_Mt_percent", colour_by="to_be_dropped", point_size=0.5) +
   labs(title="Mitochondrial expression values as % of total expression values") +
   ylab("Mito. gene expression values as % of total") +
-  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank())
-  # theme_ipsum_rc()
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  theme_ipsum_rc()
 
 suppressWarnings(plt)
 
@@ -562,8 +563,8 @@ cat("\n\n### Total expression values \n\n")
 plt <- plotColData(sce, x="Sample", y="log_total", colour_by="to_be_dropped", point_size=0.5) +
   labs(title="Log sums of expression values by cell (log-scale)",
        y="Sum of expression values (log-scale)") +
-  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank())
-  # theme_ipsum_rc()
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  theme_ipsum_rc()
 
 suppressWarnings(plt)
 ```
@@ -609,7 +610,8 @@ plt <- ggplot(colData(sce) %>% as.data.frame,
        title="Percentage of mito. content vs. genes detected \n(coloured by filtering)") +
   scale_y_log10() +
   geom_density_2d() + 
-  facet_wrap(~Sample, ncol=4)
+  facet_wrap(~Sample, ncol=4) +
+  theme_ipsum_rc()
 
 suppressWarnings(plt)
 ```
@@ -629,7 +631,8 @@ plt <- plotColData(sce,
           subtitle="Dropped cells in red") +
   ylab("Percentage mito. counts") +
   xlab("Log-total expression values") +
-  facet_wrap(~sce$Sample, nrow = 4)
+  facet_wrap(~sce$Sample, nrow = 4) +
+  theme_ipsum_rc()
   # theme(legend.position = c(0.92,0.97), legend.background = element_rect(color="grey",fill = "white"), legend.margin = margin(10,10,10,10))
 
 suppressWarnings(plt)
@@ -644,7 +647,8 @@ df_plot <- as.data.frame(colData(sce))
 df_plot$to_be_dropped <- factor(df_plot$to_be_dropped, levels=c(TRUE,FALSE))
 
 # To save space we just define this once for the next four plots
-custom_theme <- theme(panel.grid = element_blank(),
+custom_theme <- theme_ipsum_rc() +
+  theme(panel.grid = element_blank(),
         axis.text = element_text(size = 10),
         axis.text.x = element_text(angle = 45, hjust=1),
         axis.text.y = element_text(size = 10),
@@ -728,21 +732,24 @@ plot1 <- ggplot(qcs, aes(x=Sample, y=log10(detected))) +
   ylab("Number of detected genes (log10)") +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
   ggtitle("Number of detected genes across samples (after QC)") +
-  facet_grid(.~Protocol, scales="free", space="free")
+  facet_grid(.~Protocol, scales="free", space="free") +
+  theme_ipsum_rc()
 
 plot2 <- ggplot(qcs, aes(x=Sample, y=log10(total))) +
   geom_violin(scale="count") +
   ylab("Total gene expression counts (log10)") +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
   ggtitle("Total gene expression counts across samples (after QC)") +
-  facet_grid(.~Protocol, scales="free", space="free")
+  facet_grid(.~Protocol, scales="free", space="free") +
+  theme_ipsum_rc()
 
 plot3 <- ggplot(qcs, aes(x=Sample, y=subsets_Mt_percent)) +
   geom_violin(scale="count") +
   ylab("Mitochodrial share (percent)") +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5), plot.title = element_text(size=6)) +
   ggtitle("Share of mitochondrial genes across samples (after QC)") +
-  facet_grid(.~Protocol, scales="free", space="free")
+  facet_grid(.~Protocol, scales="free", space="free") +
+  theme_ipsum_rc()
 
 cat("\n\n### Detected genes\n\n")
 plot1
@@ -1045,10 +1052,11 @@ reads_df <- reads_df %>%
 cat("\n\n### Relative share (sample) \n\n")
 ggplot(reads_df, aes(x=sample, y=diff_values, fill=analysis_stage)) +
   geom_bar(stat="identity", position="fill") +
+  theme_ipsum_rc() +
   theme(axis.text.x = element_text(angle = 45, hjust=1), axis.ticks.x=element_blank()) +
   labs(title="Relative share of stage",
        subtitle="The sum of all fractions equals the initial sum of reads") +
-  facet_grid(.~protocol, scales="free_x", space="free_x")
+  facet_grid(.~protocol, scales="free_x", space="free_x") 
 
 # Stacked by sample
 cat("\n\n### Stacked bars (sample) \n\n")
@@ -1063,6 +1071,7 @@ ggplot(reads_df, aes(x=sample, y=diff_values, fill=analysis_stage)) +
 cat("\n\n### Absolute cell numbers (sample) \n\n")
 ggplot(reads_df, aes(x=sample, y=values, fill=analysis_stage)) +
   geom_bar(stat="identity", position="dodge") +
+  theme_ipsum_rc() +
   theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
   labs(title="Absolute number of reads per stage",
        subtitle="Each bar shows the number of cells at that stage") +
@@ -1072,6 +1081,7 @@ ggplot(reads_df, aes(x=sample, y=values, fill=analysis_stage)) +
 cat("\n\n### Relative share (protocol) \n\n")
 ggplot(reads_df, aes(x=protocol, y=diff_values, fill=analysis_stage)) +
   geom_bar(stat="identity", position="fill") +
+  theme_ipsum_rc() +
   theme(axis.ticks.x=element_blank()) +
   labs(title="Relative share of stage",
        subtitle="The sum of all fractions equals the initial sum of reads")
@@ -1080,6 +1090,7 @@ ggplot(reads_df, aes(x=protocol, y=diff_values, fill=analysis_stage)) +
 cat("\n\n### Stacked bars (protocol) \n\n")
 ggplot(reads_df, aes(x=protocol, y=diff_values, fill=analysis_stage)) +
   geom_bar(stat="identity") +
+  theme_ipsum_rc() +
   theme(axis.ticks.x=element_blank()) +
   labs(title="Total reads per stage",
        subtitle="Sum of fractions equal the initial sum of reads")
@@ -1088,6 +1099,7 @@ ggplot(reads_df, aes(x=protocol, y=diff_values, fill=analysis_stage)) +
 cat("\n\n### Absolute cell numbers (protocol) \n\n")
 ggplot(reads_df, aes(x=protocol, y=values, fill=analysis_stage)) +
   geom_bar(stat="identity", position="dodge") +
+  theme_ipsum_rc() +
   theme(axis.ticks.x=element_blank()) +
   labs(title="Absolute number of reads per stage",
        subtitle="Each bar shows the number of cells at that stage")
@@ -1102,6 +1114,7 @@ Note that also the relative plots (that add to one) will exhibit changes as the 
 cat("\n\n### Relative share (sample) \n\n")
 ggplot(reads_df, aes(x=sample, y=diff_values_per_cell, fill=analysis_stage)) +
   geom_bar(stat="identity", position="fill") +
+  theme_ipsum_rc() +
   theme(axis.text.x = element_text(angle = 45, hjust=1), axis.ticks.x=element_blank()) +
   labs(title="Relative share of stage (normalised by cell count)",
        subtitle="The sum of all fractions equals the initial sum of reads") +
@@ -1111,6 +1124,7 @@ ggplot(reads_df, aes(x=sample, y=diff_values_per_cell, fill=analysis_stage)) +
 cat("\n\n### Stacked bars (sample) \n\n")
 ggplot(reads_df, aes(x=sample, y=diff_values_per_cell, fill=analysis_stage)) +
   geom_bar(stat="identity") +
+  theme_ipsum_rc() +
   theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
   labs(title="Total reads per stage (normalised by cell count)",
        subtitle="Sum of fractions equal the initial sum of reads") +
@@ -1120,6 +1134,7 @@ ggplot(reads_df, aes(x=sample, y=diff_values_per_cell, fill=analysis_stage)) +
 cat("\n\n### Absolute cell numbers (sample) \n\n")
 ggplot(reads_df, aes(x=sample, y=values_per_cell, fill=analysis_stage)) +
   geom_bar(stat="identity", position="dodge") +
+  theme_ipsum_rc() +
   theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
   labs(title="Absolute number of reads per stage (normalised by cell count)",
        subtitle="Each bar shows the number of cells at that stage") +
@@ -1129,6 +1144,7 @@ ggplot(reads_df, aes(x=sample, y=values_per_cell, fill=analysis_stage)) +
 cat("\n\n### Relative share (protocol) \n\n")
 ggplot(reads_df, aes(x=protocol, y=diff_values_per_cell, fill=analysis_stage)) +
   geom_bar(stat="identity", position="fill") +
+  theme_ipsum_rc() +
   theme(axis.ticks.x=element_blank()) +
   labs(title="Relative share of stage (normalised by cell count)",
        subtitle="The sum of all fractions equals the initial sum of reads")
@@ -1137,6 +1153,7 @@ ggplot(reads_df, aes(x=protocol, y=diff_values_per_cell, fill=analysis_stage)) +
 cat("\n\n### Stacked bars (protocol) \n\n")
 ggplot(reads_df, aes(x=protocol, y=diff_values_per_cell, fill=analysis_stage)) +
   geom_bar(stat="identity") +
+  theme_ipsum_rc() +
   theme(axis.ticks.x=element_blank()) +
   labs(title="Total reads per stage (normalised by cell count)",
        subtitle="Sum of fractions equal the initial sum of reads")
@@ -1145,6 +1162,7 @@ ggplot(reads_df, aes(x=protocol, y=diff_values_per_cell, fill=analysis_stage)) +
 cat("\n\n### Absolute cell numbers (protocol) \n\n")
 ggplot(reads_df, aes(x=protocol, y=values_per_cell, fill=analysis_stage)) +
   geom_bar(stat="identity", position="dodge") +
+  theme_ipsum_rc() +
   theme(axis.ticks.x=element_blank()) +
   labs(title="Absolute number of reads per stage (normalised by cell count)",
        subtitle="Each bar shows the number of cells at that stage")

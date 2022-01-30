@@ -1,0 +1,2 @@
+Error in plotReducedDim(sce, "UMAP", colour_by = "manual_labels_coarse",  : 
+  could not find function "plotReducedDim"

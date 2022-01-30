@@ -1,6 +1,7 @@
 library(RColorBrewer)
 library(dplyr)
 library(openxlsx)
+library(stringr)
 
 
 ### Upload a file to iSEE
@@ -10,7 +11,13 @@ upload_file_to_iSEE <- function(file_path){
   file_path <- gsub(" ", "\\\\ ", normalizePath(file_path))
   destination <- "dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/"
   
-  exec_string <- paste0("scp -i ", ssh_key, " ", file_path,  " ", destination)
+  # rename the file to include a date of upload
+  file_name_components <- str_split(file_path, "/")[[1]]
+  file_name <- file_name_components[length(file_name_components)]
+  file_name_with_date <- sub(".rds", paste0("___", Sys.Date(), ".rds"), file_name)
+  
+  # the string to be executed in the shell
+  exec_string <- paste0("scp -i ", ssh_key, " ", file_path,  " ", destination, file_name_with_date)
   
   cat(paste0("Command executed: \n\n", exec_string))
   

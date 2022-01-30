@@ -1,0 +1,95 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   3%
+  ordinary text without R code
+
+  |                                                                              |....                                                                  |   6%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |......                                                                |   8%
+  ordinary text without R code
+
+  |                                                                              |........                                                              |  11%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |..........                                                            |  14%
+  ordinary text without R code
+
+  |                                                                              |............                                                          |  17%
+label: load-data
+  |                                                                              |..............                                                        |  19%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  22%
+label: code setup
+  |                                                                              |..................                                                    |  25%
+label: design matrix and basic plots
+  |                                                                              |...................                                                   |  28%
+  ordinary text without R code
+
+  |                                                                              |.....................                                                 |  31%
+label: Fresh vs. Tabib
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |.........................                                             |  36%
+label: Fresh vs. He
+  |                                                                              |...........................                                           |  39%
+  ordinary text without R code
+
+  |                                                                              |.............................                                         |  42%
+label: Fresh vs. Sole-Boldo
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |.................................                                     |  47%
+label: all contrasts
+  |                                                                              |...................................                                   |  50%
+  ordinary text without R code
+
+  |                                                                              |.....................................                                 |  53%
+label: plot abundances (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  58%
+label: plot abundances v2 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 10
+
+  |                                                                              |...........................................                           |  61%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  64%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 16
+
+  |                                                                              |...............................................                       |  67%
+  ordinary text without R code
+
+  |                                                                              |.................................................                     |  69%
+label: unnamed-chunk-2 (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 16
+
+  |                                                                              |...................................................                   |  72%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  75%
+label: visualise UMAPs (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+

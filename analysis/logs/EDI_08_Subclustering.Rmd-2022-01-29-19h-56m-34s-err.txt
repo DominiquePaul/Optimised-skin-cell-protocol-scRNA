@@ -1,0 +1,2 @@
+Error in h(simpleError(msg, call)) : 
+  error in evaluating the argument 'x' in selecting a method for function 'sort': error in evaluating the argument 'x' in selecting a method for function 'unique': error in evaluating the argument 'x' in selecting a method for function 'levels': object 'sce' not found

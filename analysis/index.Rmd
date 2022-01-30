@@ -37,6 +37,11 @@ Click here to open iSEE app: <a target="_blank" href="http://imlspenticton.uzh.c
 
 1. [Comparison of data processed with the new protocol with skin control samples](P2_01_data_comparison.html) `r give_date("P2_data_comparison.html")`
 1. [Cell cycle analysis](P2_02_Cell_Cycle.html) `r give_date("P2_data_comparison.html")`
+1. Fresh only:
+    1. [Fresh only subclustering](P2_03_Fresh_only_subclustering.html) `r give_date("P2_03_Fresh_only_subclustering.html")`
+1. Fresh vs. Culture:
+    1. [FvC: Annotations](P2_03_FvC_Annotations.html) `r give_date("P2_03_FvC_Annotations.html")`
+    1. [FvC: Gene expression plot](P2_04_FvC_gene_expression_plot.html) `r give_date("P2_04_FvC_gene_expression_plot.html")` 
 
 
 ### Downloads
@@ -49,4 +54,16 @@ Click here to open iSEE app: <a target="_blank" href="http://imlspenticton.uzh.c
 # External data integration
 
 1. [Data preparation](EDI_01_Loading_and_Preprocessing.html)  `r give_date("EDI_01_Loading_and_Preprocessing.html")`
+1. [Normalisation and selection of HVGs](EDI_02_Normalisation_HVG_DimRed.html)  `r give_date("EDI_02_Normalisation_HVG_DimRed.html")`
+1. [Batch correction and clustering](EDI_03_Batch_correction.html)  `r give_date("EDI_03_Batch_correction.html")`
+1. [Cell cycle analysis](EDI_04_Cell_Cycle.html)  `r give_date("EDI_04_Cell_Cycle.html")`
+1. [Cell annotation](EDI_05_Annotation.html)  `r give_date("EDI_05_Annotation.html")`
+1. [Marker gene analysis](EDI_06_marker_genes.html)  `r give_date("EDI_06_marker_genes.html")`
+1. [Differential abundance analysis](EDI_07_DA.html)  `r give_date("EDI_07_DA.html")`
+1. [Subclustering of selected cell types](EDI_08_Subclustering.html)  `r give_date("EDI_08_Subclustering.html")`
+
+## Downloads
+
+1. <p>EDI: Marker genes: <a href="output/EDI_marker_results_hvg_genes.xlsx" download>Click to download</a> `r give_date("EDI_marker_results_hvg_genes.xlsx")` </p>
+1. <p>EDI subclustering: Marker genes: <a href="output/EDI_subclustering_markers_genes.xlsx" download>Click to download</a> `r give_date("EDI_subclustering_markers_genes.xlsx")` </p>
 

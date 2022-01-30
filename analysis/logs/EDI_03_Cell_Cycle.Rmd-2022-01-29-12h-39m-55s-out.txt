@@ -1,0 +1,45 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
+  ordinary text without R code
+
+  |                                                                              |......                                                                |   8%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |........                                                              |  12%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  16%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |..............                                                        |  20%
+  ordinary text without R code
+
+  |                                                                              |.................                                                     |  24%
+label: load-data
+  |                                                                              |....................                                                  |  28%
+  ordinary text without R code
+
+  |                                                                              |......................                                                |  32%
+label: get cell cycle genes
+  |                                                                              |.........................                                             |  36%
+  ordinary text without R code
+
+  |                                                                              |............................                                          |  40%
+label: cell cycle scoring with seurat (with options) 
+List of 1
+ $ warning: logi FALSE
+
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  48%
+label: plot UMAP (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+

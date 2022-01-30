@@ -1,0 +1,5 @@
+Error in parse(text = x, srcfile = src) : 
+  <text>:4:0: unexpected end of input
+2:   get_sample_colours(levels(sce$Sample)) +
+3:   facet_wrap(~Protocol) +
+  ^

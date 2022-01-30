@@ -1,0 +1,264 @@
+---
+title: "Batch Correction"
+author: "Dominique Paul"
+date: "11/1/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressMessages({
+  library(BiocParallel)
+  library(tidySingleCellExperiment)
+  library(scater)
+  library(hrbrthemes)
+  library(parallel)
+  library(batchelor)
+  library(scran)
+  library(bluster)
+  library(dplyr)
+  library(igraph)
+  library(tictoc)
+  library(CellMixS)
+})
+
+# Setting for parallel computing
+n_workers <- min(detectCores()-1, 16)
+RhpcBLASctl::blas_set_num_threads(n_workers)
+bpparam <- BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)
+
+# load utils functions
+source("../code/general_purpose_code.R")
+```
+
+# Load data
+
+```{r load data}
+sce <- readRDS(file="../data/EOS_Files/EDI_EOS2_sce.rds")
+```
+
+
+# Batch Correction
+
+The data comes from different experiments and very locations on different subjects. It is therefore not safe to assume (as many batch correction methods do) that the composition of the samples is roughly the same. We use the fastMNN method for batch correction as it imposes no assumptions about the source and similarity of the data.
+
+## Pre-batch correction {.tabset}
+
+```{r pre-batch correction, fig.width=14, fig.height=10, results="asis"}
+# Before batch correction
+cat("\n\n### UMAP uncorrected by sample \n\n")
+print(plotReducedDim(sce, "UMAP", colour_by="Sample", point_size=0.5) +
+  ggtitle("UMAP prior to batch correction") +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_sample_colours(levels(sce$Sample))
+
+cat("\n\n### UMAP uncorrected by protocol \n\n")
+print(plotReducedDim(sce, "UMAP", colour_by="Protocol", point_size=0.5) +
+  ggtitle("UMAP prior to batch correction") +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_protocol_colours(levels(sce$Protocol))
+```
+
+## Batch correction with harmony {.tabset}
+
+```{r batch correction harmony, fig.width=18, fig.height=12, results="asis"}
+meta_data <- colData(sce) %>%
+  as.data.frame() %>%
+  dplyr::select(c(Protocol, Sample))
+
+reducedDim(sce, "harmony") <- harmony::HarmonyMatrix(data_mat=logcounts(sce),
+                                                  meta_data= meta_data,
+                                                  vars_use=c("Protocol", "Sample"),
+                                                  do_pca = TRUE, verbose=FALSE
+                                                  )
+
+sce <- runUMAP(sce, dimred="harmony", subset_row=rowData(sce)$is_hvg,
+                       n_neighbors=50, min_dist = 0.1, name="UMAP")
+
+cat("\n\n### UMAP corrected by sample\n\n")
+print(plotReducedDim(sce, "UMAP", colour_by="Sample", point_size=0.25) +
+  ggtitle("UMAP post batch correction - Harmony") +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_sample_colours(levels(sce$Sample))
+
+cat("\n\n### UMAP corrected by protocol\n\n")
+print(plotReducedDim(sce, "UMAP", colour_by="Protocol", point_size=0.25) +
+  ggtitle("UMAP post batch correction - Harmony") +
+  guides(colour=guide_legend(override.aes=list(size=4))) +
+  theme_ipsum_rc()) +
+  get_protocol_colours(levels(sce$Protocol))
+```
+
+
+## Compare batch integration methods using CellMixS
+
+CellMixS tests each cell for whether the distribution of distances - specific to each batch - to the k nearest cells are from the same distribution. A high CMS score means that the batches are very well mixed. A low score indicates the presence of strong differences between the batches or bad integration. Differences in the number of cells per batch are considered.
+
+CMS scores are p.values for the alternative hypothesis that the batch-specific distributions of cells are not from the same distribution. A stronger spike in small p-values indicates stronger batch effects. A even or roughly uniform distribution of p-values indicates that the batches are perfectly mixed. In our case the samples are from different experiments and different patients. We do expect differences between the samples but expect a batch integration method to result in smoothing.
+
+ 
+```{r cellmixs harmony, fig.width=14, fig.height=6}
+bpstart(bpparam)
+sce <- CellMixS::cms(sce, k=500, 
+                     group = "Sample",
+                     dim_red = "harmony",
+                     res_name="sample_harmony",
+                     BPPARAM = bpparam)
+bpstop(bpparam)
+
+bpstart(bpparam)
+sce <- CellMixS::cms(sce, k=500, 
+                     group = "Protocol",
+                     dim_red = "harmony",
+                     res_name="protocol_harmony",
+                     BPPARAM = bpparam)
+bpstop(bpparam)
+
+
+CellMixS::visHist(sce, metric = "cms.sample_",  n_col = 2) +
+  theme_ipsum_rc() +
+  labs(title="CellMixS evaluation by sample")
+
+CellMixS::visHist(sce, metric = "cms.protocol_",  n_col = 2) +
+  theme_ipsum_rc() +
+  labs(title="CellMixS evaluation by protocol")
+```
+
+
+# Clustering
+
+Two step clustering based on Harmony integration
+
+```{r clustering harmony}
+tic("kgraph_clusters harmony")
+set.seed(100)
+bpstart(bpparam)
+kgraph_clusters <- clusterRows(reducedDim(sce, "harmony"),
+    TwoStepParam(
+        first=KmeansParam(centers=10000, nstart = 5, iter.max = 100),
+        second=NNGraphParam(k=15, cluster.fun="louvain", BPPARAM=bpparam)
+    )
+)
+bpstop(bpparam)
+toc(log=TRUE)
+
+tic("kgraph_clusters_walktrap harmony")
+set.seed(100)
+bpstart(bpparam)
+kgraph_clusters_walktrap <- clusterRows(reducedDim(sce, "harmony"),
+    TwoStepParam(
+        first=KmeansParam(centers=10000, nstart = 5, iter.max = 100),
+        second=NNGraphParam(k=15, cluster.fun="walktrap", BPPARAM=bpparam)
+    )
+)
+bpstop(bpparam)
+toc(log=TRUE)
+
+table(kgraph_clusters)
+
+colData(sce)$kgraph_clusters_harmony <- factor(kgraph_clusters)
+colData(sce)$kgraph_clusters_walktrap_harmony <- factor(kgraph_clusters_walktrap)
+```
+
+
+# UMAP Visualisation  {.tabset}
+
+```{r umap visualisation, fig.width=18, fig.height=12, results="asis"}
+cat("\n## K-Graph \n\n")
+plotReducedDim(sce, "UMAP", colour_by="kgraph_clusters_harmony", text_by="kgraph_clusters_harmony", point_size=0.5) +
+  ggtitle("Two step k-means clusters") +
+  theme_ipsum_rc()
+
+cat("\n## K-Graph by Protocol\n\n")
+plotReducedDim(sce, "UMAP", colour_by="kgraph_clusters_harmony", other_fields="Protocol", point_size=0.25) +
+  ggtitle("Two step k-means clusters") +
+  facet_wrap(~Protocol) +
+  theme_ipsum_rc()
+
+cat("\n## K-Graph Walktrap \n\n")
+plotReducedDim(sce, "UMAP", colour_by="kgraph_clusters_walktrap_harmony", text_by="kgraph_clusters_walktrap_harmony", point_size=0.5) +
+  ggtitle("Two step walktrap clusters") +
+  theme_ipsum_rc()
+
+cat("\n## K-Graph Walktrap by protocol\n\n")
+plotReducedDim(sce, "UMAP", colour_by="kgraph_clusters_walktrap_harmony", other_fields="Protocol", point_size=0.25) +
+  ggtitle("Two step walktrap clusters") +
+  facet_wrap(~Protocol) +
+  theme_ipsum_rc()
+```
+
+
+# Frequencies of clusters per Sample
+
+Tabular overviews of the relative and absolute cell counts between the cluster annotations and the samples.
+
+```{r Harmony barplots, fig.width=14, fig.height=10, results="asis"}
+plot_label_barplots(sce, "kgraph_clusters_harmony", tabset="###")
+
+plot_label_barplots(sce, "kgraph_clusters_walktrap_harmony", tabset="###")
+```
+
+
+# Silhouette plot comparison {.tabset}
+
+The silhouette width is a general-purpose method for evaluating the separation between clusters but requires calculating the average distance between pairs of observations within or between clusters. This function instead approximates the average distance with the root-mean-squared-distance, which can be computed very efficiently for large datasets. The approximated averages are then used to compute the silhouette width using the usual definition.
+
+```{r silhouette plot harmony, results="asis", fig.width=16, fig.height=10}
+plot_silhouette <- function(sce, cluster_name){
+  sce_temp <- sce
+  # Performing the calculations on the PC coordinates, like before.
+  sil.approx <- approxSilhouette(reducedDim(sce_temp, "harmony"), clusters=colData(sce_temp)[[cluster_name]])
+  
+  sil.data <- as.data.frame(sil.approx)
+  sil.data$closest <- factor(ifelse(sil.data$width > 0, colData(sce_temp)[[cluster_name]], sil.data$other))
+  sil.data$cluster <- factor(colData(sce_temp)[[cluster_name]])
+  
+  ggplot(sil.data, aes(x=cluster, y=width, colour=closest)) + 
+      ggbeeswarm::geom_quasirandom(method="smiley") +
+    labs(title=paste0(cluster_name, " silhouette plot"))
+}
+
+cat("\n## Kgraph clusters \n\n")
+plot_silhouette(sce, "kgraph_clusters_harmony")
+
+cat("\n## Kgraph clusters walktrap \n\n")
+plot_silhouette(sce, "kgraph_clusters_walktrap_harmony")
+```
+
+```{r silhouette plot fastMNN, results="asis", fig.width=16, fig.height=10, eval=FALSE}
+cat("\n\n## fastMNN {.tabset}\n\n")
+
+
+plot_silhouette <- function(sce, cluster_name){
+  sce_temp <- sce
+  # Performing the calculations on the PC coordinates, like before.
+  sil.approx <- approxSilhouette(reducedDim(sce_temp, "corrected"), clusters=colData(sce_temp)[[cluster_name]])
+  
+  sil.data <- as.data.frame(sil.approx)
+  sil.data$closest <- factor(ifelse(sil.data$width > 0, colData(sce_temp)[[cluster_name]], sil.data$other))
+  sil.data$cluster <- factor(colData(sce_temp)[[cluster_name]])
+  
+  ggplot(sil.data, aes(x=cluster, y=width, colour=closest)) + 
+      ggbeeswarm::geom_quasirandom(method="smiley") +
+    labs(title=paste0(cluster_name, " silhouette plot"))
+}
+
+cat("\n### Kgraph clusters \n\n")
+plot_silhouette(sce, "kgraph_clusters_fastMNN")
+
+cat("\n### Kgraph clusters walktrap \n\n")
+plot_silhouette(sce, "kgraph_clusters_walktrap_fastMNN")
+```
+
+# Save data
+
+```{r}
+file_path <- "../data/EOS_Files/EDI_EOS3_sce.rds"
+saveRDS(sce, file = file_path)
+upload_file_to_iSEE(file_path)
+```
+
