@@ -1,0 +1,219 @@
+---
+title: "Plots"
+author: "Dominique Paul"
+date: "1/30/2022"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# load utils functions
+source("../code/general_purpose_code.R")
+```
+
+# Load data
+
+```{r}
+sce_integrated <- readRDS(file="../data/EOS_Files/EDI_EOS8_sce.rds")
+sce_fresh <- readRDS(file="../data/EOS_Files/EDI_EOS4_sce.rds")
+sce_fvc <- 
+```
+
+
+# Figure 2
+
+* A: UMAP (Fresh only)
+* B: Heatmap (Fresh only)
+* C: Barplots cell type (Fresh only)
+* D: Subclustering Macrophages 
+
+```{r}
+#########
+### A ###
+#########
+
+Fig2a <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
+  labs(title="Manual labels for high-level clusters",
+       subtitle = "UMAP of fresh samples combined") +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse)) +
+  theme(legend.position="bottom",
+        panel.spacing = unit(5, "mm")) +
+  guides(color=guide_legend(title="",
+                            nrow=3,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))
+#########
+### B ###
+#########
+
+heatmap_marker_genes <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - High level")
+
+genes <- heatmap_marker_genes %>%
+    pull(Gene)
+
+# the cells which we want to display, ordered by cell type
+column_annotations <- data.frame("cell_name"=rownames(colData(sce_fresh)), "Cell_type"=factor(colData(sce_fresh)[,"manual_labels_coarse"])) %>%
+    filter(Cell_type!="NA") %>%
+    arrange(Cell_type) %>%
+    tibble::column_to_rownames(var="cell_name")
+
+# the logcounts which we need for the pheatmap function
+sce_plot <- logcounts(sce_fresh[genes, rownames(column_annotations)])
+
+# Use own colours for the column annotations
+colours <- get_cell_colours(unique(heatmap_marker_genes$Group), type="raw")
+annotation_colours <- list("Cell_type"=colours)
+
+
+# create the plot. We convert to ggplot to take advantage of some of the display functions
+fig4 <- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
+         color=viridis(50))) +
+  theme_ipsum_rc() +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), 
+        legend.position="none",
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        plot.background=element_blank()) +
+  labs(title="Selected marker genes for cell types")
+fig4
+
+
+#########
+### C ###
+#########
+
+Fig2c <- as.data.frame(colData(sce_fresh)) %>%
+  dplyr::group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour="black", stat="identity") +
+   theme_ipsum_rc() +
+   labs(title="Annotated cell type counts",
+        subtitle="For both samples combined",
+        x="", y="Number of cells") +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  guides(fill=guide_legend(title="Cell type")) 
+
+
+#########
+### D ###
+#########
+get_annotated_subcluster <- function(cell_type){
+  sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+  plt <- plotReducedDim(sce_subset, "UMAP",
+                 colour_by = "subcluster_names", text_by="subcluster_names") +
+    theme_ipsum_rc() +
+    labs(title=cell_type) +
+    # guides(colour=guide_legend(title="Subcluster")) +
+    get_unnamed_colours(unique(sce_subset$subcluster_names), "Subcluster", type="colour") + 
+    theme(legend.position="none",
+          plot.margin = margin(t = 0.5,  # Top margin
+                               r = 0.5,  # Right margin
+                               b = 0.5,  # Bottom margin
+                               l = 20)) # Left margin 
+  plt
+}
+
+Fig2d <- get_annotated_subcluster("Macrophages/DC")
+```
+
+
+# Figure 3: Fresh only
+
+* A: Subclustering Fibroblasts
+* B: Violin plot fibroblasts
+* C: Subclustering Keratinocytes
+* D: Subclustering Pericytes
+
+```{r Figure 3}
+# A: Fibroblasts
+fig3a <- get_annotated_subcluster("Fibroblasts") +
+  ylim(c(3,7))
+
+
+
+#########
+### B ###
+#########
+papillary_genes <- c("COL18A1", "APCDD1", "HSPB3", "NPTX2", "ROBO2", "COL23A1", "PTGDS", "PDPN", "COL7A1", "COLEC12", "AXIN2") #"CTSC","DCN","INHBB"
+reticular_genes <- c("MFAP5", "MGP", "FGF7", "A2M", "ANGPTL1", "IGF1", "EFEMP1", "PCSK5", "MAP1B", "COMP") # "COL14A1, "PPP1R14A", "TAGLN
+
+# subset to a sce object with only the fibroblasts as annotated manually
+fibro_sce <- sce_fresh[,colData(sce_fresh)$manual_labels_coarse == "Fibroblasts"]
+
+# are all the genes found in our data?
+# papillary_genes %in% rownames(fibro_sce)
+# reticular_genes %in% rownames(fibro_sce)
+genes <- c(papillary_genes, reticular_genes)
+
+gene_counts <- logcounts(fibro_sce)[genes,]
+
+res <- lapply(unique(fibro_sce$subcluster_id_k50), function(fibro_type){
+  mask <- fibro_sce$subcluster_id_k50 == fibro_type
+  data.frame("genes"=genes, "rowmeans"=rowMeans(gene_counts[, mask]), "subcluster"=fibro_type)
+}) %>% purrr::reduce(rbind)
+
+plt1 <- ggplot(res[res$genes %in% papillary_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Papillary fibroblasts",
+       y="Average of logcounts",
+       x="")
+
+plt2 <- ggplot(res[res$genes %in% reticular_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Reticular fibroblasts",
+       y="Average of logcounts",
+       x="")
+
+gridExtra::grid.arrange(plt1, plt2)
+
+
+
+# C: Keratinocytes
+fig3c <- get_annotated_subcluster("Keratinocytes") +
+  xlim(c(-11,-7)) +
+  ylim(c(-5,1))
+
+
+
+# D: Keratinocytes
+fig3d <- get_annotated_subcluster("Pericytes/VSMC") +
+  xlim(c(-7,-3)) +
+  ylim(c(12.5,15.5))
+```
+
+# Figure 5 (FvC)
+
+* A: UMAP by cell type (FvC)
+* B: UMAP by protocol (FvC)
+* C: Heatmap of currently "special" dot plot (FvC)
+* D: Heatmap of Fibroblasts only with the genes: COL1A1, COL1A2, DCN, COL6A1, COL6A2,MMP1, MMP3, IGFBP3, CXCL3, IL6, TNFAIP6, CXCL2 (FvC)
+
+
+```{r Figure 5}
+```
+
+# Figure 6: Overview of results from EDI filtering
+
+[In other file]
+
+# Figure 7
+
+* UMAP by cell type (Integrated data)
+* UMAP by protocol (Integrated data)
+* Differential abundance (Integrated data)
+
+

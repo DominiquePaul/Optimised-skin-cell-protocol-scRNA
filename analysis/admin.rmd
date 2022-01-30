@@ -24,16 +24,16 @@ wflow_build(files=c(
   
   # EDI scripts
   # "EDI_01_Loading_and_Preprocessing.Rmd",
-  "EDI_02_Normalisation_HVG_DimRed.Rmd",
-  "EDI_03_Batch_correction.Rmd",
-  "EDI_04_Cell_Cycle.Rmd",
-  "EDI_05_Annotation.Rmd",
-  "EDI_06_marker_genes.Rmd",
-  "EDI_07_DA.Rmd",
-  "EDI_08_Subclustering.Rmd",
+  # "EDI_02_Normalisation_HVG_DimRed.Rmd",
+  # "EDI_03_Batch_correction.Rmd",
+  # "EDI_04_Cell_Cycle.Rmd",
+  # "EDI_05_Annotation.Rmd",
+  # "EDI_06_marker_genes.Rmd",
+  # "EDI_07_DA.Rmd",
+  # "EDI_08_Subclustering.Rmd",
   
   # P2 workflow
-  "P2_01_data_comparison.Rmd",
+  # "P2_01_data_comparison.Rmd",
   "P2_02_Cell_Cycle.Rmd",
   "P2_03_Fresh_only_subclustering.Rmd",
   "P2_03_FvC_Annotations.Rmd",
