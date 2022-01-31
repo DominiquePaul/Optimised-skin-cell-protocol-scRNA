@@ -1,0 +1,18 @@
+Error in parse_block(g[-1], g[1], params.src, markdown_mode) : 
+  Duplicate chunk label 'figure 9.2', which has been used for the chunk:
+folder_path <- "/Users/dominiquepaul/xRobinson Group/01_Systemic Sclerosis/output/plots/"
+
+figure9_1 <- ggpubr::ggarrange(
+  fig9a1,
+  fig9a2,
+  ncol = 1, nrow = 2,labels = "AUTO"
+)
+
+suppressWarnings(figure9_1)
+
+ggsave(paste0(folder_path, "figure9_1.png"),
+       plot=figure9_1,
+       width=20*0.75,
+       height=24*0.75,
+       units="in",
+       bg="white")

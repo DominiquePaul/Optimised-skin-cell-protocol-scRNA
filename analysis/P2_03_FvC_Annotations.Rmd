@@ -169,7 +169,7 @@ fig9c
 
 # Figure 9.1
 
-```{r figure 9.2, fig.width=10, fig.height=12}
+```{r figure 9.1, fig.width=10, fig.height=12}
 folder_path <- "/Users/dominiquepaul/xRobinson Group/01_Systemic Sclerosis/output/plots/"
 
 figure9_1 <- ggpubr::ggarrange(

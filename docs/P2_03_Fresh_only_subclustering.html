@@ -1,0 +1,3030 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dominique Paul" />
+
+<meta name="date" content="2022-01-30" />
+
+<title>Fresh samples only</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Protocol Paper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Fresh samples only</h1>
+<h4 class="author">Dominique Paul</h4>
+<h4 class="date">2022-01-30</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-01-30
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211228code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211228)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211228code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211228)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree97b097bcd93105d275ebb47c066a8129eb61b5b2targetblank97b097ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/97b097bcd93105d275ebb47c066a8129eb61b5b2" target="_blank">97b097b</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree97b097bcd93105d275ebb47c066a8129eb61b5b2targetblank97b097ba" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/97b097bcd93105d275ebb47c066a8129eb61b5b2" target="_blank">97b097b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    Metadata/.DS_Store
+    Ignored:    Metadata/cell_annotation_markers/.DS_Store
+    Ignored:    Paper/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.RData
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Unused/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/seeds/.DS_Store
+    Ignored:    data/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-30-19h-37m-35s-err.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-30-19h-37m-35s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-30-19h-48m-49s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-30-19h-48m-49s-out.txt
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/P2_03_Fresh_only_subclustering.Rmd</code>) and HTML (<code>docs/P2_03_Fresh_only_subclustering.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/analysis/P2_03_Fresh_only_subclustering.Rmd" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Added new clustering after meeting 29-Jan-2022
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-data-for-fresh-samples-combined" class="section level1">
+<h1>Load data for fresh samples combined</h1>
+<p>In this analysis we focus on subclustering the data for the combined two samples of the “new” protocol as well as the SSc controls.</p>
+<pre class="r"><code>sce_fresh &lt;- readRDS(&quot;../data/EOS_files/Fresh_only_EOS2.rds&quot;)</code></pre>
+<p>After manual examination of the clusters above and their respective marker genes we have created a table mapping the unsupervised clusters to their cell type group.</p>
+<pre class="r"><code>cluster_annotation_mapping &lt;- read.xlsx(&quot;../metadata/cluster_annotation_map.xlsx&quot;, sheet=&quot;Fresh_mixed&quot;)
+kableExtra::kable(cluster_annotation_mapping)</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Cluster.ID
+</th>
+<th style="text-align:left;">
+Annotation
+</th>
+<th style="text-align:left;">
+UMAP
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+Vascular endothelial
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+Macrophages/DC
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+Pericytes/VSMC
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+Fibroblasts
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+Keratinocytes
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+Keratinocytes
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+T cells
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+Lymphatic endothelial
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+Mast cells
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+add manual
+</td>
+<td style="text-align:left;">
+Melanocytes/Schwann cells
+</td>
+<td style="text-align:left;">
+fresh samples combined (n=2)
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>sce_fresh$manual_labels_coarse &lt;- mapvalues(sce_fresh$label, cluster_annotation_mapping$Cluster.ID, cluster_annotation_mapping$Annotation)</code></pre>
+<pre><code>The following `from` values were not present in `x`: add manual</code></pre>
+<pre class="r"><code>heatmap_marker_genes &lt;- read.xlsx(&quot;../metadata/marker_genes_heatmaps.xlsx&quot;, sheet=&quot;Fresh only - High level&quot;)
+subclustering_labels &lt;- read.xlsx(&quot;../metadata/marker_genes_heatmaps.xlsx&quot;, sheet=&quot;Fresh only - subclusters&quot;)</code></pre>
+</div>
+<div id="manual-labelling-of-melanocytes-schwann-cells" class="section level1">
+<h1>Manual labelling of Melanocytes / Schwann cells</h1>
+<pre class="r"><code>umap_values &lt;- reducedDim(sce_fresh, &quot;UMAP&quot;)
+mask &lt;- as.vector((umap_values[,1] &gt; -5) &amp; (umap_values[,1] &lt; 0) &amp; (umap_values[,2] &gt; -1) &amp; (umap_values[,2] &lt; 2.5))
+mask_melanocytes &lt;- as.vector((umap_values[,1] &gt; -5) &amp; (umap_values[,1] &lt; 0) &amp; (umap_values[,2] &gt; -2) &amp; (umap_values[,2] &lt; 0.22))
+mask_schwann_cells &lt;- as.vector((umap_values[,1] &gt; -5) &amp; (umap_values[,1] &lt; 0) &amp; (umap_values[,2] &gt; 0.22) &amp; (umap_values[,2] &lt; 0.4))
+
+# plot expression values
+plotReducedDim(sce_fresh[,mask], &quot;UMAP&quot;, colour_by=&quot;PMEL&quot;) +
+  labs(title=&quot;UMAP zoomed in on Melanocytes + Schwann cells&quot;,
+       subtitle=&quot;Coloured by log values of PMEL gene&quot;) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plotReducedDim(sce_fresh[,mask], &quot;UMAP&quot;, colour_by=&quot;DCT&quot;) +
+  labs(title=&quot;UMAP zoomed in on Melanocytes + Schwann cells&quot;,
+       subtitle=&quot;Coloured by log values of DCT gene&quot;) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plotReducedDim(sce_fresh[,mask], &quot;UMAP&quot;, colour_by=&quot;CDH19&quot;) +
+  labs(title=&quot;UMAP zoomed in on Melanocytes + Schwann cells&quot;,
+       subtitle=&quot;Coloured by log values of CDH19 gene&quot;) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>new_values &lt;- as.vector(sce_fresh$manual_labels_coarse)
+new_values[mask_melanocytes] &lt;- &quot;Melanocytes&quot;
+new_values[mask_schwann_cells] &lt;- &quot;Schwann cells&quot;
+sce_fresh$manual_labels_coarse &lt;- factor(new_values)</code></pre>
+</div>
+<div id="umaps-coloured-by-cluster-and-cell-type-group" class="section level1 tabset">
+<h1 class="tabset">UMAPs coloured by cluster and cell type group</h1>
+<p>We take a look at the UMAPs to check that the mapping is indeed as we expect.</p>
+<pre class="r"><code>cat(&quot;\n\n## Clusters \n\n&quot;)</code></pre>
+<div id="clusters" class="section level2">
+<h2>Clusters</h2>
+<pre class="r"><code>fig3a1 &lt;- plotReducedDim(sce_fresh, &quot;UMAP&quot;, colour_by=&quot;label&quot;, text_by=&quot;label&quot;, point_size=0.25) +
+  labs(title=&quot;Unsupervised cluster labels&quot;,
+       subtitle = &quot;UMAP of fresh samples combined&quot;) +
+  theme_ipsum_rc() +
+  scale_colour_discrete(name = &quot;Cluster labels&quot;) +
+  theme(#legend.position=&quot;bottom&quot;,
+        panel.spacing = unit(5, &quot;mm&quot;)) +
+  guides(color=guide_legend(title=&quot;&quot;,
+                            #nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>fig3a1</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/visualise%20UMAPs-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n## Cell type groups \n\n&quot;)</code></pre>
+</div>
+<div id="cell-type-groups" class="section level2">
+<h2>Cell type groups</h2>
+<pre class="r"><code>fig3a2 &lt;- plotReducedDim(sce_fresh, &quot;UMAP&quot;, colour_by=&quot;manual_labels_coarse&quot;, text_by=&quot;manual_labels_coarse&quot;, point_size=0.25) +
+  labs(title=&quot;Manual labels for high-level clusters&quot;,
+       subtitle = &quot;UMAP of fresh samples combined&quot;) +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse)) +
+  theme(#legend.position=&quot;bottom&quot;,
+        panel.spacing = unit(5, &quot;mm&quot;)) +
+  guides(color=guide_legend(title=&quot;&quot;,
+                            # nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>fig3a2</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/visualise%20UMAPs-2.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="absolute-cell-abundance" class="section level1 tabset">
+<h1 class="tabset">Absolute cell abundance</h1>
+<pre class="r"><code># Samples combined
+cat(paste0(&quot;\n\n##&quot;, &quot; Samples combined \n\n&quot;))</code></pre>
+<div id="samples-combined" class="section level2">
+<h2>Samples combined</h2>
+<pre class="r"><code>as.data.frame(colData(sce_fresh)) %&gt;%
+  dplyr::group_by(manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+   theme_ipsum_rc() +
+   labs(title=&quot;Annotated cell type counts&quot;,
+        subtitle=&quot;For both samples combined&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  guides(fill=guide_legend(title=&quot;Cell type&quot;))</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/absolute%20cell%20abundance-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Sample 1
+cat(paste0(&quot;\n\n##&quot;, &quot; Sample 1 \n\n&quot;))</code></pre>
+</div>
+<div id="sample-1" class="section level2">
+<h2>Sample 1</h2>
+<pre class="r"><code>as.data.frame(colData(sce_fresh)) %&gt;%
+  filter(Sample==&quot;Fresh_S1&quot;) %&gt;%
+  dplyr::group_by(manual_labels_coarse, Sample) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+   theme_ipsum_rc() +
+   labs(title=&quot;Annotated cell type counts&quot;,
+        subtitle=&quot;For Sample 1&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  guides(fill=guide_legend(title=&quot;Cell type&quot;))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;manual_labels_coarse&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/absolute%20cell%20abundance-2.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Sample 2
+cat(paste0(&quot;\n\n##&quot;, &quot; Sample 2 \n\n&quot;))</code></pre>
+</div>
+<div id="sample-2" class="section level2">
+<h2>Sample 2</h2>
+<pre class="r"><code>as.data.frame(colData(sce_fresh)) %&gt;%
+  filter(Sample==&quot;Fresh_S2&quot;) %&gt;%
+  dplyr::group_by(manual_labels_coarse, Sample) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+   theme_ipsum_rc() +
+   labs(title=&quot;Annotated cell type counts&quot;,
+        subtitle=&quot;For Sample 2&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  guides(fill=guide_legend(title=&quot;Cell type&quot;))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;manual_labels_coarse&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/absolute%20cell%20abundance-3.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="one-cell-count-plot" class="section level1">
+<h1>One cell count plot</h1>
+<pre class="r"><code>comb &lt;- as.data.frame(colData(sce_fresh)) %&gt;%
+  dplyr::group_by(manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  mutate(Sample=&quot;Combined&quot;) %&gt;%
+  select(manual_labels_coarse, Sample, counts)
+
+d1 &lt;- as.data.frame(colData(sce_fresh)) %&gt;%
+  filter(Sample==&quot;Fresh_S1&quot;) %&gt;%
+  dplyr::group_by(manual_labels_coarse, Sample) %&gt;%
+  dplyr::summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;manual_labels_coarse&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>d2 &lt;- as.data.frame(colData(sce_fresh)) %&gt;%
+  filter(Sample==&quot;Fresh_S2&quot;) %&gt;%
+  dplyr::group_by(manual_labels_coarse, Sample) %&gt;%
+  dplyr::summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;manual_labels_coarse&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>fig5a &lt;- rbind(comb, d1, d2) %&gt;%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+   theme_ipsum_rc() +
+   labs(title=&quot;Annotated cell type counts&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  facet_wrap(~Sample) +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse), type=&quot;fill&quot;)
+
+fig5a</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/combined%20plot-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="relative-cell-abundance" class="section level1">
+<h1>Relative cell abundance</h1>
+<pre class="r"><code>data_combined &lt;- as.data.frame(colData(sce_fresh)) %&gt;%
+  dplyr::group_by(manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  mutate(Sample=&quot;Samples combined&quot;) %&gt;%
+  select(manual_labels_coarse, Sample, counts)
+
+data_by_sample &lt;- as.data.frame(colData(sce_fresh)) %&gt;%
+  dplyr::group_by(manual_labels_coarse, Sample) %&gt;%
+  dplyr::summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;manual_labels_coarse&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>fig5b &lt;- rbind(data_combined, data_by_sample) %&gt;%
+  ggplot(aes(x=Sample, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;, position=&quot;fill&quot;) +
+   scale_y_continuous(labels = scales::percent) +
+   theme_ipsum_rc() +
+   labs(title=&quot;Relative frequency of cell types&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse), type=&quot;fill&quot;)
+
+fig5b</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/unnamed-chunk-2-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="subclustering" class="section level1">
+<h1>Subclustering</h1>
+<pre class="r"><code>sce_fresh$manual_labels_coarse2 &lt;- sce_fresh$manual_labels_coarse
+sce_fresh$manual_labels_coarse2 &lt;- sub(&quot;Vascular endothelial&quot;, &quot;Endothelial cells&quot;, sce_fresh$manual_labels_coarse2)
+sce_fresh$manual_labels_coarse2 &lt;- sub(&quot;Lymphatic endothelial&quot;, &quot;Endothelial cells&quot;, sce_fresh$manual_labels_coarse2)</code></pre>
+<p>We now look at each cell type group individually. We re-cluster the cells and identify the marker genes of said plots.</p>
+<pre class="r"><code>run_subclustering &lt;- function(sce_object, cell_type, k=50){
+  sce_fresh_copy &lt;- sce_object
+  sce_subset &lt;- sce_object[,sce_object$manual_labels_coarse2 == cell_type]
+  
+  # recluster the cells
+  if (dim(sce_subset)[2] &lt; (k+1)){
+    cat(paste0(cell_type, &quot; did not have a sufficient number of cells to be subclustered. Minimum required is &quot;, k, &quot; and only &quot;, dim(sce_subset)[2], &quot; cells are labelled as &quot;, cell_type))
+    
+    return(sce_fresh_copy)
+  }
+  
+  set.seed(100)
+  snn.graph &lt;- buildSNNGraph(sce_subset, k=k, use.dimred=&quot;harmony&quot;)
+  clusters &lt;- igraph::cluster_walktrap(snn.graph)$membership
+  colData(sce_fresh_copy)[sce_fresh_copy$manual_labels_coarse2 == cell_type, &quot;subcluster_id_k50&quot;] &lt;- clusters
+
+
+
+  ##### Re-calculate UMAP #####
+  set.seed(100)
+  sce_subset &lt;- runUMAP(sce_subset, dimred = &#39;harmony&#39;, subset_row=rowData(sce_subset)$is_hvg, min_dist = 0.1)
+  umap_for_cell_type &lt;- reducedDim(sce_subset, &quot;UMAP&quot;)
+  column_name &lt;- paste0(&quot;UMAP_&quot;, cell_type)
+
+  # copy from another dimension reduction. This is a workaround to set a
+  # dimension reduction for only some of the cells
+  reducedDim(sce_fresh_copy, column_name) &lt;- reducedDim(sce_fresh_copy, &quot;UMAP&quot;)
+  # set all values to 0 first
+  reducedDim(sce_fresh_copy, column_name)[,c(1,2)] &lt;- NA
+  # Set new values
+  attr(reducedDim(sce_fresh_copy, column_name), &quot;scaled:center&quot;) &lt;- attr(umap_for_cell_type, &quot;scaled:center&quot;)
+  reducedDim(sce_fresh_copy, column_name)[rownames(umap_for_cell_type),] &lt;- umap_for_cell_type
+  
+  return(sce_fresh_copy)
+}
+
+special_cases &lt;- c(&quot;Fibroblasts&quot;, &quot;Macrophages/DC&quot;, &quot;Endothelial cells&quot;)
+
+for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+  if (cell_type %in% special_cases) next
+  sce_fresh &lt;- run_subclustering(sce_fresh, cell_type, k=50)
+}
+
+sce_fresh &lt;- run_subclustering(sce_fresh, &quot;Fibroblasts&quot;, k=52)
+sce_fresh &lt;- run_subclustering(sce_fresh, &quot;Macrophages/DC&quot;, k=70)
+sce_fresh &lt;- run_subclustering(sce_fresh, &quot;Endothelial cells&quot;, k=40)
+
+# transform column into factor values
+sce_fresh$subcluster_id_k50_long &lt;- factor(paste0(sce_fresh$manual_labels_coarse2, &quot;_&quot;, sce_fresh$subcluster_id_k50))
+sce_fresh$subcluster_id_k50 &lt;- factor(sce_fresh$subcluster_id_k50)</code></pre>
+</div>
+<div id="plot-umaps" class="section level1">
+<h1>Plot UMAPs</h1>
+<pre class="r"><code>k &lt;- 51
+
+# We also create a separate column for each of the cell types. We do this to easily analyse the results in iSee
+for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+  colData(sce_fresh)[,cell_type] &lt;- colData(sce_fresh)[,&quot;subcluster_id_k50&quot;]
+  colData(sce_fresh)[sce_fresh$manual_labels_coarse2 != cell_type, cell_type] &lt;- NA
+  colData(sce_fresh)[, cell_type] &lt;- factor(as.numeric(colData(sce_fresh)[, cell_type]))
+}
+
+cat(&quot;\n\n## Original UMAP dimensions {.tabset} \n\n&quot;)</code></pre>
+<div id="original-umap-dimensions" class="section level2 tabset">
+<h2 class="tabset">Original UMAP dimensions</h2>
+<pre class="r"><code>for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+
+  # create tab for markdown
+  cat(&quot;\n\n### &quot;, cell_type, &quot;\n\n&quot;)
+  
+  if (dim(sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type])[2] &lt; k){
+    cat(&quot;Skipped as the cell type &quot;, cell_type, &quot; was too small to subcluster&quot;)
+    next
+  }
+
+  # plot the UMAP of the subcluster
+  print(plotReducedDim(sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type], &quot;UMAP&quot;,
+                 colour_by = &quot;subcluster_id_k50&quot;, text_by=&quot;subcluster_id_k50&quot;) +
+          theme_ipsum_rc() +
+    labs(title=cell_type,
+         subtitle=&quot;k=50&quot;))
+}</code></pre>
+<div id="fibroblasts" class="section level3">
+<h3>Fibroblasts</h3>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="keratinocytes" class="section level3">
+<h3>Keratinocytes</h3>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="endothelial-cells" class="section level3">
+<h3>Endothelial cells</h3>
+<pre><code>Warning: Removed 2 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pericytesvsmc" class="section level3">
+<h3>Pericytes/VSMC</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="macrophagesdc" class="section level3">
+<h3>Macrophages/DC</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mast-cells" class="section level3">
+<h3>Mast cells</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="t-cells" class="section level3">
+<h3>T cells</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n## Re-calculated UMAPs {.tabset} \n\n&quot;)</code></pre>
+</div>
+</div>
+<div id="re-calculated-umaps" class="section level2 tabset">
+<h2 class="tabset">Re-calculated UMAPs</h2>
+<pre class="r"><code>for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+  if (dim(sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type])[2] &lt; (k+1)){
+    cat(&quot;Skipped as the cell type &quot;, cell_type, &quot; was too small to subcluster&quot;)
+    next
+  }
+
+  # create tab for markdown
+  cat(&quot;\n\n### &quot;, cell_type, &quot;\n\n&quot;)
+  column_name &lt;- paste0(&quot;UMAP_&quot;, cell_type)
+
+  # plot the UMAP of the subcluster
+  print(plotReducedDim(sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type], column_name,
+                 colour_by = &quot;subcluster_id_k50&quot;, text_by=&quot;subcluster_id_k50&quot;) +
+          theme_ipsum_rc() +
+    labs(title=paste0(&quot;Recalculated UMAP for &quot;, cell_type),
+         subtitle=&quot;k=50&quot;))
+}</code></pre>
+<div id="fibroblasts-1" class="section level3">
+<h3>Fibroblasts</h3>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="keratinocytes-1" class="section level3">
+<h3>Keratinocytes</h3>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="endothelial-cells-1" class="section level3">
+<h3>Endothelial cells</h3>
+<pre><code>Warning: Removed 2 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-10.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pericytesvsmc-1" class="section level3">
+<h3>Pericytes/VSMC</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="macrophagesdc-1" class="section level3">
+<h3>Macrophages/DC</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mast-cells-1" class="section level3">
+<h3>Mast cells</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-13.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="t-cells-1" class="section level3">
+<h3>T cells</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/plot%20old%20and%20new%20UMAPs-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="plot-subcluster-sizes-per-cell-type" class="section level1 tabset">
+<h1 class="tabset">Plot subcluster sizes per cell type</h1>
+<pre class="r"><code># plot bar charts for cell types
+for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+  
+  cat(&quot;\n\n## &quot;, cell_type, &quot;\n\n&quot;)
+  
+  if (dim(sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type])[2] &lt; (k+1)){
+    cat(&quot;Skipped as the cell type was too small to subcluster&quot;)
+    next
+  }
+
+  sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+
+  data_complete &lt;- as.data.frame(colData(sce_subset)) %&gt;%
+    dplyr::group_by(subcluster_id_k50) %&gt;%
+    dplyr::summarise(n_cells=n()) %&gt;%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3)) %&gt;%
+    mutate(Sample=&quot;Samples combined&quot;) %&gt;%
+    select(Sample, subcluster_id_k50, n_cells, share)
+
+
+  data_stratified &lt;- as.data.frame(colData(sce_subset)) %&gt;%
+    dplyr::group_by(Sample, subcluster_id_k50) %&gt;%
+    dplyr::summarise(n_cells=n()) %&gt;%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3))
+
+  print(ggplot(rbind(data_complete, data_stratified),
+               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+    geom_bar(stat=&quot;identity&quot;) +
+    facet_grid(subcluster_id_k50 ~ .) +
+    labs(title=cell_type,
+         subtitle=&quot;Bars show fraction of cells for given cell type and sample&quot;) +
+      theme_ipsum_rc() +
+    guides(fill=guide_legend(title=&quot;Subcluster&quot;)))
+  
+  print(ggplot(rbind(data_complete, data_stratified),
+               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+    geom_bar(stat=&quot;identity&quot;, position=&quot;fill&quot;) +
+    labs(title=cell_type,
+         subtitle=&quot;Bars show fraction of cells for given cell type and sample&quot;) +
+      theme_ipsum_rc() +
+      guides(fill=guide_legend(title=&quot;Subcluster&quot;)))
+}</code></pre>
+<div id="fibroblasts-2" class="section level2">
+<h2>Fibroblasts</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="keratinocytes-2" class="section level2">
+<h2>Keratinocytes</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-2.png" width="960" style="display: block; margin: auto;" /><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-3.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="endothelial-cells-2" class="section level2">
+<h2>Endothelial cells</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-4.png" width="960" style="display: block; margin: auto;" /><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-5.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pericytesvsmc-2" class="section level2">
+<h2>Pericytes/VSMC</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-6.png" width="960" style="display: block; margin: auto;" /><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-7.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="macrophagesdc-2" class="section level2">
+<h2>Macrophages/DC</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-8.png" width="960" style="display: block; margin: auto;" /><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-9.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mast-cells-2" class="section level2">
+<h2>Mast cells</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-10.png" width="960" style="display: block; margin: auto;" /><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-11.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="t-cells-2" class="section level2">
+<h2>T cells</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-12.png" width="960" style="display: block; margin: auto;" /><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-13.png" width="960" style="display: block; margin: auto;" /><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20sizes-14.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="section" class="section level1 unnumbered">
+<h1 class="unnumbered"></h1>
+<div id="marker-genes-per-subcluster" class="section level2">
+<h2>Marker genes per subcluster</h2>
+<p>To identify the differentiated cell types within each cluster we analyse the marker genes using three methods (as before):</p>
+<ol style="list-style-type: decimal">
+<li>Welch t-test: fast-computed and good statistical properties for large numbers of cells
+<ol style="list-style-type: decimal">
+<li>We test for marker genes that test significant against ANY other cluster</li>
+<li>We test for makrer genes that test singnificant against ALL other clusters</li>
+</ol></li>
+<li>Wilcoxon test: directly assesses separation between the expression distributions of clusters</li>
+<li>Entropy and f-stat method</li>
+</ol>
+<pre class="r"><code>wb &lt;- createWorkbook()
+addWorksheet(wb, &quot;Intro&quot;)
+writeData(wb, &quot;Intro&quot;, data.frame(&quot;Marker genes for the subclusters of the samples sequenced with the fresh protocol&quot;),
+          colNames=F)
+
+# prepare a theme for adjusting the pheatmap plot
+reduced_ipsum_rc_theme &lt;- theme_ipsum_rc() +
+  theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank(),
+            axis.title.y=element_blank(),
+            axis.text.y=element_blank(),
+            axis.ticks.y=element_blank(),
+            panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# We will run three t-tests with very similar function calls.
+# We thus define the workflow as a function, allowing the changes to be made via parameter changes
+run_marker_gene_analysis &lt;- function(test_name, type_comparison, worksheet_prefix, tabset=&quot;###&quot;){
+
+  prefix &lt;- ifelse(test_name==&quot;t&quot;, &quot;logFC&quot;, &quot;AUC&quot;)
+  heatmap_lower_limit &lt;- ifelse(test_name==&quot;t&quot;, -3, 0)
+  heatmap_upper_limit &lt;- ifelse(test_name==&quot;t&quot;, 3, 1)
+
+  marker_results_per_cell_type &lt;- list()
+
+  for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+    cat(cell_type)
+    # create tab for markdown
+    cat(paste0(&quot;\n\n&quot;, tabset, &quot; &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+    # create the subset
+    sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+    sce_subset$subcluster_id_k50 &lt;- factor(sce_subset$subcluster_id_k50)
+    
+    if (dim(sce_subset[,sce_subset$manual_labels_coarse2 == cell_type])[2] &lt; 50){
+      cat(paste0(cell_type, &quot; was skipped.&quot;))
+      next
+    }
+
+    # get the marker genes for each cluster
+    all.markers &lt;- findMarkers(sce_subset, test.type=test_name,
+                               pval.type=type_comparison,
+                               groups=sce_subset$subcluster_id_k50,
+                               direction=&quot;up&quot;, block=sce_subset$Sample)
+
+    marker_results_per_cell_type[[cell_type]] &lt;- all.markers
+
+    for (marker_num in names(all.markers)){
+      # create tab for markdown
+      cat(paste0(&quot;\n\n#&quot;, tabset, &quot; Cluster &quot;, marker_num, &quot; \n\n&quot;))
+
+      # subset marker genes object for a given cluster
+      all_cluster_markers &lt;- all.markers[[marker_num]]
+      # we only look at union of the top 5 markers per pairwise comparison
+      if (type_comparison==&quot;any&quot;){
+        cluster_markers &lt;- all_cluster_markers[all_cluster_markers$Top &lt;= 5,]  
+      } else {
+        cluster_markers &lt;- all_cluster_markers[1:25,]
+      }
+
+      cluster_markers_logFCs &lt;- getMarkerEffects(cluster_markers, prefix = prefix)
+      cluster_markers_logFCs[is.na(cluster_markers_logFCs)] &lt;- 0
+
+      # Create pheatmap plot per cluster
+      if (dim(cluster_markers_logFCs)[2] == 1){
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T,
+                                 cluster_cols=FALSE)) +
+        labs(title=paste0(&quot;Cluster &quot;,marker_num),
+             subtitle=&quot;Pairwise comparisons - comparison with only remaining subcluster&quot;) +
+        reduced_ipsum_rc_theme)
+      } else {
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T, cluster_cols=FALSE)) +
+                labs(title=paste0(&quot;Cluster &quot;, marker_num), subtitle=&quot;Pairwise comparisons&quot;) +
+                reduced_ipsum_rc_theme)
+      }
+
+      # write to excel
+      cell_type_short &lt;- ifelse(nchar(cell_type) &gt; 10, substr(cell_type, 1, 10), cell_type)
+      sheet_name &lt;- paste0(&quot;F_&quot;, worksheet_prefix, &quot;_&quot;, cell_type_short,&quot;_c&quot;, marker_num)
+      addWorksheet(wb, sheet_name)
+      cluster_markers_excel_out &lt;- cbind(&quot;Gene&quot;=rownames(all_cluster_markers), all_cluster_markers)
+      writeData(wb, sheet_name, cluster_markers_excel_out, rowNames = TRUE)
+    }
+  }
+  return(marker_results_per_cell_type)
+}
+
+
+# Function to plot UMAPs of subclusters for top n genes
+plot_umap_feature_plots &lt;- function(markers, n=10, tabset=&quot;###&quot;){
+  for (cell_type in names(markers)){
+    subset_sce &lt;- sce_fresh[, sce_fresh$manual_labels_coarse2 == cell_type]
+    cat(paste0(&quot;\n\n&quot;, tabset, &quot; &quot;, cell_type, &quot;  {.tabset} \n\n&quot;))
+
+    for (marker_num in names(markers[[cell_type]])){
+      # set tabs
+      cat(paste0(&quot;\n\n#&quot;, tabset, &quot; Cluster &quot;, marker_num, &quot; {.tabset} \n\n&quot;))
+      all_genes &lt;- rownames(markers[[cell_type]][[marker_num]])
+
+      for (i in 1:n){
+        gene_name &lt;- all_genes[[i]]
+        cat(paste0(&quot;\n\n##&quot;, tabset, &quot; &quot;, gene_name , &quot; \n\n&quot;))
+        x_mu &lt;- mean(reducedDim(subset_sce, &quot;UMAP&quot;)[,1])
+        x_var &lt;- var(reducedDim(subset_sce, &quot;UMAP&quot;)[,1])
+        y_mu &lt;- mean(reducedDim(subset_sce, &quot;UMAP&quot;)[,2])
+        y_var &lt;- var(reducedDim(subset_sce, &quot;UMAP&quot;)[,2])
+
+        print(plotReducedDim(subset_sce, dimred=&quot;UMAP&quot;, colour_by=gene_name, point_size=0.5) +
+                labs(title=gene_name, subtitle=paste0(cell_type, &quot; - Marker gene number &quot;, i, &quot;of subcluster &quot;, marker_num)) +
+                xlim(x_mu-2*x_var, x_mu+x_var*2) +
+                ylim(y_mu-2*y_var, y_mu+y_var*2) +
+                theme_ipsum_rc())
+      }
+    }
+  }
+}</code></pre>
+<div id="t-test-testing-for-significance-against-any-other-cluster" class="section level3 tabset">
+<h3 class="tabset">t-test testing for significance against any other cluster</h3>
+<p>Testing with the comparison type “any” we select marker genes which are significant in ANY comparison with another cluster. If we should have overclustered and the same cell type is split into two clusters, then marker genes of this cell type would not show up if we would be using the “all” comparison method. The marker genes which define the cell type split into two clusters would show as significant in all comparisons, except the two sister-clusters, and woud thus not show.</p>
+<pre class="r"><code>all_markers_ttest_any &lt;- run_marker_gene_analysis(test_name = &quot;t&quot;, type_comparison = &quot;any&quot;, worksheet_prefix = &quot;ttest_any&quot;, tabset=&quot;####&quot;)</code></pre>
+<p>Fibroblasts</p>
+<div id="fibroblasts-3" class="section level4 tabset">
+<h4 class="tabset">Fibroblasts</h4>
+<div id="cluster-1" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-5.png" width="672" style="display: block; margin: auto;" />Keratinocytes</p>
+</div>
+</div>
+<div id="keratinocytes-3" class="section level4 tabset">
+<h4 class="tabset">Keratinocytes</h4>
+<div id="cluster-1-1" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-1" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-1" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-1" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-1" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-10.png" width="672" style="display: block; margin: auto;" />Endothelial cells</p>
+</div>
+</div>
+<div id="endothelial-cells-3" class="section level4 tabset">
+<h4 class="tabset">Endothelial cells</h4>
+<div id="cluster-1-2" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-2" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-2" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-13.png" width="672" style="display: block; margin: auto;" />Pericytes/VSMC</p>
+</div>
+</div>
+<div id="pericytesvsmc-3" class="section level4 tabset">
+<h4 class="tabset">Pericytes/VSMC</h4>
+<div id="cluster-1-3" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-3" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-15.png" width="672" style="display: block; margin: auto;" />Macrophages/DC</p>
+</div>
+</div>
+<div id="macrophagesdc-3" class="section level4 tabset">
+<h4 class="tabset">Macrophages/DC</h4>
+<div id="cluster-1-4" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-16.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-4" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-17.png" width="672" style="display: block; margin: auto;" />Mast cells</p>
+</div>
+</div>
+<div id="mast-cells-3" class="section level4 tabset">
+<h4 class="tabset">Mast cells</h4>
+<div id="cluster-1-5" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-18.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-5" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-19.png" width="672" style="display: block; margin: auto;" />T cells</p>
+</div>
+</div>
+<div id="t-cells-3" class="section level4 tabset">
+<h4 class="tabset">T cells</h4>
+<div id="cluster-1-6" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-20.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-6" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20any-21.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+</div>
+<div id="umaps-for-each-cell-type-coloured-by-expression-values-for-top-marker-genes" class="section level2 tabset">
+<h2 class="tabset">UMAPs for each cell type coloured by expression values for top marker genes</h2>
+<p>We visualise the re-calculated UMAPs for each cluster and colour the cells by the expression values (logscale) of the top marker genes of each subclusters</p>
+<pre class="r"><code>plot_umap_feature_plots(all_markers_ttest_any, n=5, tabset=&quot;###&quot;)</code></pre>
+<div id="fibroblasts-4" class="section level3 tabset">
+<h3 class="tabset">Fibroblasts</h3>
+<div id="cluster-1-7" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="sparcl1" class="section level5">
+<h5>SPARCL1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fos" class="section level5">
+<h5>FOS</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-2.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lgals1" class="section level5">
+<h5>LGALS1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-3.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd5" class="section level5">
+<h5>MT-ND5</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-4.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="txnip" class="section level5">
+<h5>TXNIP</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-5.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-7" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="cxcl12" class="section level5">
+<h5>CXCL12</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-6.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c3" class="section level5">
+<h5>C3</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-7.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="apoe" class="section level5">
+<h5>APOE</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-8.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="igfbp7" class="section level5">
+<h5>IGFBP7</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-9.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps27a" class="section level5">
+<h5>RPS27A</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-10.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-3" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="robo2" class="section level5">
+<h5>ROBO2</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-11.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="nfkbia" class="section level5">
+<h5>NFKBIA</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-12.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fos-1" class="section level5">
+<h5>FOS</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-13.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="apcdd1" class="section level5">
+<h5>APCDD1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-14.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="irf1" class="section level5">
+<h5>IRF1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-15.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-4-2" class="section level4 tabset">
+<h4 class="tabset">Cluster 4</h4>
+<div id="mfap5" class="section level5">
+<h5>MFAP5</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-16.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mgp" class="section level5">
+<h5>MGP</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-17.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ccn5" class="section level5">
+<h5>CCN5</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-18.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fbln1" class="section level5">
+<h5>FBLN1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-19.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tnxb" class="section level5">
+<h5>TNXB</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-20.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-5-2" class="section level4 tabset">
+<h4 class="tabset">Cluster 5</h4>
+<div id="sod2" class="section level5">
+<h5>SOD2</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-21.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="col18a1" class="section level5">
+<h5>COL18A1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-22.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="col6a1" class="section level5">
+<h5>COL6A1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-23.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hmox1" class="section level5">
+<h5>HMOX1</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-24.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gem" class="section level5">
+<h5>GEM</h5>
+<pre><code>Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-25.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="keratinocytes-4" class="section level3 tabset">
+<h3 class="tabset">Keratinocytes</h3>
+<div id="cluster-1-8" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="krt5" class="section level5">
+<h5>KRT5</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-26.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt1" class="section level5">
+<h5>KRT1</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-27.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt2a" class="section level5">
+<h5>MT2A</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-28.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krtdap" class="section level5">
+<h5>KRTDAP</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-29.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dst" class="section level5">
+<h5>DST</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-30.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-8" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="csta" class="section level5">
+<h5>CSTA</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-31.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krtdap-1" class="section level5">
+<h5>KRTDAP</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-32.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dmkn" class="section level5">
+<h5>DMKN</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-33.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="itm2b" class="section level5">
+<h5>ITM2B</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-34.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sbsn" class="section level5">
+<h5>SBSN</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-35.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-4" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="col17a1" class="section level5">
+<h5>COL17A1</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-36.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt5-1" class="section level5">
+<h5>KRT5</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-37.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="postn" class="section level5">
+<h5>POSTN</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-38.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dst-1" class="section level5">
+<h5>DST</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-39.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ctnnal1" class="section level5">
+<h5>CTNNAL1</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-40.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-4-3" class="section level4 tabset">
+<h4 class="tabset">Cluster 4</h4>
+<div id="krt14" class="section level5">
+<h5>KRT14</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-41.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="apoe-1" class="section level5">
+<h5>APOE</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-42.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="s100a14" class="section level5">
+<h5>S100A14</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-43.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt5-2" class="section level5">
+<h5>KRT5</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-44.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dst-2" class="section level5">
+<h5>DST</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-45.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-5-3" class="section level4 tabset">
+<h4 class="tabset">Cluster 5</h4>
+<div id="mt1x" class="section level5">
+<h5>MT1X</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-46.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt10" class="section level5">
+<h5>KRT10</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-47.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krtdap-2" class="section level5">
+<h5>KRTDAP</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-48.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sbsn-1" class="section level5">
+<h5>SBSN</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-49.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="s100a10" class="section level5">
+<h5>S100A10</h5>
+<pre><code>Warning: Removed 25 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-50.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="endothelial-cells-4" class="section level3 tabset">
+<h3 class="tabset">Endothelial cells</h3>
+<div id="cluster-1-9" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="txnip-1" class="section level5">
+<h5>TXNIP</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-51.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sparcl1-1" class="section level5">
+<h5>SPARCL1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-52.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ifitm3" class="section level5">
+<h5>IFITM3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-53.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fos-2" class="section level5">
+<h5>FOS</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-54.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ifi27" class="section level5">
+<h5>IFI27</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-55.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-9" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="ptprc" class="section level5">
+<h5>PTPRC</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-56.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="srgn" class="section level5">
+<h5>SRGN</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-57.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cd44" class="section level5">
+<h5>CD44</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-58.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ezr" class="section level5">
+<h5>EZR</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-59.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="crem" class="section level5">
+<h5>CREM</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-60.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-5" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="adamts9" class="section level5">
+<h5>ADAMTS9</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-61.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tm4sf1" class="section level5">
+<h5>TM4SF1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-62.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sparcl1-2" class="section level5">
+<h5>SPARCL1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-63.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ifitm3-1" class="section level5">
+<h5>IFITM3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-64.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pnp" class="section level5">
+<h5>PNP</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-65.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="pericytesvsmc-4" class="section level3 tabset">
+<h3 class="tabset">Pericytes/VSMC</h3>
+<div id="cluster-1-10" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="fos-3" class="section level5">
+<h5>FOS</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-66.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="actb" class="section level5">
+<h5>ACTB</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-67.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="txnip-2" class="section level5">
+<h5>TXNIP</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-68.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="jun" class="section level5">
+<h5>JUN</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-69.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lmod1" class="section level5">
+<h5>LMOD1</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-70.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-10" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="ddx21" class="section level5">
+<h5>DDX21</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-71.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tnfaip3" class="section level5">
+<h5>TNFAIP3</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-72.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ednrb" class="section level5">
+<h5>EDNRB</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-73.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sod2-1" class="section level5">
+<h5>SOD2</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-74.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ifi16" class="section level5">
+<h5>IFI16</h5>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-75.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="macrophagesdc-4" class="section level3 tabset">
+<h3 class="tabset">Macrophages/DC</h3>
+<div id="cluster-1-11" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="g0s2" class="section level5">
+<h5>G0S2</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-76.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rala" class="section level5">
+<h5>RALA</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-77.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mcoln2" class="section level5">
+<h5>MCOLN2</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-78.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cst7" class="section level5">
+<h5>CST7</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-79.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lgals2" class="section level5">
+<h5>LGALS2</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-80.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-11" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="selenop" class="section level5">
+<h5>SELENOP</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-81.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c1qa" class="section level5">
+<h5>C1QA</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-82.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="f13a1" class="section level5">
+<h5>F13A1</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-83.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rnase1" class="section level5">
+<h5>RNASE1</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-84.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c1qc" class="section level5">
+<h5>C1QC</h5>
+<pre><code>Warning: Removed 199 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-85.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="mast-cells-4" class="section level3 tabset">
+<h3 class="tabset">Mast cells</h3>
+<div id="cluster-1-12" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="tnfrsf9" class="section level5">
+<h5>TNFRSF9</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-86.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cdc42ep3" class="section level5">
+<h5>CDC42EP3</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-87.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="acsl4" class="section level5">
+<h5>ACSL4</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-88.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="glul" class="section level5">
+<h5>GLUL</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-89.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cpm" class="section level5">
+<h5>CPM</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-90.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-12" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="gng12" class="section level5">
+<h5>GNG12</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-91.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vcan" class="section level5">
+<h5>VCAN</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-92.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pcolce" class="section level5">
+<h5>PCOLCE</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-93.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="nbl1" class="section level5">
+<h5>NBL1</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-94.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="asph" class="section level5">
+<h5>ASPH</h5>
+<pre><code>Warning: Removed 111 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-95.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="t-cells-4" class="section level3 tabset">
+<h3 class="tabset">T cells</h3>
+<div id="cluster-1-13" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="junb" class="section level5">
+<h5>JUNB</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-96.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dusp6" class="section level5">
+<h5>DUSP6</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-97.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fos-4" class="section level5">
+<h5>FOS</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-98.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="wac" class="section level5">
+<h5>WAC</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-99.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="nedd9" class="section level5">
+<h5>NEDD9</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-100.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-13" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="col1a1" class="section level5">
+<h5>COL1A1</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-101.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cxcl14" class="section level5">
+<h5>CXCL14</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-102.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cd44-1" class="section level5">
+<h5>CD44</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-103.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="col1a2" class="section level5">
+<h5>COL1A2</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-104.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcn" class="section level5">
+<h5>DCN</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/feature%20plots-105.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+</div>
+<div id="section-1" class="section level2 unnumbered">
+<h2 class="unnumbered"></h2>
+<div id="t-test-testing-for-significance-against-all-other-clusters" class="section level3 tabset">
+<h3 class="tabset">t-test testing for significance against all other clusters</h3>
+<p>While the “all” comparison method has some disadvantages as stated above, can be highly effective when it does work. The method only reports a small set of markers that are highly specific to the cluster of interest.</p>
+<pre class="r"><code>run_marker_gene_analysis(test_name = &quot;t&quot;, type_comparison = &quot;all&quot;, worksheet_prefix = &quot;ttest_all&quot;, tabset=&quot;####&quot;)</code></pre>
+<p>Fibroblasts</p>
+<div id="fibroblasts-5" class="section level4 tabset">
+<h4 class="tabset">Fibroblasts</h4>
+<div id="cluster-1-14" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-14" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-6" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-4" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-4" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-5.png" width="672" style="display: block; margin: auto;" />Keratinocytes</p>
+</div>
+</div>
+<div id="keratinocytes-5" class="section level4 tabset">
+<h4 class="tabset">Keratinocytes</h4>
+<div id="cluster-1-15" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-15" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-7" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-5" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-5" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-10.png" width="672" style="display: block; margin: auto;" />Endothelial cells</p>
+</div>
+</div>
+<div id="endothelial-cells-5" class="section level4 tabset">
+<h4 class="tabset">Endothelial cells</h4>
+<div id="cluster-1-16" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-16" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-8" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-13.png" width="672" style="display: block; margin: auto;" />Pericytes/VSMC</p>
+</div>
+</div>
+<div id="pericytesvsmc-5" class="section level4 tabset">
+<h4 class="tabset">Pericytes/VSMC</h4>
+<div id="cluster-1-17" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-17" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-15.png" width="672" style="display: block; margin: auto;" />Macrophages/DC</p>
+</div>
+</div>
+<div id="macrophagesdc-5" class="section level4 tabset">
+<h4 class="tabset">Macrophages/DC</h4>
+<div id="cluster-1-18" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-16.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-18" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-17.png" width="672" style="display: block; margin: auto;" />Mast cells</p>
+</div>
+</div>
+<div id="mast-cells-5" class="section level4 tabset">
+<h4 class="tabset">Mast cells</h4>
+<div id="cluster-1-19" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-18.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-19" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-19.png" width="672" style="display: block; margin: auto;" />T cells</p>
+</div>
+</div>
+<div id="t-cells-5" class="section level4 tabset">
+<h4 class="tabset">T cells</h4>
+<div id="cluster-1-20" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-20.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-20" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/t-test%20all-21.png" width="672" style="display: block; margin: auto;" />$Fibroblasts List of length 5 names(5): 1 2 3 4 5</p>
+<p>$Keratinocytes List of length 5 names(5): 1 2 3 4 5</p>
+<p>$<code>Endothelial cells</code> List of length 3 names(3): 1 2 3</p>
+<p>$<code>Pericytes/VSMC</code> List of length 2 names(2): 1 2</p>
+<p>$<code>Macrophages/DC</code> List of length 2 names(2): 1 2</p>
+<p>$<code>Mast cells</code> List of length 2 names(2): 1 2</p>
+<p>$<code>T cells</code> List of length 2 names(2): 1 2</p>
+</div>
+</div>
+</div>
+<div id="wilcoxon" class="section level3 tabset">
+<h3 class="tabset">Wilcoxon</h3>
+<p>The wilcox directly measures the difference of the expression value distributions of two clusters. It tells us how strong the overlap between the gene expression values for two clusters is. It thus directly measures what we are interested in: the separation of two clusters. The resulting value is proportional to the area-under-the-curve and can be understood as the probability of a random cell in the focus cluster having a higher expression value than the clusters being compared to. 0 means that the expression values of a cell in the cluster are strictly lower than any cell in the other cluster. 1 means that the value of any cell in the cluster is higher than any cell in the cluster it is being compared to. While this test allows us to examine the ‘clarity’ of separation, the t-test shows us the size of this difference.</p>
+<pre class="r"><code>run_marker_gene_analysis(test_name = &quot;wilcox&quot;, type_comparison = &quot;any&quot;, worksheet_prefix = &quot;wilcox_any&quot;, tabset=&quot;####&quot;)</code></pre>
+<p>Fibroblasts</p>
+<div id="fibroblasts-6" class="section level4 tabset">
+<h4 class="tabset">Fibroblasts</h4>
+<div id="cluster-1-21" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-21" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-9" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-6" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-6" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-5.png" width="672" style="display: block; margin: auto;" />Keratinocytes</p>
+</div>
+</div>
+<div id="keratinocytes-6" class="section level4 tabset">
+<h4 class="tabset">Keratinocytes</h4>
+<div id="cluster-1-22" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-22" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-10" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-7" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-7" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-10.png" width="672" style="display: block; margin: auto;" />Endothelial cells</p>
+</div>
+</div>
+<div id="endothelial-cells-6" class="section level4 tabset">
+<h4 class="tabset">Endothelial cells</h4>
+<div id="cluster-1-23" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-23" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-11" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-13.png" width="672" style="display: block; margin: auto;" />Pericytes/VSMC</p>
+</div>
+</div>
+<div id="pericytesvsmc-6" class="section level4 tabset">
+<h4 class="tabset">Pericytes/VSMC</h4>
+<div id="cluster-1-24" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-24" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-15.png" width="672" style="display: block; margin: auto;" />Macrophages/DC</p>
+</div>
+</div>
+<div id="macrophagesdc-6" class="section level4 tabset">
+<h4 class="tabset">Macrophages/DC</h4>
+<div id="cluster-1-25" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-16.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-25" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-17.png" width="672" style="display: block; margin: auto;" />Mast cells</p>
+</div>
+</div>
+<div id="mast-cells-6" class="section level4 tabset">
+<h4 class="tabset">Mast cells</h4>
+<div id="cluster-1-26" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-18.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-26" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-19.png" width="672" style="display: block; margin: auto;" />T cells</p>
+</div>
+</div>
+<div id="t-cells-6" class="section level4 tabset">
+<h4 class="tabset">T cells</h4>
+<div id="cluster-1-27" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-20.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-27" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/wilcox%20any-21.png" width="672" style="display: block; margin: auto;" />$Fibroblasts List of length 5 names(5): 1 2 3 4 5</p>
+<p>$Keratinocytes List of length 5 names(5): 1 2 3 4 5</p>
+<p>$<code>Endothelial cells</code> List of length 3 names(3): 1 2 3</p>
+<p>$<code>Pericytes/VSMC</code> List of length 2 names(2): 1 2</p>
+<p>$<code>Macrophages/DC</code> List of length 2 names(2): 1 2</p>
+<p>$<code>Mast cells</code> List of length 2 names(2): 1 2</p>
+<p>$<code>T cells</code> List of length 2 names(2): 1 2</p>
+</div>
+</div>
+</div>
+<div id="entropy-f-stat-method" class="section level3 tabset">
+<h3 class="tabset">Entropy f-stat method</h3>
+<pre class="r"><code># define the entropy function which we will apply to our SCE object on a per gene  basis
+shannon_entropy &lt;- function(x, e=1e-10){
+  x &lt;- x+e
+  p &lt;- (x)/sum(x)
+  -sum((p)*log(p))
+}
+
+# Calculating the entropy and f-statistics takes very long. We split the calculation
+# and printing of the results into two parts as there were issues with duplicates
+# during printing and this made debugging easier
+
+fstats &lt;- lapply(unique(sce_fresh$manual_labels_coarse2), function(cell_type){
+  # cat(paste0(&quot;\n\n#### &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+
+  # create the subset
+  sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  sce_subset$subcluster_id_k50 &lt;- factor(sce_subset$subcluster_id_k50)
+
+  aggr_sce &lt;- aggregateAcrossCells(sce_subset, sce_subset$subcluster_id_k50)
+
+  # We compute the datarframe containing:
+  # (1) the gene name as symbol
+  # (2) the entropy of the expression values for a given gene and
+  # (3) the f-statistic of the analysis of variance test of the log-experession values vs. the subclusters
+  entropy_fstat_sce &lt;- BiocParallel::bplapply(
+    seq_along(rownames(aggr_sce)),
+    function(.x){
+      data.frame(
+        gene=rowData(sce_subset)$Symbol[.x],
+        entropy=shannon_entropy(counts(aggr_sce[.x,])),
+        fstat=summary(aov(logcounts(sce_subset)[.x,]~sce_subset$subcluster_id_k50))[[1]]$`F value`[1]
+      )},
+    BPPARAM=BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)) %&gt;%
+      purrr::reduce(rbind)
+
+  # We compare the normalised values of the f-statistic and the entropy.
+  entropy_fstat_sce &lt;-  entropy_fstat_sce %&gt;%
+    dplyr::mutate(entropy_norm = (entropy + 1e3) / max(entropy + 1e3, na.rm=TRUE),
+                  fstat_norm = (fstat + 1e3) / max(fstat + 1e3, na.rm=TRUE),
+                  ent_fstat_ratio = fstat_norm / entropy_norm)
+
+})
+
+names(fstats) &lt;- unique(sce_fresh$manual_labels_coarse2)
+  
+# Show the f-statistic vs the entropy in a plot for all genes
+# Also, show violin plots for the top 50 genes
+
+for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+  # Create a tab for the markdown view in workflowr
+  cat(paste0(&quot;\n\n#### &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+     
+  entropy_fstat_sce &lt;- fstats[[cell_type]]
+  
+  # we select the top 50 markers as defined via the fstat_norm / entropy_norm metric
+  topmarkers_order &lt;- order(entropy_fstat_sce$ent_fstat_ratio, decreasing=TRUE)
+  topmarkers &lt;- unique(entropy_fstat_sce[topmarkers_order[1:50],])
+
+  # Save the values to our excel
+  cell_type_short &lt;- ifelse(nchar(cell_type) &gt; 10, substr(cell_type, 1, 10), cell_type)
+  sheet_name &lt;- paste0(&quot;F_entropy_&quot;, cell_type_short)
+  addWorksheet(wb, sheet_name)
+  writeData(wb, sheet_name, entropy_fstat_sce[topmarkers_order,], rowNames = TRUE)
+
+  # Plot the f-statistic against the entropy
+  cat(&quot;\n\n##### Entropy plot \n\n&quot;)
+  print(ggplot(entropy_fstat_sce) +
+    geom_point(aes(x=log(fstat), y=entropy), show.legend = F, colour=&quot;#02C39A&quot;) +
+    labs(x=&quot;log(F-statistic)&quot;, y=&quot;Entropy&quot;, title=&quot;Entropy vs. F-statistic of cluster separation&quot;) +
+    ggrepel::geom_text_repel(data=topmarkers,
+                             aes(x=log(fstat), y=entropy, label=gene, size=4),
+                             show.legend=F,
+                             max.overlaps = 30))
+}</code></pre>
+</div>
+<div id="violin-plots-for-genes-in-f-stat-method" class="section level3 tabset">
+<h3 class="tabset">Violin plots for genes in f-stat method</h3>
+<pre class="r"><code># Violin plots by cell type
+for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
+  # Create a tab for the markdown view in workflowr
+  cat(paste0(&quot;\n\n#### &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+     
+  entropy_fstat_sce &lt;- fstats[[cell_type]]
+  
+  # we select the top 50 markers as defined via the fstat_norm / entropy_norm metric
+  topmarkers_order &lt;- order(entropy_fstat_sce$ent_fstat_ratio, decreasing=TRUE)
+  topmarkers &lt;- unique(entropy_fstat_sce[topmarkers_order[1:50],])
+  entropy_fstat_sce
+
+  # Plot violin plots with the subclusters on the x-axis and the expression values per cell on the y-axis
+  # We do this for the top 50 genes as identified by the fstat_norm / entropy_norm metric
+  genes_to_plot &lt;-  unique(entropy_fstat_sce$gene[topmarkers_order[1:50]])
+  rownames(sce_subset) &lt;- rowData(sce_subset)$Symbol
+  
+  # If we change from ensemble_gene_id to gene_symbol there are some duplicates.
+  # We remove them to avoid errors with the plotting function
+  sce_subset &lt;- sce_subset[unique(rownames(sce_subset)),]
+  entropy_fstat_sce &lt;- entropy_fstat_sce[!duplicated(entropy_fstat_sce$gene),]
+  
+
+  for(i in seq_along(genes_to_plot)){
+    cat(&quot;\n\n##### &quot;, genes_to_plot[i], &quot;\n\n&quot;)
+    print(plotExpression(sce_subset,  
+                   entropy_fstat_sce$gene[entropy_fstat_sce$gene == genes_to_plot[i]],
+                   x = &quot;subcluster_id_k50&quot;, point_size=0.5))
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div id="heatmaps" class="section level1 tabset">
+<h1 class="tabset">Heatmaps</h1>
+<pre class="r"><code>genes &lt;- heatmap_marker_genes %&gt;%
+    pull(Gene)
+
+# the cells which we want to display, ordered by cell type
+column_annotations &lt;- data.frame(&quot;cell_name&quot;=rownames(colData(sce_fresh)), &quot;Cell_type&quot;=factor(colData(sce_fresh)[,&quot;manual_labels_coarse&quot;])) %&gt;%
+    filter(Cell_type!=&quot;NA&quot;) %&gt;%
+    arrange(Cell_type) %&gt;%
+    tibble::column_to_rownames(var=&quot;cell_name&quot;)
+
+# the logcounts which we need for the pheatmap function
+sce_plot &lt;- logcounts(sce_fresh[genes, rownames(column_annotations)])
+
+# Use own colours for the column annotations
+colours &lt;- get_cell_colours(unique(heatmap_marker_genes$Group), type=&quot;raw&quot;)
+annotation_colours &lt;- list(&quot;Cell_type&quot;=colours)
+
+
+# create the plot. We convert to ggplot to take advantage of some of the display functions
+fig4 &lt;- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
+         color=viridis(50))) +
+  theme_ipsum_rc() +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), 
+        legend.position=&quot;none&quot;,
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        plot.background=element_blank()) +
+  labs(title=&quot;Selected marker genes for cell types&quot;)
+fig4</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/coarse%20heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="feature-plots" class="section level1">
+<h1>Feature plots</h1>
+<pre class="r"><code># Convert the dataframe with marker genes to a list with the cell type as name
+unique_cell_types &lt;- unique(heatmap_marker_genes$Group)
+genes_list &lt;- lapply(unique_cell_types, function(group){
+  heatmap_marker_genes[heatmap_marker_genes$Group==group, &quot;Gene&quot;]
+})
+names(genes_list) &lt;- unique_cell_types
+
+# write a function to get the average of the logcounts of each gene
+get_coloured_expression_plot &lt;- function(gene_list, cell_type){
+  sce_tmp &lt;- sce_fresh
+  if (length(gene_list) == 1){
+    average_values &lt;- logcounts(sce_tmp[gene_list])
+  } else {
+    average_values &lt;- colMeans(logcounts(sce_tmp[gene_list])) 
+  }
+  colData(sce_tmp)[,cell_type] &lt;- as.numeric(average_values)
+  plt &lt;- plotReducedDim(sce_tmp, &quot;UMAP&quot;, colour_by=cell_type, point_size=0.25) +
+    labs(title=cell_type,
+         subtitle=paste(gene_list, collapse=&quot;, &quot;)) +
+    theme_ipsum_rc() +
+    theme(legend.position=&quot;none&quot;) +
+    theme(plot.margin = margin(t = 0.5,  # Top margin
+                               r = 0.5,  # Right margin
+                               b = 0.5,  # Bottom margin
+                               l = 20)) # Left margin
+  plt
+ }
+
+
+plt1 &lt;- get_coloured_expression_plot(genes_list[[1]], names(genes_list)[1])
+plt2 &lt;- get_coloured_expression_plot(genes_list[[2]], names(genes_list)[2])
+plt3 &lt;- get_coloured_expression_plot(genes_list[[3]], names(genes_list)[3])
+plt4 &lt;- get_coloured_expression_plot(genes_list[[4]], names(genes_list)[4])
+plt5 &lt;- get_coloured_expression_plot(genes_list[[5]], names(genes_list)[5])
+plt6 &lt;- get_coloured_expression_plot(genes_list[[6]], names(genes_list)[6])
+plt7 &lt;- get_coloured_expression_plot(genes_list[[7]], names(genes_list)[7])
+plt8 &lt;- get_coloured_expression_plot(genes_list[[8]], names(genes_list)[8])
+plt9 &lt;- get_coloured_expression_plot(genes_list[[9]], names(genes_list)[9])
+plt10 &lt;- get_coloured_expression_plot(genes_list[[10]], names(genes_list)[10])
+
+
+# store figure as variable and print
+fig3b &lt;- gridExtra::grid.arrange(plt1, plt2, plt3, plt4, plt5, plt6, plt7, plt8, plt9, plt10, ncol=4)</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/figure%203-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fig3b</code></pre>
+<pre><code>TableGrob (3 x 4) &quot;arrange&quot;: 10 grobs
+    z     cells    name           grob
+1   1 (1-1,1-1) arrange gtable[layout]
+2   2 (1-1,2-2) arrange gtable[layout]
+3   3 (1-1,3-3) arrange gtable[layout]
+4   4 (1-1,4-4) arrange gtable[layout]
+5   5 (2-2,1-1) arrange gtable[layout]
+6   6 (2-2,2-2) arrange gtable[layout]
+7   7 (2-2,3-3) arrange gtable[layout]
+8   8 (2-2,4-4) arrange gtable[layout]
+9   9 (3-3,1-1) arrange gtable[layout]
+10 10 (3-3,2-2) arrange gtable[layout]</code></pre>
+</div>
+<div id="papillary-v.-reticular-fibroblasts" class="section level1">
+<h1>Papillary v. Reticular fibroblasts</h1>
+<div id="average-values-across-all-fibroblast-cells" class="section level2">
+<h2>Average values across all fibroblast cells</h2>
+<pre class="r"><code>papillary_genes &lt;- c(&quot;COL18A1&quot;, &quot;APCDD1&quot;, &quot;HSPB3&quot;, &quot;NPTX2&quot;, &quot;ROBO2&quot;, &quot;COL23A1&quot;, &quot;PTGDS&quot;, &quot;PDPN&quot;, &quot;COL7A1&quot;, &quot;COLEC12&quot;, &quot;AXIN2&quot;) #&quot;CTSC&quot;,&quot;DCN&quot;,&quot;INHBB&quot;
+reticular_genes &lt;- c(&quot;MFAP5&quot;, &quot;MGP&quot;, &quot;FGF7&quot;, &quot;A2M&quot;, &quot;ANGPTL1&quot;, &quot;IGF1&quot;, &quot;EFEMP1&quot;, &quot;PCSK5&quot;, &quot;MAP1B&quot;, &quot;COMP&quot;) # &quot;COL14A1, &quot;PPP1R14A&quot;, &quot;TAGLN
+
+# subset to a sce object with only the fibroblasts as annotated manually
+fibro_sce &lt;- sce_fresh[,colData(sce_fresh)$manual_labels_coarse == &quot;Fibroblasts&quot;]
+
+# are all the genes found in our data?
+# papillary_genes %in% rownames(fibro_sce)
+# reticular_genes %in% rownames(fibro_sce)
+genes &lt;- c(papillary_genes, reticular_genes)
+
+gene_counts &lt;- logcounts(fibro_sce)[genes,]
+
+res &lt;- lapply(unique(fibro_sce$subcluster_id_k50), function(fibro_type){
+  mask &lt;- fibro_sce$subcluster_id_k50 == fibro_type
+  data.frame(&quot;genes&quot;=genes, &quot;rowmeans&quot;=rowMeans(gene_counts[, mask]), &quot;subcluster&quot;=fibro_type)
+}) %&gt;% purrr::reduce(rbind)
+
+plt1 &lt;- ggplot(res[res$genes %in% papillary_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
+  geom_bar(stat=&quot;identity&quot;, position=&quot;dodge&quot;) +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title=&quot;Papillary fibroblasts&quot;,
+       y=&quot;Average of logcounts&quot;,
+       x=&quot;&quot;)
+
+plt2 &lt;- ggplot(res[res$genes %in% reticular_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
+  geom_bar(stat=&quot;identity&quot;, position=&quot;dodge&quot;) +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title=&quot;Reticular fibroblasts&quot;,
+       y=&quot;Average of logcounts&quot;,
+       x=&quot;&quot;)
+
+gridExtra::grid.arrange(plt1, plt2)</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/unnamed-chunk-3-1.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="expression-values-by-fibroblast-subcluster" class="section level1">
+<h1>Expression values by Fibroblast subcluster</h1>
+<pre class="r"><code># average of logcounts for papillary fibroblast genes
+fibro_sce$papillary_gene_avg &lt;- colMeans(logcounts(fibro_sce)[papillary_genes,])
+# average of logcounts for reticular fibroblast genes
+fibro_sce$reticular_gene_avg &lt;- colMeans(logcounts(fibro_sce)[reticular_genes,])
+
+plt1 &lt;- plotColData(fibro_sce, x=&quot;subcluster_id_k50&quot;, y=&quot;papillary_gene_avg&quot;, colour_by=&quot;subcluster_id_k50&quot;) +
+  labs(title=&quot;Papillary Fibroblasts&quot;,
+       subtitle=&quot;Average gene expression for a selection of genes&quot;,
+       y=&quot;&quot;,
+       x=&quot;&quot;) +
+  ylim(0,3.25) +
+  theme_ipsum_rc() +
+  theme(legend.position=&quot;none&quot;)
+
+
+plt2 &lt;- plotColData(fibro_sce, x=&quot;subcluster_id_k50&quot;, y=&quot;reticular_gene_avg&quot;, colour_by=&quot;subcluster_id_k50&quot;) +
+  labs(title=&quot;Reticular Fibroblasts&quot;,
+       subtitle=&quot;Average gene expression for a selection of genes&quot;,
+       y=&quot;&quot;,
+       x=&quot;&quot;) +
+  ylim(0,3.25) +
+  theme_ipsum_rc() +
+  theme(legend.position=&quot;none&quot;)
+
+gridExtra::grid.arrange(plt1, plt2, nrow=1)</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/unnamed-chunk-4-1.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+<div id="supplementary-figures" class="section level1">
+<h1>Supplementary Figures</h1>
+<pre class="r"><code>folder_path = &quot;../output/plots/&quot;</code></pre>
+<div id="figure-3" class="section level2">
+<h2>Figure 3</h2>
+<pre class="r"><code>figure3 &lt;- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  fig3a2,
+  fig3b,
+  heights=c(1,1),
+  ncol = 1, nrow = 2,labels = &quot;AUTO&quot;
+)))
+
+
+suppressMessages(suppressWarnings((figure3)))</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/figure%203%20-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(paste0(folder_path, &quot;figure3.png&quot;),
+       plot=figure3,
+       width=20*0.75,
+       height=24*0.75,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+<div id="figure-3-supplementary" class="section level2">
+<h2>Figure 3 supplementary</h2>
+<pre class="r"><code>figure3_supplemental &lt;- fig3a1
+
+ggsave(paste0(folder_path, &quot;figure3_supplemental.png&quot;),
+       plot=figure3_supplemental,
+       width=14*0.75,
+       height=10*0.75,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+<div id="figure-4" class="section level2">
+<h2>Figure 4</h2>
+<pre class="r"><code>figure4 &lt;- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  fig4,
+  heights=c(1),
+  ncol = 1, nrow = 1, labels = NULL
+)))
+
+suppressMessages(suppressWarnings((figure4)))</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/supplementary%20figure%204%20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(paste0(folder_path, &quot;figure4.png&quot;),
+       plot=figure4,
+       width=8*0.75,
+       height=7*0.75,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+<div id="figure-5" class="section level2">
+<h2>Figure 5</h2>
+<pre class="r"><code>figure5 &lt;- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  fig5a,
+  fig5b,
+  heights=c(1,1),
+  ncol = 1, nrow = 2, labels = &quot;AUTO&quot;
+)))
+
+suppressMessages(suppressWarnings(figure5))</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/supplementary%20figure%205-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(paste0(folder_path, &quot;figure5.png&quot;),
+       plot=figure5,
+       width=20*0.75,
+       height=24*0.75,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+<div id="figure-6" class="section level2">
+<h2>Figure 6</h2>
+<pre class="r"><code>sce_fresh$subcluster_names &lt;- NA
+
+for (cell_type in unique(subclustering_labels$Cell.type)){
+  # if the cell type was not found in the excel, then its skipped
+  if (cell_type %in% sce_fresh$manual_labels_coarse2 == FALSE) {
+    cat(paste0(cell_type, &quot; not found in subclustering mapping&quot;))
+    next
+  }
+
+  sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  subset_subcluster_annot &lt;- subclustering_labels[subclustering_labels$Cell.type == cell_type, ] %&gt;%
+    select(Cluster, Label) %&gt;%
+    distinct()
+  
+  subcluster_labels &lt;- as.vector(sce_subset$subcluster_id_k50)
+  
+  colData(sce_fresh)[sce_fresh$manual_labels_coarse2 == cell_type, &quot;subcluster_names&quot;] &lt;- mapvalues(subcluster_labels, subset_subcluster_annot$Cluster, subset_subcluster_annot$Label)
+  
+}</code></pre>
+<pre><code>The following `from` values were not present in `x`: 4</code></pre>
+<pre><code>The following `from` values were not present in `x`: 3</code></pre>
+<pre class="r"><code># unique(subclustering_labels$Cell.type)
+# unique(colData(sce_fresh)[sce_fresh$manual_labels_coarse2 == &quot;Fibroblasts&quot;, &quot;subcluster_names&quot;])</code></pre>
+<pre class="r"><code>cell_types_fig6 &lt;- c(&quot;Fibroblasts&quot;, &quot;Endothelial cells&quot;, &quot;Keratinocytes&quot;, &quot;Pericytes/VSMC&quot;, &quot;Macrophages/DC&quot;)
+
+get_annotated_subcluster &lt;- function(cell_type){
+  sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+  plt &lt;- plotReducedDim(sce_subset, &quot;UMAP&quot;,
+                 colour_by = &quot;subcluster_names&quot;, text_by=&quot;subcluster_names&quot;) +
+    theme_ipsum_rc() +
+    labs(title=cell_type) +
+    # guides(colour=guide_legend(title=&quot;Subcluster&quot;)) +
+    get_unnamed_colours(unique(sce_subset$subcluster_names), &quot;Subcluster&quot;, type=&quot;colour&quot;) + 
+    theme(legend.position=&quot;none&quot;,
+          plot.margin = margin(t = 0.5,  # Top margin
+                               r = 0.5,  # Right margin
+                               b = 0.5,  # Bottom margin
+                               l = 20)) # Left margin 
+  plt
+}
+
+get_stratified_barplot &lt;- function(cell_type){
+   sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+
+  data_complete &lt;- as.data.frame(colData(sce_subset)) %&gt;%
+    dplyr::group_by(subcluster_names) %&gt;%
+    dplyr::summarise(n_cells=n()) %&gt;%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3)) %&gt;%
+    mutate(Sample=&quot;Samples combined&quot;) %&gt;%
+    select(Sample, subcluster_names, n_cells, share)
+
+  data_stratified &lt;- as.data.frame(colData(sce_subset)) %&gt;%
+    dplyr::group_by(Sample, subcluster_names) %&gt;%
+    dplyr::summarise(n_cells=n()) %&gt;%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3))
+  
+  plt &lt;- ggplot(rbind(data_complete, data_stratified),
+               aes(x=Sample, y=share, fill=subcluster_names)) +
+    geom_bar(stat=&quot;identity&quot;) +
+    facet_grid(subcluster_names ~ .) +
+    labs(title=cell_type,
+         subtitle=&quot;Bars show fraction of cells for given cell type and sample&quot;,
+         y=&quot;&quot;) +
+    theme_ipsum_rc() +
+    theme(strip.text.y=element_blank()) +
+    # guides(fill=guide_legend(title=&quot;Subcluster&quot;)) +
+    get_unnamed_colours(unique(sce_subset$subcluster_names), &quot;Subcluster&quot;, type=&quot;fill&quot;) + 
+    scale_y_continuous(labels = scales::percent, n.breaks=3) +
+    theme(panel.spacing = unit(2, &quot;mm&quot;),
+          # legend.key = element_rect(size=5),
+          legend.key.size = unit(2, &quot;lines&quot;),
+          plot.margin = margin(t = 0.5,  # Top margin
+                               r = 0.5,  # Right margin
+                               b = 0.5,  # Bottom margin
+                               l = 20)) # Left margin
+  plt
+}
+
+
+# UMAPs
+fig6a1 &lt;- get_annotated_subcluster(cell_types_fig6[1]) +
+  ylim(c(3,7))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>fig6b1 &lt;- get_annotated_subcluster(cell_types_fig6[2]) +
+  xlim(c(9,16))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>fig6c1 &lt;- get_annotated_subcluster(cell_types_fig6[3]) +
+  xlim(c(-11,-7)) +
+  ylim(c(-5,1))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>fig6d1 &lt;- get_annotated_subcluster(cell_types_fig6[4]) +
+  xlim(c(-7,-3)) +
+  ylim(c(12.5,15.5))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>fig6e1 &lt;- get_annotated_subcluster(cell_types_fig6[5])</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code># barcharts
+fig6a2 &lt;- get_stratified_barplot(cell_types_fig6[1])</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>fig6b2 &lt;- get_stratified_barplot(cell_types_fig6[2])</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>fig6c2 &lt;- get_stratified_barplot(cell_types_fig6[3])</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>fig6d2 &lt;- get_stratified_barplot(cell_types_fig6[4])</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>fig6e2 &lt;- get_stratified_barplot(cell_types_fig6[5])</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>figure6 &lt;- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  ggpubr::ggarrange(fig6a1, fig6a2, ncol = 2),
+  ggpubr::ggarrange(fig6b1, fig6b2, ncol = 2),
+  ggpubr::ggarrange(fig6c1, fig6c2, ncol = 2),
+  ggpubr::ggarrange(fig6d1, fig6d2, ncol = 2),
+  ggpubr::ggarrange(fig6e1, fig6e2, ncol = 2),
+  ncol = 1, nrow = 5,labels = &quot;AUTO&quot;
+)))
+
+suppressMessages(suppressWarnings(figure6))</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/supplementary%20figure%206-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(paste0(folder_path, &quot;figure6.png&quot;),
+       plot=figure6,
+       width=20*0.9,
+       height=24*0.9,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+<div id="figure-7---subcluster-heatmaps" class="section level2">
+<h2>Figure 7 - Subcluster heatmaps</h2>
+<pre class="r"><code># sort subclustering_labels alphabetically by the names
+heatmap_marker_genes_subclusters &lt;- subclustering_labels %&gt;% 
+  arrange(Label)</code></pre>
+<pre class="r"><code>folder_path &lt;- &quot;/Users/dominiquepaul/xRobinson Group/01_Systemic Sclerosis/output/plots/&quot;
+
+plot_heatmap &lt;- function(cell_type){
+  
+  sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+  # the genes which we want to display
+  genes &lt;- heatmap_marker_genes_subclusters %&gt;%
+    filter(Cell.type==cell_type) %&gt;%
+    pull(Gene)
+  
+  # check whether genes are in rownames
+  genes_not_found &lt;- genes[genes %in% rownames(sce_subset) == FALSE]
+  if (length(genes_not_found) &gt; 0) cat(paste0(&quot;\nGenes not found for cell type &quot;, cell_type, &quot;: &quot;, genes_not_found))
+  
+  genes &lt;- genes[genes %in% rownames(sce_subset)] 
+  
+  # the cells which we want to display, ordered by subcluster
+  column_annotations &lt;- data.frame(row.names=colnames(sce_subset), &quot;Subcluster&quot;=sce_subset$subcluster_names) %&gt;%
+    arrange(Subcluster)
+  
+  # the logcounts which we need for the pheatmap function
+  sce_plot &lt;- logcounts(sce_subset[genes, rownames(column_annotations)])
+  
+  # Use own colours for the column annotations
+  colours &lt;- get_unnamed_colours(unique(column_annotations$Subcluster), type=&quot;raw&quot;)
+  annotation_colours &lt;- list(&quot;Subcluster&quot;=colours)
+
+  #plt &lt;- grid.grabExpr(draw(hmap, annotation_legend_side=&quot;bottom&quot;, heatmap_legend_side=&quot;right&quot;)) +
+  plt &lt;- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
+                  show_rownames=TRUE, show_colnames=FALSE, color=viridis(50), 
+                  annotation_col=column_annotations, annotation_colors=annotation_colours)) +
+    theme_ipsum_rc()+ 
+    theme(axis.line=element_blank(),axis.text.x=element_blank(),
+            axis.text.y=element_blank(),axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),legend.position=&quot;none&quot;,
+            panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),plot.background=element_blank()) +
+    labs(title=paste0(&quot;Selected subcluster marker genes for &quot;, cell_type))
+  
+  return(plt)
+}
+
+subcluster_heatmap_cell_types &lt;- unique(subclustering_labels$Cell.type)
+
+fig7a &lt;- plot_heatmap(subcluster_heatmap_cell_types[1])</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20heatmaps-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fig7b &lt;- plot_heatmap(subcluster_heatmap_cell_types[2])</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20heatmaps-2.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fig7c &lt;- plot_heatmap(subcluster_heatmap_cell_types[3])</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20heatmaps-3.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fig7d &lt;- plot_heatmap(subcluster_heatmap_cell_types[4])</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20heatmaps-4.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fig7e &lt;- plot_heatmap(subcluster_heatmap_cell_types[5])</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20heatmaps-5.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>figure7 &lt;- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  fig7a, 
+  fig7b,
+  fig7c,
+  fig7d,
+  fig7e,
+  ncol = 1, nrow = 5,labels = &quot;AUTO&quot;
+)))
+
+suppressMessages(suppressWarnings(figure7))</code></pre>
+<p><img src="figure/P2_03_Fresh_only_subclustering.Rmd/subcluster%20heatmaps-6.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(paste0(folder_path, &quot;figure7.png&quot;),
+       plot=figure7,
+       width=20*0.9,
+       height=24*0.9,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+<pre class="r"><code>sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+# the genes which we want to display
+genes &lt;- heatmap_marker_genes_subclusters %&gt;%
+  filter(Cell.type==cell_type) %&gt;%
+  pull(Gene)
+
+# check whether genes are in rownames
+genes_not_found &lt;- genes[genes %in% rownames(sce_subset) == FALSE]
+if (length(genes_not_found) &gt; 0) cat(paste0(&quot;\nGenes not found for cell type &quot;, cell_type, &quot;: &quot;, genes_not_found))
+
+genes &lt;- genes[genes %in% rownames(sce_subset)] 
+
+# the cells which we want to display, ordered by subcluster
+column_annotations &lt;- data.frame(row.names=colnames(sce_subset), &quot;Subcluster&quot;=sce_subset$subcluster_names) %&gt;%
+  arrange(Subcluster)
+
+# the logcounts which we need for the pheatmap function
+sce_plot &lt;- logcounts(sce_subset[genes, rownames(column_annotations)])
+
+# Use own colours for the column annotations
+colours &lt;- get_unnamed_colours(unique(column_annotations$Subcluster), type=&quot;raw&quot;)
+annotation_colours &lt;- list(&quot;Subcluster&quot;=colours)</code></pre>
+</div>
+</div>
+<div id="save-files" class="section level1">
+<h1>Save Files</h1>
+<div id="save-excel" class="section level2">
+<h2>Save Excel</h2>
+<pre class="r fold-show"><code>filename &lt;- &quot;../docs/output/Protocol_subclustering_markers_genes.xlsx&quot;
+saveWorkbook(wb, filename, overwrite=TRUE)</code></pre>
+</div>
+</div>
+<div id="save-sce-object" class="section level1">
+<h1>Save SCE object</h1>
+<pre class="r fold-show"><code>file_path_fresh &lt;- &quot;../data/EOS_files/Fresh_only_EOS3.rds&quot;
+saveRDS(sce_fresh, file=file_path_fresh)
+upload_file_to_iSEE(file_path_fresh)</code></pre>
+<pre><code>Command executed: 
+
+scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/Fresh_only_EOS3.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/Fresh_only_EOS3___2022-01-30.rds</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] stringr_1.4.0               RColorBrewer_1.1-2         
+ [3] kableExtra_1.3.4            RhpcBLASctl_0.21-247.1     
+ [5] viridis_0.6.2               viridisLite_0.4.0          
+ [7] dplyr_1.0.7                 plyr_1.8.6                 
+ [9] ggrepel_0.9.1               BiocParallel_1.28.3        
+[11] pheatmap_1.0.12             ggplotify_0.1.0            
+[13] scran_1.22.1                scater_1.22.0              
+[15] ggplot2_3.3.5               scuttle_1.4.0              
+[17] SingleCellExperiment_1.16.0 SummarizedExperiment_1.24.0
+[19] Biobase_2.54.0              GenomicRanges_1.46.1       
+[21] GenomeInfoDb_1.30.0         IRanges_2.28.0             
+[23] S4Vectors_0.32.3            BiocGenerics_0.40.0        
+[25] MatrixGenerics_1.6.0        matrixStats_0.61.0         
+[27] openxlsx_4.2.5              hrbrthemes_0.8.6           
+
+loaded via a namespace (and not attached):
+  [1] backports_1.4.1           workflowr_1.7.0          
+  [3] systemfonts_1.0.3         igraph_1.2.10            
+  [5] digest_0.6.29             yulab.utils_0.0.4        
+  [7] htmltools_0.5.2           fansi_1.0.2              
+  [9] magrittr_2.0.1            ScaledMatrix_1.2.0       
+ [11] cluster_2.1.2             limma_3.50.0             
+ [13] extrafont_0.17            extrafontdb_1.0          
+ [15] svglite_2.0.0             colorspace_2.0-2         
+ [17] rvest_1.0.2               textshaping_0.3.6        
+ [19] xfun_0.29                 crayon_1.4.2             
+ [21] RCurl_1.98-1.5            jsonlite_1.7.3           
+ [23] glue_1.6.0                gtable_0.3.0             
+ [25] zlibbioc_1.40.0           XVector_0.34.0           
+ [27] webshot_0.5.2             DelayedArray_0.20.0      
+ [29] car_3.0-12                BiocSingular_1.10.0      
+ [31] Rttf2pt1_1.3.8            abind_1.4-5              
+ [33] scales_1.1.1              DBI_1.1.2                
+ [35] edgeR_3.36.0              rstatix_0.7.0            
+ [37] Rcpp_1.0.8                gridGraphics_0.5-1       
+ [39] dqrng_0.3.0               rsvd_1.0.5               
+ [41] metapod_1.2.0             httr_1.4.2               
+ [43] FNN_1.1.3                 ellipsis_0.3.2           
+ [45] pkgconfig_2.0.3           farver_2.1.0             
+ [47] sass_0.4.0                uwot_0.1.11              
+ [49] locfit_1.5-9.4            utf8_1.2.2               
+ [51] tidyselect_1.1.1          labeling_0.4.2           
+ [53] rlang_0.4.12              later_1.3.0              
+ [55] munsell_0.5.0             tools_4.1.0              
+ [57] generics_0.1.1            broom_0.7.10             
+ [59] evaluate_0.14             fastmap_1.1.0            
+ [61] ragg_1.2.1                yaml_2.2.1               
+ [63] knitr_1.37                fs_1.5.2                 
+ [65] zip_2.2.0                 purrr_0.3.4              
+ [67] sparseMatrixStats_1.6.0   whisker_0.4              
+ [69] xml2_1.3.3                compiler_4.1.0           
+ [71] rstudioapi_0.13           beeswarm_0.4.0           
+ [73] ggsignif_0.6.3            tibble_3.1.6             
+ [75] statmod_1.4.36            bslib_0.3.1              
+ [77] stringi_1.7.6             highr_0.9                
+ [79] RSpectra_0.16-0           gdtools_0.2.3            
+ [81] lattice_0.20-45           bluster_1.4.0            
+ [83] Matrix_1.4-0              vctrs_0.3.8              
+ [85] pillar_1.6.4              lifecycle_1.0.1          
+ [87] jquerylib_0.1.4           BiocNeighbors_1.12.0     
+ [89] cowplot_1.1.1             bitops_1.0-7             
+ [91] irlba_2.3.5               httpuv_1.6.4             
+ [93] R6_2.5.1                  promises_1.2.0.1         
+ [95] gridExtra_2.3             vipor_0.4.5              
+ [97] assertthat_0.2.1          rprojroot_2.0.2          
+ [99] withr_2.4.3               GenomeInfoDbData_1.2.7   
+[101] grid_4.1.0                beachmat_2.10.0          
+[103] tidyr_1.1.4               rmarkdown_2.11           
+[105] DelayedMatrixStats_1.16.0 carData_3.0-4            
+[107] git2r_0.29.0              ggpubr_0.4.0             
+[109] ggbeeswarm_0.6.0         </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
