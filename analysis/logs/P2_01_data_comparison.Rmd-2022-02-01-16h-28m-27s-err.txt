@@ -1,0 +1,2 @@
+Error in data.frame(x = fit.vs$mean, y = fit.vs$var, z = fit.vs$trend(fit.vs$mean),  : 
+  attempt to apply non-function

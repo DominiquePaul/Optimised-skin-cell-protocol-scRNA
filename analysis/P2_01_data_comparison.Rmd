@@ -1031,39 +1031,43 @@ We select the 2000 most variable genes
 ```{r feature selection, fig.width=14, fig.height=10, results="asis"}
 num_hvg=2000
 
-normalise_data_by_library_size <- function(sce, sce_name){
+select_hvgs <- function(sce, sce_name){
   
   cat(paste0("\n\n## ", sce_name, " \n\n"))
 
   # model the gene variance
-  dec.sce <- scran::modelGeneVar(sce)
-  fit.vs <- metadata(dec.sce)
-
-  # Mark all HVGs for visualisation
-  hvg <- getTopHVGs(dec.sce, n=num_hvg)
-  label <- rep("No HVG", nrow(sce))
-  names(label) <- names(fit.vs$mean)
-  label[hvg] <- "Is HVG"
-
-  # construct a df to make plotting with ggplot easier
-  print(data.frame("x"=fit.vs$mean, "y"=fit.vs$var, "z"=fit.vs$trend(fit.vs$mean), "color"=label) %>%
-    ggplot(aes(x=x, y=y, color=color)) +
-    geom_point() +
-    scale_color_manual(values=c("orange","black")) +
-    geom_line(aes(x, z), colour="dodgerblue", size=0.75) +
-    labs(x="Mean of log-expression",
-         y="Variance of log-expression",
-         title=paste0("Top ", num_hvg, " highly variable genes")))
-
-
-  list("sco"=dec.sce, "hvg"=hvg)
+  dec.sce <- scran::modelGeneVar(sce, block=sce$Sample)
+  hvg_sub <- getTopHVGs(dec.sce, n=num_hvg)
+  
+  mean_var_comb_sub <- purrr::map(unique(sce$Sample), ~ {
+   dec.sce$per.block[[.x]] %>% 
+    as_tibble %>% 
+    mutate(row_names = rownames(dec.sce$per.block[[.x]]),
+           is_hvg = row_names %in% hvg_sub,
+           Sample = .x)
+    }) %>% 
+    purrr::reduce(rbind)
+  
+  print(mean_var_comb_sub %>% 
+    ggplot() +
+      geom_point(aes(x = mean, y = total, color= is_hvg)) +
+      geom_line(aes(x=mean, y= tech)) +
+      labs(y="Variance",x="Mean expression") +
+      facet_wrap(~Sample) +
+      scale_color_manual(values=c("orange","black")) +
+      labs(x="Mean of log-expression", 
+           y="Variance of log-expression",
+           title="Variance of the expression values as a function of the mean",
+           subtitle=paste0("Top ", num_hvg, " highly variable genes")))
+    
+  list("sco"=dec.sce, "hvg"=hvg_sub)
 }
 
-res.fresh <- normalise_data_by_library_size(sce_fresh_filtered, "Fresh samples only")
+res.fresh <- select_hvgs(sce_fresh_filtered, "Fresh samples only")
 dec.sce.fresh <- res.fresh$sco
 hvg.fresh <- res.fresh$hvg
 
-res.all <- normalise_data_by_library_size(sce_all_filtered, "Fresh and cultured samples")
+res.all <- select_hvgs(sce_all_filtered, "Fresh and cultured samples")
 dec.sce.all <- res.all$sco
 hvg.all <- res.all$hvg
 ```
@@ -1114,7 +1118,7 @@ run_batch_correction <- function(sce, sce_name){
   sce <- runPCA(sce, exprs_values="logcounts", subset_row=rowData(sce)$is_hvg)
 
   set.seed(100)
-  sce <- runUMAP(sce, dimred="PCA", n_neighbors=50, min_dist = 0.1) #, subset_row=rowData(sce)$is_hvg
+  sce <- runUMAP(sce, dimred="PCA", n_neighbors=50, min_dist = 0.1, subset_row=rowData(sce)$is_hvg)
 
   cat("\n\n### UMAP uncorrected \n\n")
   print(plotReducedDim(sce, "UMAP", colour_by="Sample", point_size=0.5) +
@@ -1157,10 +1161,10 @@ sce_all_filtered <- run_batch_correction(sce_all_filtered, "Fresh and cultured s
 # Clustering with k=50
 
 ```{r Clustering, results="asis", class.source="fold-show"}
-run_clustering <- function(sce, sce_name){
+run_clustering <- function(sce){
 
   set.seed(100)
-  g50 <- buildSNNGraph(sce, k=50, use.dimred = 'harmony')  #, subset.row=rowData(sce)$is_hvg) # build graph
+  g50 <- buildSNNGraph(sce, k=50, use.dimred = 'harmony', subset.row=rowData(sce)$is_hvg) # build graph
 
   set.seed(100)
   clust50 <- igraph::cluster_walktrap(g50)$membership # find groups
@@ -1171,7 +1175,7 @@ run_clustering <- function(sce, sce_name){
   sce
 }
 
-sce_fresh_filtered <- run_clustering(sce_fresh_filtered, )
+sce_fresh_filtered <- run_clustering(sce_fresh_filtered)
 sce_all_filtered <- run_clustering(sce_all_filtered)
 ```
 

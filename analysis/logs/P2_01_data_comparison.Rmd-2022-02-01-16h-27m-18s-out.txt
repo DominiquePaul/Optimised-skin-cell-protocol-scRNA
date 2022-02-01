@@ -1,0 +1,26 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   1%
+   inline R code fragments
+
+  |                                                                              |..                                                                    |   2%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |..                                                                    |   3%
+  ordinary text without R code
+
+  |                                                                              |...                                                                   |   4%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |....                                                                  |   6%
+  ordinary text without R code
+
+  |                                                                              |.....                                                                 |   7%
+label: Load multiple samples
+  |                                                                              |......                                                                |   8%
+  ordinary text without R code
+
+  |                                                                              |......                                                                |   9%
+label: data from fresh protocol loaded together

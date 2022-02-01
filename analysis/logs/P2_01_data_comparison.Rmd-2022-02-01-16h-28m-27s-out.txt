@@ -1,0 +1,238 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   1%
+   inline R code fragments
+
+  |                                                                              |..                                                                    |   2%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |..                                                                    |   3%
+  ordinary text without R code
+
+  |                                                                              |...                                                                   |   4%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |....                                                                  |   6%
+  ordinary text without R code
+
+  |                                                                              |.....                                                                 |   7%
+label: Load multiple samples
+  |                                                                              |......                                                                |   8%
+  ordinary text without R code
+
+  |                                                                              |......                                                                |   9%
+label: data from fresh protocol loaded together
+  |                                                                              |.......                                                               |  10%
+  ordinary text without R code
+
+  |                                                                              |........                                                              |  11%
+label: joint skin and fresh samples
+  |                                                                              |.........                                                             |  12%
+  ordinary text without R code
+
+  |                                                                              |.........                                                             |  13%
+label: Basic filtering (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |..........                                                            |  15%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  16%
+label: remove doublets (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |............                                                          |  17%
+  ordinary text without R code
+
+  |                                                                              |.............                                                         |  18%
+label: Mitochondria check (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |.............                                                         |  19%
+  ordinary text without R code
+
+  |                                                                              |..............                                                        |  20%
+label: Add quality control metrics
+  |                                                                              |...............                                                       |  21%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  22%
+label: First QC charts (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 20
+ $ fig.height: num 8
+
+  |                                                                              |.................                                                     |  24%
+  ordinary text without R code
+
+  |                                                                              |.................                                                     |  25%
+label: plots for QC: Mitochondrial content 2 (with options) 
+List of 3
+ $ fig.width : num 20
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |..................                                                    |  26%
+  ordinary text without R code
+
+  |                                                                              |...................                                                   |  27%
+label: lib size vs. mito (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |....................                                                  |  28%
+  ordinary text without R code
+
+  |                                                                              |....................                                                  |  29%
+label: unnamed-chunk-1 (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |.....................                                                 |  30%
+  ordinary text without R code
+
+  |                                                                              |......................                                                |  31%
+label: advanced filtering - marking
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |........................                                              |  34%
+label: overview of filters (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |........................                                              |  35%
+  ordinary text without R code
+
+  |                                                                              |.........................                                             |  36%
+label: Overview of cells being dropped (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 14
+ $ fig.height: num 8
+
+  |                                                                              |..........................                                            |  37%
+  ordinary text without R code
+
+  |                                                                              |...........................                                           |  38%
+label: Violin plot of cells to be dropped (with options) 
+List of 3
+ $ fig.width : num 20
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |............................                                          |  39%
+  ordinary text without R code
+
+  |                                                                              |............................                                          |  40%
+label: plots for QC: Mitochondrial content after QC (with options) 
+List of 3
+ $ fig.width : num 20
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |.............................                                         |  42%
+  ordinary text without R code
+
+  |                                                                              |..............................                                        |  43%
+label: stratified samples (with options) 
+List of 3
+ $ fig.width : num 18
+ $ fig.height: num 12
+ $ results   : chr "asis"
+
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |...............................                                       |  45%
+label: stratified coloured by mt percent (with options) 
+List of 3
+ $ fig.width : num 18
+ $ fig.height: num 12
+ $ results   : chr "asis"
+
+  |                                                                              |................................                                      |  46%
+  ordinary text without R code
+
+  |                                                                              |.................................                                     |  47%
+label: log10 counts by sample (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |..................................                                    |  48%
+  ordinary text without R code
+
+  |                                                                              |...................................                                   |  49%
+label: log10 counts by protocol (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |...................................                                   |  51%
+  ordinary text without R code
+
+  |                                                                              |....................................                                  |  52%
+label: gene counts by sample (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |.....................................                                 |  53%
+  ordinary text without R code
+
+  |                                                                              |......................................                                |  54%
+label: geme counts by protocol (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |.......................................                               |  55%
+  ordinary text without R code
+
+  |                                                                              |.......................................                               |  56%
+label: Barplot of cells to be dropped (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 12
+ $ fig.height: num 8
+
+  |                                                                              |........................................                              |  57%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  58%
+label: drop cells from dataset (with options) 
+List of 1
+ $ class.source: chr "fold-show"
+
+  |                                                                              |..........................................                            |  60%
+  ordinary text without R code
+
+  |                                                                              |..........................................                            |  61%
+label: scTransform normalisation
+  |                                                                              |...........................................                           |  62%
+  ordinary text without R code
+
+  |                                                                              |............................................                          |  63%
+label: feature selection (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+
