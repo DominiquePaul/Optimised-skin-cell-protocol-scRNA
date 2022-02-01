@@ -1,0 +1,159 @@
+---
+title: "special Marker genes"
+author: "Dominique Paul"
+date: "1/31/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+suppressMessages({
+  library(tidySingleCellExperiment)
+  library(ggplot2)
+  library(hrbrthemes)
+  library(openxlsx)
+  library(scater)
+  library(scran)
+  library(pheatmap)
+  library(ggplotify)
+  library(viridis)
+})
+
+
+# load utils functions
+source("../code/general_purpose_code.R")
+```
+
+# Reload the data
+
+```{r Reload the data}
+sce <- readRDS(file="../data/EOS_Files/FvC_EOS2.rds")
+```
+
+# UMAP coloured by clusters and protocol {.tabset}
+
+```{r Visualisation of clusters, fig.width=16, fig.height=10, results="asis"}
+cat("\n\n## UMAP coloured by cluster \n\n")
+plotReducedDim(sce, "UMAP", colour_by="label", text_by="label", point_size=0.5) +
+  labs(title="UMAP plot coloured by clusters") +
+  theme_ipsum_rc()
+
+cat("\n\n## UMAP coloured by Protocol \n\n")
+plotReducedDim(sce, "UMAP", colour_by="Protocol", point_size=0.5) +
+  labs(title="UMAP plot coloured by protocol") + 
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce$Protocol))
+```
+
+
+```{r, fig.width=14, fig.height=10}
+# Plot UMAP
+plotReducedDim(sce, "UMAP", colour_by="label", text_by="label") +
+  geom_vline(xintercept=-4.8) +
+  geom_vline(xintercept=-3) +
+  geom_hline(yintercept=-1) +
+  geom_hline(yintercept=1.4) 
+
+
+# reduced dimension UMAP (RDU)
+RDU <- reducedDim(sce, "UMAP")
+
+cluster_labels <- as.numeric(sce$label)
+cluster_labels[-4.8 < RDU[,1] & RDU[,1] < -3 & -1.4 < RDU[,2] & RDU[,2] < 1.4] <- 17
+sce$label_new <- as.factor(cluster_labels)
+  
+# Plot UMAP
+plotReducedDim(sce, "UMAP", colour_by="label_new", text_by="label_new")
+```
+
+## Marker genes for each cluster using the Wilcox {.tabset}
+
+The Wilcoxon test makes pairwise comparisons between to groups (clusters) which is proportional to the area und the curve (AUC). The scores represent the likelihood of a random cell of another cluster having a higher expression than the reference cluster. Scores of 0 and 1 indicate that the distributions are completely separated.
+
+```{r marker genes wilcox upregulated, fig.height=10, fig.width=7, results="asis"}
+sce$label <- sce$label_new
+
+markers.all.up <- findMarkers(sce, 
+                              test.type="wilcox",
+                              pval.type="any",
+                              direction="up", 
+                              block=sce$Sample)
+
+for (i in 1:length(unique(colLabels(sce)))){
+  
+  cat(paste0("### Cluster ", i, "\n"))
+  
+  interesting.all.up <- markers.all.up[[i]]
+  interesting.all.up <- interesting.all.up[interesting.all.up$Top <=10,]
+  logFCs <- getMarkerEffects(interesting.all.up, prefix="AUC")
+  logFCs[is.na(logFCs)] <- 0 # set all NAs to 0
+  
+   # write to excel
+  # sheet_name <- paste0("wilcox_pairs_cluster_", i)
+  # addWorksheet(wb, sheet_name)
+  # writeData(wb, sheet_name, logFCs, rowNames=TRUE)
+  
+  pheatmap(logFCs, breaks=seq(0, 1, length.out=101),
+           main=paste0("Cluster ",i, ": Marker genes, corrected for batch effects \n (upregulated only)")) + 
+    theme_ipsum_rc()
+  
+  cat("\n\n")
+}
+```
+
+
+```{r}
+colData(sce) %>%
+  as.data.frame() %>%
+  group_by(label) %>%
+  summarise_all(mean)
+```
+
+```{r}
+colData(sce) %>%
+  as.data.frame() %>%
+  group_by(label) %>%
+  summarise_all(mean)
+```
+
+
+## Heatmap for Wilcoxon test results
+
+```{r pheatmap for wilcox results, fig.width=16, fig.height=40}
+top_genes_wilcox <- lapply(markers.all.up, function(marker_set){
+  marker_set %>%
+    as.data.frame() %>%
+    filter(Top <= 5) %>%
+    rownames()
+}) %>% 
+  unlist(use.names=F) %>% 
+  unique()
+
+# Matrix to plot the heatmap of expression values. 
+# To avoid a too big plot we only keep every 10th cell
+sce_plot <- sce_marker_genes[top_genes_wilcox, seq(1, dim(sce_marker_genes)[2], 20)]
+# We sort by cluster
+sce_plot <- sce_plot[,order(sce_plot$label)]
+# Anotations
+column_annotations <- data.frame("Cluster"=factor(sce_plot$label), row.names=colnames(sce_plot))
+# clip heatmap values to ensure that colour contrast is high
+sce_plot <- assay(sce_plot, "logcounts")
+sce_plot[sce_plot >=3] = 3
+
+as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, silent=TRUE,
+         color=inferno(50))) +
+  labs(title="Gene signatures per cluster identified via wilcox test",
+       subtitle="Top 5 differentially expressed genes per cluster; values are log-counts clipped at 3") +
+  theme_ipsum_rc()+ 
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),legend.position="none",
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank())
+```
+
+
+

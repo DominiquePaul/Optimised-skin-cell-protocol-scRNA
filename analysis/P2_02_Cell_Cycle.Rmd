@@ -30,11 +30,11 @@ source("../code/general_purpose_code.R")
 We load the data for the two 'Fresh' samples as well as the joint dataset of fresh AND cultured samples that we have processed in the previous script.  Both the two and the six samples were batch-corrected respectively.
 
 ```{r load data}
-file_path_fresh <- "../data/EOS_files/Fresh_only_EOS1.rds"
+file_path_fresh <- "../data/EOS_files/Fresh_EOS1_sce.rds"
 sce_fresh <- readRDS(file_path_fresh)
 rownames(sce_fresh) <- rowData(sce_fresh)$ID # might need this for the analysis
 
-file_path_all <- "../data/EOS_files/FvC_EOS1.rds"
+file_path_all <- "../data/EOS_files/FvC_EOS1_sce.rds"
 sce_all <- readRDS(file_path_all)
 rownames(sce_all) <- rowData(sce_all)$ID # might need this for the analysis
 ```
@@ -152,13 +152,13 @@ as.data.frame(colData(sce_all)) %>%
 
 ```{r save data}
 # Fresh samples only
-file_path_fresh <- "../data/EOS_files/Fresh_only_EOS2.rds"
+file_path_fresh <- "../data/EOS_files/Fresh_EOS2_sce.rds"
 rownames(sce_fresh) <- rowData(sce_fresh)$Symbol
 saveRDS(sce_fresh, file=file_path_fresh)
 upload_file_to_iSEE(file_path_fresh)
 
 # Frsh and cultured samples
-file_path_all <- "../data/EOS_files/FvC_EOS2.rds"
+file_path_all <- "../data/EOS_files/FvC_EOS2_sce.rds"
 rownames(sce_all) <- rowData(sce_all)$Symbol
 saveRDS(sce_all, file=file_path_all)
 upload_file_to_iSEE(file_path_all)

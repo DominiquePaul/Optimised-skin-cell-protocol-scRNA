@@ -57,11 +57,18 @@ kableExtra::kable(cluster_annotation_mapping)
 sce$manual_labels_coarse <- mapvalues(sce$kgraph_clusters_walktrap_harmony, cluster_annotation_mapping$Cluster.ID, cluster_annotation_mapping$Annotation)
 ```
 
-## Manual labelling of mast cells
+## Manually annotate mast cells
 
-```{r manual mast cell labeling}
+```{r manual mast cell labeling, fig.width=14, fig.height=10}
+# Plot UMAP
+# plotReducedDim(sce, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse") +
+#   geom_vline(xintercept=6) +
+#   geom_vline(xintercept=7) +
+#   geom_hline(yintercept=5) +
+#   geom_hline(yintercept=7) 
+
 umap_values <- reducedDim(sce, "UMAP")
-mask <- as.vector((umap_values[,1] > 2) & (umap_values[,1] < 4) & (umap_values[,2] > -12.4) & (umap_values[,2] < -10))
+mask <- as.vector((6 < umap_values[,1]) & (umap_values[,1] < 7) & (5 < umap_values[,2]) & (umap_values[,2] < 7))
 
 new_values <- as.vector(sce$manual_labels_coarse)
 new_values[mask] <- "Mast cells"
@@ -71,7 +78,7 @@ sce$manual_labels_coarse <- factor(new_values)
 
 # UMAPs coloured by cluster and cell type group {.tabset}
 
-```{r visualise UMAPs with manual labels, fig.width=16, fig.height=10, results="asis"}
+```{r visualise UMAPs with manual labels, fig.width=12, fig.height=8, results="asis"}
 cat("\n\n## Cell type groups \n\n")
 plotReducedDim(sce, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse") +
   labs(title="Manual labels for high-level clusters",
@@ -418,7 +425,8 @@ for (annotation in annotation_col_names){
 # Save data 
 
 ```{r save data}
-rownames(sce) <- rowData(sce)$Symbol
-saveRDS(sce, file = "../data/EOS_Files/EDI_EOS5_sce.rds")
+file_path <- "../data/EOS_Files/EDI_EOS5_sce.rds"
+saveRDS(sce, file = file_path)
+upload_file_to_iSEE(file_path)
 ```
 

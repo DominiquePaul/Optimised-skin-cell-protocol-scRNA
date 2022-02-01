@@ -40,7 +40,7 @@ source("../code/general_purpose_code.R")
 In this analysis we focus on subclustering the data for the combined two samples of the "new" protocol as well as the SSc controls.
 
 ```{r load data}
-sce_fresh <- readRDS("../data/EOS_files/Fresh_only_EOS2.rds")
+sce_fresh <- readRDS("../data/EOS_files/Fresh_EOS2_sce.rds")
 ```
 
 After manual examination of the clusters above and their respective marker genes we have created a table mapping the unsupervised clusters to their cell type group.
@@ -58,30 +58,14 @@ heatmap_marker_genes <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", shee
 subclustering_labels <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - subclusters")
 ```
 
-# Manual labelling of Melanocytes / Schwann cells
+# Manual labelling of Melanocytes and Schwann cells
 
 ```{r}
 umap_values <- reducedDim(sce_fresh, "UMAP")
-mask <- as.vector((umap_values[,1] > -5) & (umap_values[,1] < 0) & (umap_values[,2] > -1) & (umap_values[,2] < 2.5))
-mask_melanocytes <- as.vector((umap_values[,1] > -5) & (umap_values[,1] < 0) & (umap_values[,2] > -2) & (umap_values[,2] < 0.22))
-mask_schwann_cells <- as.vector((umap_values[,1] > -5) & (umap_values[,1] < 0) & (umap_values[,2] > 0.22) & (umap_values[,2] < 0.4))
+mask_location <- as.vector((4 < umap_values[,1]) & (umap_values[,1] < 6) & (6 < umap_values[,2]) & (umap_values[,2] < 8))
 
-# plot expression values
-plotReducedDim(sce_fresh[,mask], "UMAP", colour_by="PMEL") +
-  labs(title="UMAP zoomed in on Melanocytes + Schwann cells",
-       subtitle="Coloured by log values of PMEL gene") +
-  theme_ipsum_rc()
-
-plotReducedDim(sce_fresh[,mask], "UMAP", colour_by="DCT") +
-  labs(title="UMAP zoomed in on Melanocytes + Schwann cells",
-       subtitle="Coloured by log values of DCT gene") +
-  theme_ipsum_rc()
-
-plotReducedDim(sce_fresh[,mask], "UMAP", colour_by="CDH19") +
-  labs(title="UMAP zoomed in on Melanocytes + Schwann cells",
-       subtitle="Coloured by log values of CDH19 gene") +
-  theme_ipsum_rc()
-
+mask_melanocytes <- as.vector(mask_location & logcounts(sce_fresh)["PMEL",] > 3)
+mask_schwann_cells <- as.vector(mask_location & logcounts(sce_fresh)["PMEL",] < 3)
 
 new_values <- as.vector(sce_fresh$manual_labels_coarse)
 new_values[mask_melanocytes] <- "Melanocytes"
@@ -1175,9 +1159,9 @@ saveWorkbook(wb, filename, overwrite=TRUE)
 # Save SCE object
 
 ```{r save sce object, class.source="fold-show"}
-file_path_fresh <- "../data/EOS_files/Fresh_only_EOS3.rds"
-saveRDS(sce_fresh, file=file_path_fresh)
-upload_file_to_iSEE(file_path_fresh)
+file_path <- "../data/EOS_files/Fresh_EOS3_sce.rds"
+saveRDS(sce_fresh, file=file_path)
+upload_file_to_iSEE(file_path)
 ```
 
 

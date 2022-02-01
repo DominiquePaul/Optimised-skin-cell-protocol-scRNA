@@ -1,0 +1,3547 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dominique Paul" />
+
+<meta name="date" content="2022-01-31" />
+
+<title>Subclustering of Integrated Data</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Protocol Paper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Subclustering of Integrated Data</h1>
+<h4 class="author">Dominique Paul</h4>
+<h4 class="date">2022-01-31</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-01-31
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211228code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211228)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211228code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211228)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    Metadata/.DS_Store
+    Ignored:    Metadata/cell_annotation_markers/.DS_Store
+    Ignored:    Paper/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.RData
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Supple_table_1.png
+    Ignored:    analysis/Unused/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/seeds/.DS_Store
+    Ignored:    data/
+    Ignored:    output/.DS_Store
+    Ignored:    output/plots/.DS_Store
+
+Untracked files:
+    Untracked:  Metadata/~$cluster_annotation_map.xlsx
+    Untracked:  analysis/FVC_quick_marker.Rmd
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-out.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-err.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-31-20h-43m-32s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-31-20h-43m-32s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-20h-45m-24s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-20h-45m-24s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-22h-50m-16s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-22h-50m-16s-out.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-err.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-out.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-err.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-22h-36m-39s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-22h-36m-39s-out.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-err.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-out.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-22h-46m-20s-err.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-22h-46m-20s-out.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-err.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-out.txt
+    Untracked:  output/plots/Suppl_Figure5.png
+    Untracked:  output/plots/Suppl_table_1.csv
+    Untracked:  output/plots/Suppl_table_1.png
+    Untracked:  output/plots/Suppl_table_2.csv
+    Untracked:  output/plots/Suppl_table_2.png
+    Untracked:  output/plots/old/
+    Untracked:  output/plots/overview_figure_fvc.png
+    Untracked:  output/plots_31Jan/
+
+Unstaged changes:
+    Modified:   Metadata/cluster_annotation_map.xlsx
+    Modified:   Metadata/marker_genes_heatmaps.xlsx
+    Modified:   analysis/EDI_01_Loading_and_Preprocessing.Rmd
+    Modified:   analysis/EDI_03_Batch_correction.Rmd
+    Modified:   analysis/EDI_05_Annotation.Rmd
+    Modified:   analysis/P2_01_data_comparison.Rmd
+    Modified:   analysis/P2_03_Fresh_only_subclustering.Rmd
+    Modified:   analysis/P2_03_FvC_Annotations.Rmd
+    Modified:   analysis/admin.rmd
+    Modified:   analysis/plots.Rmd
+    Modified:   code/general_purpose_code.R
+    Modified:   output/plots/figure3.png
+    Modified:   output/plots/figure3_supplemental.png
+    Modified:   output/plots/figure4.png
+    Modified:   output/plots/figure5.png
+    Modified:   output/plots/figure6.png
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/EDI_08_Subclustering.Rmd</code>) and HTML (<code>docs/EDI_08_Subclustering.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/analysis/EDI_08_Subclustering.Rmd" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Added new clustering after meeting 29-Jan-2022
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-data-for-fresh-samples-combined" class="section level1">
+<h1>Load data for fresh samples combined</h1>
+<!-- In this analysis we focus on subclustering the data for the combined two samples of the "new" protocol. -->
+<p>In this analysis we focus on subclustering the data for the combined two samples of the “new” protocol as well as the SSc controls.</p>
+<pre class="r"><code>sce_integrated &lt;- readRDS(file=&quot;../data/EOS_Files/EDI_EOS5_sce.rds&quot;)</code></pre>
+</div>
+<div id="umaps-coloured-by-cluster-and-cell-type-group" class="section level1 tabset">
+<h1 class="tabset">UMAPs coloured by cluster and cell type group</h1>
+<p>We take a look at the UMAPs to check that the mapping is indeed as we expect.</p>
+<pre class="r"><code>cat(&quot;\n\n## Clusters \n\n&quot;)</code></pre>
+<div id="clusters" class="section level2">
+<h2>Clusters</h2>
+<pre class="r"><code>plotReducedDim(sce_integrated, &quot;UMAP&quot;, colour_by=&quot;label&quot;, text_by=&quot;label&quot;) +
+  labs(title=&quot;Unsupervised cluster labels&quot;,
+       subtitle = &quot;UMAP of all integrated datasets&quot;) +
+  theme_ipsum_rc()</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/visualise%20UMAPs-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n## Cell type groups \n\n&quot;)</code></pre>
+</div>
+<div id="cell-type-groups" class="section level2">
+<h2>Cell type groups</h2>
+<pre class="r"><code>plotReducedDim(sce_integrated, &quot;UMAP&quot;, colour_by=&quot;manual_labels_coarse&quot;, text_by=&quot;manual_labels_coarse&quot;) +
+  labs(title=&quot;Manual labels for high-level clusters&quot;,
+       subtitle = &quot;UMAP of all integrated datasets&quot;) +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/visualise%20UMAPs-2.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="subclustering" class="section level1">
+<h1>Subclustering</h1>
+<p>We now look at each cell type group individually. We recluster the cells and identify the marker genes of said plots.</p>
+<pre class="r"><code>for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+
+  ##### Create subclustering #####
+
+  # create the subset
+  sce_subset &lt;- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+
+  # recluster the cells
+  set.seed(100)
+  snn.graph &lt;- buildSNNGraph(sce_subset, k=50, use.dimred=&quot;harmony&quot;)
+  clusters &lt;- igraph::cluster_walktrap(snn.graph)$membership
+  colData(sce_integrated)[sce_integrated$manual_labels_coarse == cell_type, &quot;subcluster_id_k50&quot;] &lt;- clusters
+
+
+
+  ##### Re-calculate UMAP #####
+  set.seed(100)
+  sce_subset &lt;- runUMAP(sce_subset, dimred = &#39;harmony&#39;, subset_row=rowData(sce_subset)$is_hvg, min_dist = 0.1)
+  umap_for_cell_type &lt;- reducedDim(sce_subset, &quot;UMAP&quot;)
+  column_name &lt;- paste0(&quot;UMAP_&quot;, cell_type)
+
+  # copy from another dimension reduction. This is a workaround to set a
+  # dimension reduction for only some of the cells
+  reducedDim(sce_integrated, column_name) &lt;- reducedDim(sce_integrated, &quot;UMAP&quot;)
+  # set all values to 0 first
+  reducedDim(sce_integrated, column_name)[,c(1,2)] &lt;- NA
+  # Set new values
+  attr(reducedDim(sce_integrated, column_name), &quot;scaled:center&quot;) &lt;- attr(umap_for_cell_type, &quot;scaled:center&quot;)
+  reducedDim(sce_integrated, column_name)[rownames(umap_for_cell_type),] &lt;- umap_for_cell_type
+}</code></pre>
+<pre><code>Warning in .refine_k(k, precomputed, query = FALSE): &#39;k&#39; capped at the number of
+observations minus 1</code></pre>
+<pre class="r"><code># transform column into factor values
+sce_integrated$subcluster_id_k50_long &lt;- factor(paste0(sce_integrated$manual_labels_coarse, &quot;_&quot;, sce_integrated$subcluster_id_k50))
+sce_integrated$subcluster_id_k50 &lt;- factor(sce_integrated$subcluster_id_k50)
+
+# We also create a separate column for each of the cell types. We do this to easily analyse the results in iSee
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  colData(sce_integrated)[,cell_type] &lt;- colData(sce_integrated)[,&quot;subcluster_id_k50&quot;]
+  colData(sce_integrated)[sce_integrated$manual_labels_coarse != cell_type, cell_type] &lt;- NA
+  colData(sce_integrated)[, cell_type] &lt;- factor(as.numeric(colData(sce_integrated)[, cell_type]))
+}
+
+
+cat(&quot;\n\n## Original UMAP dimensions {.tabset} \n\n&quot;)</code></pre>
+<div id="original-umap-dimensions" class="section level2 tabset">
+<h2 class="tabset">Original UMAP dimensions</h2>
+<pre class="r"><code>for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+
+  # create tab for markdown
+  cat(&quot;\n\n### &quot;, cell_type, &quot;\n\n&quot;)
+
+  # plot the UMAP of the subcluster
+  print(plotReducedDim(sce_integrated[,sce_integrated$manual_labels_coarse == cell_type], &quot;UMAP&quot;,
+                 colour_by = &quot;subcluster_id_k50&quot;, text_by=&quot;subcluster_id_k50&quot;) +
+          theme_ipsum_rc() +
+    labs(title=cell_type,
+         subtitle=&quot;k=50&quot;))
+}</code></pre>
+<div id="fibroblasts" class="section level3">
+<h3>Fibroblasts</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="keratinocytes" class="section level3">
+<h3>Keratinocytes</h3>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="t-cells" class="section level3">
+<h3>T cells</h3>
+<pre><code>Warning: Removed 7 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vascular-endothelial" class="section level3">
+<h3>Vascular endothelial</h3>
+<pre><code>Warning: Removed 2 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pericytesvsmc" class="section level3">
+<h3>Pericytes/VSMC</h3>
+<pre><code>Warning: Removed 4 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="melanocytesschwann-cellsneuronal-cells" class="section level3">
+<h3>Melanocytes/Schwann cells/Neuronal cells</h3>
+<pre><code>Warning: Removed 8 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="macrophagesdc" class="section level3">
+<h3>Macrophages/DC</h3>
+<pre><code>Warning: Removed 5 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lymphatic-endothelial" class="section level3">
+<h3>Lymphatic endothelial</h3>
+<pre><code>Warning: Removed 7 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sweat-gland-cells" class="section level3">
+<h3>Sweat gland cells</h3>
+<pre><code>Warning: Removed 8 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mast-cells" class="section level3">
+<h3>Mast cells</h3>
+<pre><code>Warning: Removed 8 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-10.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cat(&quot;\n\n## Re-calculated UMAPs {.tabset} \n\n&quot;)</code></pre>
+</div>
+</div>
+<div id="re-calculated-umaps" class="section level2 tabset">
+<h2 class="tabset">Re-calculated UMAPs</h2>
+<pre class="r"><code>for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+
+  # create tab for markdown
+  cat(&quot;\n\n### &quot;, cell_type, &quot;\n\n&quot;)
+  column_name &lt;- paste0(&quot;UMAP_&quot;, cell_type)
+
+  # plot the UMAP of the subcluster
+  print(plotReducedDim(sce_integrated[,sce_integrated$manual_labels_coarse == cell_type], column_name,
+                 colour_by = &quot;subcluster_id_k50&quot;, text_by=&quot;subcluster_id_k50&quot;) +
+          theme_ipsum_rc() +
+    labs(title=paste0(&quot;Recalculated UMAP for &quot;, cell_type),
+         subtitle=&quot;k=50&quot;))
+}</code></pre>
+<div id="fibroblasts-1" class="section level3">
+<h3>Fibroblasts</h3>
+<pre><code>Warning: Removed 3 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="keratinocytes-1" class="section level3">
+<h3>Keratinocytes</h3>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="t-cells-1" class="section level3">
+<h3>T cells</h3>
+<pre><code>Warning: Removed 7 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-13.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vascular-endothelial-1" class="section level3">
+<h3>Vascular endothelial</h3>
+<pre><code>Warning: Removed 2 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pericytesvsmc-1" class="section level3">
+<h3>Pericytes/VSMC</h3>
+<pre><code>Warning: Removed 4 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-15.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="melanocytesschwann-cellsneuronal-cells-1" class="section level3">
+<h3>Melanocytes/Schwann cells/Neuronal cells</h3>
+<pre><code>Warning: Removed 8 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-16.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="macrophagesdc-1" class="section level3">
+<h3>Macrophages/DC</h3>
+<pre><code>Warning: Removed 5 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-17.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lymphatic-endothelial-1" class="section level3">
+<h3>Lymphatic endothelial</h3>
+<pre><code>Warning: Removed 7 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-18.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sweat-gland-cells-1" class="section level3">
+<h3>Sweat gland cells</h3>
+<pre><code>Warning: Removed 8 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-19.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mast-cells-1" class="section level3">
+<h3>Mast cells</h3>
+<pre><code>Warning: Removed 8 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subclustering-20.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="absolute-cell-abundance" class="section level1 tabset">
+<h1 class="tabset">Absolute cell abundance</h1>
+<pre class="r"><code># Samples combined
+cat(paste0(&quot;\n\n##&quot;, &quot; Samples combined \n\n&quot;))</code></pre>
+<div id="samples-combined" class="section level2">
+<h2>Samples combined</h2>
+<pre class="r"><code>as.data.frame(colData(sce_integrated)) %&gt;%
+  dplyr::group_by(manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+  geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+  theme_ipsum_rc() +
+  labs(title=&quot;Annotated cell type counts&quot;,
+        subtitle=&quot;For both samples combined&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+  theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse), type=&quot;fill&quot;)</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/absolute%20cell%20abundance-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#TODO: Stratified cell abundances by protocol
+plt_data &lt;- as.data.frame(colData(sce_integrated)) %&gt;%
+  dplyr::group_by(Protocol, manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Protocol&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>for (protocol_name in unique(plt_data$Protocol)){
+  cat(paste0(&quot;\n\n## &quot;, protocol_name, &quot;\n\n&quot;))
+  plt_data_subset &lt;- plt_data[plt_data$Protocol==protocol_name,]
+  
+  print(ggplot(plt_data_subset, aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+  geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+  theme_ipsum_rc() +
+  labs(title=&quot;Annotated cell type counts&quot;,
+        subtitle=&quot;For both samples combined&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+  theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse), type=&quot;fill&quot;))
+}</code></pre>
+</div>
+<div id="fresh" class="section level2">
+<h2>Fresh</h2>
+<p><img src="figure/EDI_08_Subclustering.Rmd/absolute%20cell%20abundance-2.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sole_boldo_et_al" class="section level2">
+<h2>Sole_Boldo_et_al</h2>
+<p><img src="figure/EDI_08_Subclustering.Rmd/absolute%20cell%20abundance-3.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="he_et_al" class="section level2">
+<h2>He_et_al</h2>
+<p><img src="figure/EDI_08_Subclustering.Rmd/absolute%20cell%20abundance-4.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tabib_et_al" class="section level2">
+<h2>Tabib_et_al</h2>
+<p><img src="figure/EDI_08_Subclustering.Rmd/absolute%20cell%20abundance-5.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="relative-cell-abundance" class="section level1">
+<h1>Relative cell abundance</h1>
+<pre class="r"><code>data_combined &lt;- as.data.frame(colData(sce_integrated)) %&gt;%
+  dplyr::group_by(manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  mutate(Sample=&quot;Samples combined&quot;) %&gt;%
+  mutate(Protocol=&quot;Samples combined&quot;) %&gt;%
+  dplyr::select(manual_labels_coarse, Sample, Protocol, counts)
+
+data_by_protocol &lt;- as.data.frame(colData(sce_integrated)) %&gt;%
+  dplyr::group_by(manual_labels_coarse, Protocol) %&gt;%
+  dplyr::summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;manual_labels_coarse&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>rbind(data_combined[,-2], data_by_protocol) %&gt;%
+  ggplot(aes(x=Protocol, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;, position=&quot;fill&quot;) +
+   scale_y_continuous(labels = scales::percent) +
+   theme_ipsum_rc() +
+   labs(title=&quot;Relative frequency of cell types&quot;,
+        x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(unique(data_combined$manual_labels_coarse), type=&quot;fill&quot;)</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/unnamed-chunk-1-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>data_by_sample &lt;- as.data.frame(colData(sce_integrated)) %&gt;%
+  dplyr::group_by(manual_labels_coarse, Sample) %&gt;%
+  dplyr::summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;manual_labels_coarse&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>rbind(data_combined[,-3], data_by_sample) %&gt;%
+  ggplot(aes(x=Sample, y=counts, fill=manual_labels_coarse)) +
+  geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;, position=&quot;fill&quot;) +
+  scale_y_continuous(labels = scales::percent) +
+  theme_ipsum_rc() +
+  labs(title=&quot;Relative frequency of cell types&quot;,
+       x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+  theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(unique(data_combined$manual_labels_coarse), type=&quot;fill&quot;)</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/unnamed-chunk-1-2.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+<div id="plot-subcluster-sizes-per-cell-type" class="section level1 tabset">
+<h1 class="tabset">Plot subcluster sizes per cell type</h1>
+<pre class="r"><code># plot bar charts for cell types
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  
+  cat(&quot;\n\n## &quot;, cell_type, &quot;\n\n&quot;)
+
+  sce_subset &lt;- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+
+  data_complete &lt;- as.data.frame(colData(sce_subset)) %&gt;%
+    dplyr::group_by(subcluster_id_k50) %&gt;%
+    dplyr::summarise(n_cells=n()) %&gt;%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3)) %&gt;%
+    mutate(Sample=&quot;Samples combined&quot;) %&gt;%
+    dplyr::select(Sample, subcluster_id_k50, n_cells, share)
+
+
+  data_stratified &lt;- as.data.frame(colData(sce_subset)) %&gt;%
+    dplyr::group_by(Sample, subcluster_id_k50) %&gt;%
+    dplyr::summarise(n_cells=n()) %&gt;%
+    dplyr::mutate(share= round(n_cells/sum(n_cells),3))
+
+  print(ggplot(rbind(data_complete, data_stratified),
+               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+          geom_bar(stat=&quot;identity&quot;) +
+          facet_grid(subcluster_id_k50 ~ .) +
+          theme_ipsum_rc() +
+          theme(axis.text.x = element_text(angle = 45,hjust=1),
+                strip.text.y = element_text(angle=0,size=7)) +
+          labs(title=cell_type,
+               subtitle=&quot;Bars show fraction of cells for given cell type and sample&quot;))
+      
+  
+  print(ggplot(rbind(data_complete, data_stratified),
+               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+          geom_bar(stat=&quot;identity&quot;, position=&quot;fill&quot;) +
+          theme_ipsum_rc() +
+          theme(axis.text.x = element_text(angle = 45,hjust=1),
+                strip.text.y = element_text(angle=0,size=7)) +
+          labs(title=cell_type,
+               subtitle=&quot;Bars show fraction of cells for given cell type and sample&quot;))
+}</code></pre>
+<div id="fibroblasts-2" class="section level2">
+<h2>Fibroblasts</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-1.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="keratinocytes-2" class="section level2">
+<h2>Keratinocytes</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-2.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-3.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="t-cells-2" class="section level2">
+<h2>T cells</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-4.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-5.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vascular-endothelial-2" class="section level2">
+<h2>Vascular endothelial</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-6.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-7.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pericytesvsmc-2" class="section level2">
+<h2>Pericytes/VSMC</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-8.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-9.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="melanocytesschwann-cellsneuronal-cells-2" class="section level2">
+<h2>Melanocytes/Schwann cells/Neuronal cells</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-10.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-11.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="macrophagesdc-2" class="section level2">
+<h2>Macrophages/DC</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-12.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-13.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lymphatic-endothelial-2" class="section level2">
+<h2>Lymphatic endothelial</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-14.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-15.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sweat-gland-cells-2" class="section level2">
+<h2>Sweat gland cells</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-16.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-17.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mast-cells-2" class="section level2">
+<h2>Mast cells</h2>
+<pre><code>`summarise()` has grouped output by &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-18.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-19.png" width="1536" style="display: block; margin: auto;" /><img src="figure/EDI_08_Subclustering.Rmd/subcluster%20sizes-20.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="section" class="section level1 unnumbered">
+<h1 class="unnumbered"></h1>
+<div id="marker-genes-per-subcluster" class="section level2 tabset">
+<h2 class="tabset">Marker genes per subcluster</h2>
+<p>To identify the differentiated cell types within each cluster we analyse the marker genes using three methods (as before):</p>
+<ol style="list-style-type: decimal">
+<li>Welch t-test: fast-computed and good statistical properties for large numbers of cells
+<ol style="list-style-type: decimal">
+<li>We test for marker genes that test significant against ANY other cluster</li>
+<li>We test for marker genes that test singnificant against ALL other clusters</li>
+</ol></li>
+<li>Wilcoxon test: directly assesses separation between the expression distributions of clusters</li>
+<li>Entropy and f-stat method</li>
+</ol>
+<pre class="r"><code>wb &lt;- createWorkbook()
+addWorksheet(wb, &quot;Intro&quot;)
+writeData(wb, &quot;Intro&quot;, data.frame(&quot;Marker genes for the subclusters of the integrated datasets&quot;),
+          colNames=F)
+
+# prepare a theme for adjusting the pheatmap plot
+reduced_ipsum_rc_theme &lt;- theme_ipsum_rc() +
+  theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank(),
+            axis.title.y=element_blank(),
+            axis.text.y=element_blank(),
+            axis.ticks.y=element_blank(),
+            panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# We will run three t-tests with very similar function calls.
+# We thus define the workflow as a function, allowing the changes to be made via parameter changes
+run_marker_gene_analysis &lt;- function(test_name, type_comparison, worksheet_prefix, tabset=&quot;###&quot;){
+
+  prefix &lt;- ifelse(test_name==&quot;t&quot;, &quot;logFC&quot;, &quot;AUC&quot;)
+  heatmap_lower_limit &lt;- ifelse(test_name==&quot;t&quot;, -3, 0)
+  heatmap_upper_limit &lt;- ifelse(test_name==&quot;t&quot;, 3, 1)
+
+  marker_results_per_cell_type &lt;- list()
+
+  for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+    # create tab for markdown
+    cat(paste0(&quot;\n\n&quot;, tabset, &quot; &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+    # create the subset
+    sce_subset &lt;- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+    sce_subset$subcluster_id_k50 &lt;- factor(sce_subset$subcluster_id_k50)
+
+    # get the marker genes for each cluster
+    all.markers &lt;- findMarkers(sce_subset, test.type=test_name,
+                               pval.type=type_comparison,
+                               groups=sce_subset$subcluster_id_k50,
+                               direction=&quot;up&quot;, block=sce_subset$Sample)
+
+    marker_results_per_cell_type[[cell_type]] &lt;- all.markers
+
+    for (marker_num in names(all.markers)){
+      # create tab for markdown
+      cat(paste0(&quot;\n\n#&quot;, tabset, &quot; Cluster &quot;, marker_num, &quot; \n\n&quot;))
+
+      # subset marker genes object for a given cluster
+      all_cluster_markers &lt;- all.markers[[marker_num]]
+      # we only look at union of the top 5 markers per pairwise comparison
+      if (type_comparison==&quot;any&quot;){
+        cluster_markers &lt;- all_cluster_markers[all_cluster_markers$Top &lt;= 5,]  
+      } else {
+        cluster_markers &lt;- all_cluster_markers[1:25,]
+      }
+
+      cluster_markers_logFCs &lt;- getMarkerEffects(cluster_markers, prefix = prefix)
+      cluster_markers_logFCs[is.na(cluster_markers_logFCs)] &lt;- 0
+
+      # Create pheatmap plot per cluster
+      if (dim(cluster_markers_logFCs)[2] == 1){
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T,
+                                 cluster_cols=FALSE)) +
+        labs(title=paste0(&quot;Cluster &quot;,marker_num),
+             subtitle=&quot;Pairwise comparisons - comparison with only remaining subcluster&quot;) +
+        reduced_ipsum_rc_theme)
+      } else {
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T, cluster_cols=FALSE)) +
+                labs(title=paste0(&quot;Cluster &quot;, marker_num), subtitle=&quot;Pairwise comparisons&quot;) +
+                reduced_ipsum_rc_theme)
+      }
+
+      # write to excel
+      cell_type_short &lt;- ifelse(nchar(cell_type) &gt; 10, substr(cell_type, 1, 10), cell_type)
+      sheet_name &lt;- paste0(&quot;F_&quot;, worksheet_prefix, &quot;_&quot;, cell_type_short,&quot;_c&quot;, marker_num)
+      addWorksheet(wb, sheet_name)
+      cluster_markers_excel_out &lt;- cbind(&quot;Gene&quot;=rownames(all_cluster_markers), all_cluster_markers)
+      writeData(wb, sheet_name, cluster_markers_excel_out, rowNames = TRUE)
+    }
+  }
+  return(marker_results_per_cell_type)
+}
+
+
+# Function to plot UMAPs of subclusters for top n genes
+plot_umap_feature_plots &lt;- function(markers, n=10, tabset=&quot;###&quot;){
+  for (cell_type in names(markers)){
+    subset_sce &lt;- sce_integrated[, sce_integrated$manual_labels_coarse == cell_type]
+    cat(paste0(&quot;\n\n&quot;, tabset, &quot; &quot;, cell_type, &quot;  {.tabset} \n\n&quot;))
+
+    for (marker_num in names(markers[[cell_type]])){
+      # set tabs
+      cat(paste0(&quot;\n\n#&quot;, tabset, &quot; Cluster &quot;, marker_num, &quot; {.tabset} \n\n&quot;))
+      all_genes &lt;- rownames(markers[[cell_type]][[marker_num]])
+
+      for (i in 1:n){
+        gene_name &lt;- all_genes[[i]]
+        cat(paste0(&quot;\n\n##&quot;, tabset, &quot; &quot;, gene_name , &quot; \n\n&quot;))
+        x_mu &lt;- mean(reducedDim(subset_sce, &quot;UMAP&quot;)[,1])
+        x_var &lt;- var(reducedDim(subset_sce, &quot;UMAP&quot;)[,1])
+        y_mu &lt;- mean(reducedDim(subset_sce, &quot;UMAP&quot;)[,2])
+        y_var &lt;- var(reducedDim(subset_sce, &quot;UMAP&quot;)[,2])
+
+        print(plotReducedDim(subset_sce, dimred=&quot;UMAP&quot;, colour_by=gene_name, point_size=0.5) +
+                labs(title=gene_name, subtitle=paste0(cell_type, &quot; - Marker gene number &quot;, i, &quot;of subcluster &quot;, marker_num)) +
+                xlim(x_mu-2*x_var, x_mu+x_var*2) +
+                ylim(y_mu-2*y_var, y_mu+y_var*2) +
+                theme_ipsum_rc())
+      }
+    }
+  }
+}</code></pre>
+<div id="t-test-testing-for-significance-against-any-other-cluster" class="section level3 tabset">
+<h3 class="tabset">t-test testing for significance against any other cluster</h3>
+<p>Testing with the comparison type “any” we select marker genes which are significant in ANY comparison with another cluster. If we should have overclustered and the same cell type is split into two clusters, then marker genes of this cell type would not show up if we would be using the “all” comparison method. The marker genes which define the cell type split into two clusters would show as significant in all comparisons, except the two sister-clusters, and woud thus not show.</p>
+<pre class="r"><code>all_markers_ttest_any &lt;- run_marker_gene_analysis(test_name = &quot;t&quot;, type_comparison = &quot;any&quot;, worksheet_prefix = &quot;ttest_any&quot;, tabset=&quot;####&quot;)</code></pre>
+<div id="fibroblasts-3" class="section level4 tabset">
+<h4 class="tabset">Fibroblasts</h4>
+<div id="cluster-1" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-7" class="section level5">
+<h5>Cluster 7</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="keratinocytes-3" class="section level4 tabset">
+<h4 class="tabset">Keratinocytes</h4>
+<div id="cluster-1-1" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-1" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-1" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-10.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-1" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-1" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6-1" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-13.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-7-1" class="section level5">
+<h5>Cluster 7</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-8" class="section level5">
+<h5>Cluster 8</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-15.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-9" class="section level5">
+<h5>Cluster 9</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-16.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-10" class="section level5">
+<h5>Cluster 10</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-17.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="t-cells-3" class="section level4 tabset">
+<h4 class="tabset">T cells</h4>
+<div id="cluster-1-2" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-18.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-2" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-19.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-2" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-20.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="vascular-endothelial-3" class="section level4 tabset">
+<h4 class="tabset">Vascular endothelial</h4>
+<div id="cluster-1-3" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-21.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-3" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-22.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-3" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-23.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-2" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-24.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-2" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-25.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6-2" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-26.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-7-2" class="section level5">
+<h5>Cluster 7</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-27.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-8-1" class="section level5">
+<h5>Cluster 8</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-28.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="pericytesvsmc-3" class="section level4 tabset">
+<h4 class="tabset">Pericytes/VSMC</h4>
+<div id="cluster-1-4" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-29.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-4" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-30.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-4" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-31.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-3" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-32.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-3" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-33.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6-3" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-34.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="melanocytesschwann-cellsneuronal-cells-3" class="section level4 tabset">
+<h4 class="tabset">Melanocytes/Schwann cells/Neuronal cells</h4>
+<div id="cluster-1-5" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-35.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-5" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-36.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="macrophagesdc-3" class="section level4 tabset">
+<h4 class="tabset">Macrophages/DC</h4>
+<div id="cluster-1-6" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-37.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-6" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-38.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-5" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-39.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-4" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-40.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-4" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-41.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="lymphatic-endothelial-3" class="section level4 tabset">
+<h4 class="tabset">Lymphatic endothelial</h4>
+<div id="cluster-1-7" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-42.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-7" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-43.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-6" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-44.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="sweat-gland-cells-3" class="section level4 tabset">
+<h4 class="tabset">Sweat gland cells</h4>
+<div id="cluster-1-8" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-45.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-8" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-46.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="mast-cells-3" class="section level4 tabset">
+<h4 class="tabset">Mast cells</h4>
+<div id="cluster-1-9" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-47.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-9" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20any-48.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+</div>
+<div id="umaps-for-each-cell-type-coloured-by-expression-values-for-top-marker-genes" class="section level2 tabset">
+<h2 class="tabset">UMAPs for each cell type coloured by expression values for top marker genes</h2>
+<p>We visualise the re-calculated UMAPs for each cluster and colour the cells by the expression values (logscale) of the top marker genes of each subclusters</p>
+<pre class="r"><code>plot_umap_feature_plots(all_markers_ttest_any, n=5, tabset=&quot;###&quot;)</code></pre>
+<div id="fibroblasts-4" class="section level3 tabset">
+<h3 class="tabset">Fibroblasts</h3>
+<div id="cluster-1-10" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="rps27" class="section level5">
+<h5>RPS27</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps18" class="section level5">
+<h5>RPS18</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-2.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl10" class="section level5">
+<h5>RPL10</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-3.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cxcl12" class="section level5">
+<h5>CXCL12</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-4.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ccn5" class="section level5">
+<h5>CCN5</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-5.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-10" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="rps18-1" class="section level5">
+<h5>RPS18</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-6.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gem" class="section level5">
+<h5>GEM</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-7.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cxcl12-1" class="section level5">
+<h5>CXCL12</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-8.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl41" class="section level5">
+<h5>RPL41</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-9.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl21" class="section level5">
+<h5>RPL21</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-10.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-7" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="sfrp2" class="section level5">
+<h5>SFRP2</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-11.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ptgds" class="section level5">
+<h5>PTGDS</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-12.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cxcl12-2" class="section level5">
+<h5>CXCL12</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-13.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="col1a1" class="section level5">
+<h5>COL1A1</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-14.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-co2" class="section level5">
+<h5>MT-CO2</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-15.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-4-5" class="section level4 tabset">
+<h4 class="tabset">Cluster 4</h4>
+<div id="col1a2" class="section level5">
+<h5>COL1A2</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-16.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcn" class="section level5">
+<h5>DCN</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-17.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mmp2" class="section level5">
+<h5>MMP2</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-18.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lgals1" class="section level5">
+<h5>LGALS1</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-19.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vim" class="section level5">
+<h5>VIM</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-20.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-5-5" class="section level4 tabset">
+<h4 class="tabset">Cluster 5</h4>
+<div id="col1a2-1" class="section level5">
+<h5>COL1A2</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-21.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcn-1" class="section level5">
+<h5>DCN</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-22.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ccn5-1" class="section level5">
+<h5>CCN5</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-23.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd3" class="section level5">
+<h5>MT-ND3</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-24.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cthrc1" class="section level5">
+<h5>CTHRC1</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-25.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-6-4" class="section level4 tabset">
+<h4 class="tabset">Cluster 6</h4>
+<div id="rps27a" class="section level5">
+<h5>RPS27A</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-26.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="apcdd1" class="section level5">
+<h5>APCDD1</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-27.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lgals1-1" class="section level5">
+<h5>LGALS1</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-28.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="col6a1" class="section level5">
+<h5>COL6A1</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-29.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ptma" class="section level5">
+<h5>PTMA</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-30.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-7-3" class="section level4 tabset">
+<h4 class="tabset">Cluster 7</h4>
+<div id="rpl32" class="section level5">
+<h5>RPL32</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-31.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps18-2" class="section level5">
+<h5>RPS18</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-32.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps6" class="section level5">
+<h5>RPS6</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-33.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl23a" class="section level5">
+<h5>RPL23A</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-34.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps27a-1" class="section level5">
+<h5>RPS27A</h5>
+<pre><code>Warning: Removed 393 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-35.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="keratinocytes-4" class="section level3 tabset">
+<h3 class="tabset">Keratinocytes</h3>
+<div id="cluster-1-11" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="s100a6" class="section level5">
+<h5>S100A6</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-36.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dst" class="section level5">
+<h5>DST</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-37.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vim-1" class="section level5">
+<h5>VIM</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-38.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt5" class="section level5">
+<h5>KRT5</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-39.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="serpinb2" class="section level5">
+<h5>SERPINB2</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-40.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-11" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="sfn" class="section level5">
+<h5>SFN</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-41.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="s100a14" class="section level5">
+<h5>S100A14</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-42.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt1x" class="section level5">
+<h5>MT1X</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-43.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krtdap" class="section level5">
+<h5>KRTDAP</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-44.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dmkn" class="section level5">
+<h5>DMKN</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-45.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-8" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="perp" class="section level5">
+<h5>PERP</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-46.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="col17a1" class="section level5">
+<h5>COL17A1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-47.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt5-1" class="section level5">
+<h5>KRT5</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-48.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps2" class="section level5">
+<h5>RPS2</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-49.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt15" class="section level5">
+<h5>KRT15</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-50.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-4-6" class="section level4 tabset">
+<h4 class="tabset">Cluster 4</h4>
+<div id="sfn-1" class="section level5">
+<h5>SFN</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-51.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="s100a14-1" class="section level5">
+<h5>S100A14</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-52.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps18-3" class="section level5">
+<h5>RPS18</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-53.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fth1" class="section level5">
+<h5>FTH1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-54.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gstp1" class="section level5">
+<h5>GSTP1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-55.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-5-6" class="section level4 tabset">
+<h4 class="tabset">Cluster 5</h4>
+<div id="pgrmc1" class="section level5">
+<h5>PGRMC1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-56.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krt79" class="section level5">
+<h5>KRT79</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-57.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="acsbg1" class="section level5">
+<h5>ACSBG1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-58.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cidea" class="section level5">
+<h5>CIDEA</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-59.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tmem91" class="section level5">
+<h5>TMEM91</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-60.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-6-5" class="section level4 tabset">
+<h4 class="tabset">Cluster 6</h4>
+<div id="pip" class="section level5">
+<h5>PIP</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-61.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcd" class="section level5">
+<h5>DCD</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-62.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cd63" class="section level5">
+<h5>CD63</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-63.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ftl" class="section level5">
+<h5>FTL</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-64.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="xbp1" class="section level5">
+<h5>XBP1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-65.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-7-4" class="section level4 tabset">
+<h4 class="tabset">Cluster 7</h4>
+<div id="s100a6-1" class="section level5">
+<h5>S100A6</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-66.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl34" class="section level5">
+<h5>RPL34</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-67.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps18-4" class="section level5">
+<h5>RPS18</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-68.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fth1-1" class="section level5">
+<h5>FTH1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-69.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vim-2" class="section level5">
+<h5>VIM</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-70.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-8-2" class="section level4 tabset">
+<h4 class="tabset">Cluster 8</h4>
+<div id="stmn1" class="section level5">
+<h5>STMN1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-71.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="h2afz" class="section level5">
+<h5>H2AFZ</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-72.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hmgb2" class="section level5">
+<h5>HMGB2</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-73.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tuba1b" class="section level5">
+<h5>TUBA1B</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-74.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hmgb1" class="section level5">
+<h5>HMGB1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-75.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-9-1" class="section level4 tabset">
+<h4 class="tabset">Cluster 9</h4>
+<div id="calml5" class="section level5">
+<h5>CALML5</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-76.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="krtdap-1" class="section level5">
+<h5>KRTDAP</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-77.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dmkn-1" class="section level5">
+<h5>DMKN</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-78.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sbsn" class="section level5">
+<h5>SBSN</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-79.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="perp-1" class="section level5">
+<h5>PERP</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-80.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-10-1" class="section level4 tabset">
+<h4 class="tabset">Cluster 10</h4>
+<div id="cox5b" class="section level5">
+<h5>COX5B</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-81.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ptma-1" class="section level5">
+<h5>PTMA</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-82.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps18-5" class="section level5">
+<h5>RPS18</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-83.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ndufa4" class="section level5">
+<h5>NDUFA4</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-84.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mgst1" class="section level5">
+<h5>MGST1</h5>
+<pre><code>Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-85.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="t-cells-4" class="section level3 tabset">
+<h3 class="tabset">T cells</h3>
+<div id="cluster-1-12" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="mt-nd1" class="section level5">
+<h5>MT-ND1</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-86.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd2" class="section level5">
+<h5>MT-ND2</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-87.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hspa1a" class="section level5">
+<h5>HSPA1A</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-88.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hspb1" class="section level5">
+<h5>HSPB1</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-89.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd4" class="section level5">
+<h5>MT-ND4</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-90.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-12" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="arhgdib" class="section level5">
+<h5>ARHGDIB</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-91.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cotl1" class="section level5">
+<h5>COTL1</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-92.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ptprc" class="section level5">
+<h5>PTPRC</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-93.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="il32" class="section level5">
+<h5>IL32</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-94.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cd52" class="section level5">
+<h5>CD52</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-95.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-9" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="il32-1" class="section level5">
+<h5>IL32</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-96.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd2-1" class="section level5">
+<h5>MT-ND2</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-97.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="s100a4" class="section level5">
+<h5>S100A4</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-98.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps27-1" class="section level5">
+<h5>RPS27</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-99.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ptprc-1" class="section level5">
+<h5>PTPRC</h5>
+<pre><code>Warning: Removed 293 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-100.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="vascular-endothelial-4" class="section level3 tabset">
+<h3 class="tabset">Vascular endothelial</h3>
+<div id="cluster-1-13" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="txnip" class="section level5">
+<h5>TXNIP</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-101.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rapgef5" class="section level5">
+<h5>RAPGEF5</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-102.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cavin1" class="section level5">
+<h5>CAVIN1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-103.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tie1" class="section level5">
+<h5>TIE1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-104.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mdc1" class="section level5">
+<h5>MDC1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-105.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-13" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="txnip-1" class="section level5">
+<h5>TXNIP</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-106.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl10-1" class="section level5">
+<h5>RPL10</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-107.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ramp2" class="section level5">
+<h5>RAMP2</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-108.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chchd10" class="section level5">
+<h5>CHCHD10</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-109.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fau" class="section level5">
+<h5>FAU</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-110.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-10" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="txnip-2" class="section level5">
+<h5>TXNIP</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-111.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mob1a" class="section level5">
+<h5>MOB1A</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-112.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tgif1" class="section level5">
+<h5>TGIF1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-113.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fkbp1a" class="section level5">
+<h5>FKBP1A</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-114.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ilf2" class="section level5">
+<h5>ILF2</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-115.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-4-7" class="section level4 tabset">
+<h4 class="tabset">Cluster 4</h4>
+<div id="tm4sf1" class="section level5">
+<h5>TM4SF1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-116.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cxcl14" class="section level5">
+<h5>CXCL14</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-117.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sod2" class="section level5">
+<h5>SOD2</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-118.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcn-2" class="section level5">
+<h5>DCN</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-119.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-atp6" class="section level5">
+<h5>MT-ATP6</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-120.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-5-7" class="section level4 tabset">
+<h4 class="tabset">Cluster 5</h4>
+<div id="tm4sf1-1" class="section level5">
+<h5>TM4SF1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-121.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sod2-1" class="section level5">
+<h5>SOD2</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-122.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl10-2" class="section level5">
+<h5>RPL10</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-123.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gadd45b" class="section level5">
+<h5>GADD45B</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-124.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adamts9" class="section level5">
+<h5>ADAMTS9</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-125.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-6-6" class="section level4 tabset">
+<h4 class="tabset">Cluster 6</h4>
+<div id="txnip-3" class="section level5">
+<h5>TXNIP</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-126.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cxcl14-1" class="section level5">
+<h5>CXCL14</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-127.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fos" class="section level5">
+<h5>FOS</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-128.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd3-1" class="section level5">
+<h5>MT-ND3</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-129.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="jun" class="section level5">
+<h5>JUN</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-130.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-7-5" class="section level4 tabset">
+<h4 class="tabset">Cluster 7</h4>
+<div id="tm4sf1-2" class="section level5">
+<h5>TM4SF1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-131.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="plekhg1" class="section level5">
+<h5>PLEKHG1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-132.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sod2-2" class="section level5">
+<h5>SOD2</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-133.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="emp1" class="section level5">
+<h5>EMP1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-134.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="b2m" class="section level5">
+<h5>B2M</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-135.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-8-3" class="section level4 tabset">
+<h4 class="tabset">Cluster 8</h4>
+<div id="znf385d" class="section level5">
+<h5>ZNF385D</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-136.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tm4sf1-3" class="section level5">
+<h5>TM4SF1</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-137.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sod2-3" class="section level5">
+<h5>SOD2</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-138.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="palm2-akap2" class="section level5">
+<h5>PALM2-AKAP2</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-139.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ybx3" class="section level5">
+<h5>YBX3</h5>
+<pre><code>Warning: Removed 33 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-140.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="pericytesvsmc-4" class="section level3 tabset">
+<h3 class="tabset">Pericytes/VSMC</h3>
+<div id="cluster-1-14" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="tagln" class="section level5">
+<h5>TAGLN</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-141.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="acta2" class="section level5">
+<h5>ACTA2</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-142.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="myh11" class="section level5">
+<h5>MYH11</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-143.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="myl9" class="section level5">
+<h5>MYL9</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-144.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ccni" class="section level5">
+<h5>CCNI</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-145.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-14" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="tmsb10" class="section level5">
+<h5>TMSB10</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-146.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="nfkbia" class="section level5">
+<h5>NFKBIA</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-147.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ccl2" class="section level5">
+<h5>CCL2</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-148.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="nampt" class="section level5">
+<h5>NAMPT</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-149.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="b2m-1" class="section level5">
+<h5>B2M</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-150.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-11" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="acta2-1" class="section level5">
+<h5>ACTA2</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-151.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="myh11-1" class="section level5">
+<h5>MYH11</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-152.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd2-2" class="section level5">
+<h5>MT-ND2</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-153.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="actb" class="section level5">
+<h5>ACTB</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-154.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tpm2" class="section level5">
+<h5>TPM2</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-155.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-4-8" class="section level4 tabset">
+<h4 class="tabset">Cluster 4</h4>
+<div id="cycs" class="section level5">
+<h5>CYCS</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-156.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tpm2-1" class="section level5">
+<h5>TPM2</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-157.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt1a" class="section level5">
+<h5>MT1A</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-158.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cebpd" class="section level5">
+<h5>CEBPD</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-159.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c11orf96" class="section level5">
+<h5>C11orf96</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-160.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-5-8" class="section level4 tabset">
+<h4 class="tabset">Cluster 5</h4>
+<div id="tmsb4x" class="section level5">
+<h5>TMSB4X</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-161.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ndufa4l2" class="section level5">
+<h5>NDUFA4L2</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-162.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="b2m-2" class="section level5">
+<h5>B2M</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-163.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="myl9-1" class="section level5">
+<h5>MYL9</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-164.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="igfbp7" class="section level5">
+<h5>IGFBP7</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-165.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-6-7" class="section level4 tabset">
+<h4 class="tabset">Cluster 6</h4>
+<div id="tmsb4x-1" class="section level5">
+<h5>TMSB4X</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-166.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="b2m-3" class="section level5">
+<h5>B2M</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-167.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd3-2" class="section level5">
+<h5>MT-ND3</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-168.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="s100a6-2" class="section level5">
+<h5>S100A6</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-169.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-atp6-1" class="section level5">
+<h5>MT-ATP6</h5>
+<pre><code>Warning: Removed 162 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-170.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="melanocytesschwann-cellsneuronal-cells-4" class="section level3 tabset">
+<h3 class="tabset">Melanocytes/Schwann cells/Neuronal cells</h3>
+<div id="cluster-1-15" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="gstp1-1" class="section level5">
+<h5>GSTP1</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-171.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pmel" class="section level5">
+<h5>PMEL</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-172.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rab7a" class="section level5">
+<h5>RAB7A</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-173.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gpnmb" class="section level5">
+<h5>GPNMB</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-174.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="qpct" class="section level5">
+<h5>QPCT</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-175.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-15" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="mt-nd3-3" class="section level5">
+<h5>MT-ND3</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-176.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd2-3" class="section level5">
+<h5>MT-ND2</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-177.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="h3f3b" class="section level5">
+<h5>H3F3B</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-178.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tmsb4x-2" class="section level5">
+<h5>TMSB4X</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-179.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcn-3" class="section level5">
+<h5>DCN</h5>
+<pre><code>Warning: Removed 61 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-180.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="macrophagesdc-4" class="section level3 tabset">
+<h3 class="tabset">Macrophages/DC</h3>
+<div id="cluster-1-16" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="f13a1" class="section level5">
+<h5>F13A1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-181.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hspa1b" class="section level5">
+<h5>HSPA1B</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-182.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hla-dpb1" class="section level5">
+<h5>HLA-DPB1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-183.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c1qa" class="section level5">
+<h5>C1QA</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-184.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hla-dpa1" class="section level5">
+<h5>HLA-DPA1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-185.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-16" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="serpinb9" class="section level5">
+<h5>SERPINB9</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-186.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hla-dpb1-1" class="section level5">
+<h5>HLA-DPB1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-187.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ppp1r15a" class="section level5">
+<h5>PPP1R15A</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-188.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd2-4" class="section level5">
+<h5>MT-ND2</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-189.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hspa1b-1" class="section level5">
+<h5>HSPA1B</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-190.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-12" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="rnase1" class="section level5">
+<h5>RNASE1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-191.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd1-1" class="section level5">
+<h5>MT-ND1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-192.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd5" class="section level5">
+<h5>MT-ND5</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-193.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="selenop" class="section level5">
+<h5>SELENOP</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-194.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ftl-1" class="section level5">
+<h5>FTL</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-195.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-4-9" class="section level4 tabset">
+<h4 class="tabset">Cluster 4</h4>
+<div id="st3gal6" class="section level5">
+<h5>ST3GAL6</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-196.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="serpinb9-1" class="section level5">
+<h5>SERPINB9</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-197.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hla-dpb1-2" class="section level5">
+<h5>HLA-DPB1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-198.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cotl1-1" class="section level5">
+<h5>COTL1</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-199.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rel" class="section level5">
+<h5>REL</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-200.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-5-9" class="section level4 tabset">
+<h4 class="tabset">Cluster 5</h4>
+<div id="serpinb9-2" class="section level5">
+<h5>SERPINB9</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-201.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl10-3" class="section level5">
+<h5>RPL10</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-202.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cst7" class="section level5">
+<h5>CST7</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-203.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c15orf48" class="section level5">
+<h5>C15orf48</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-204.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps28" class="section level5">
+<h5>RPS28</h5>
+<pre><code>Warning: Removed 1625 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-205.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="lymphatic-endothelial-4" class="section level3 tabset">
+<h3 class="tabset">Lymphatic endothelial</h3>
+<div id="cluster-1-17" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="rpl31" class="section level5">
+<h5>RPL31</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-206.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tff3" class="section level5">
+<h5>TFF3</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-207.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="prox1" class="section level5">
+<h5>PROX1</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-208.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl21-1" class="section level5">
+<h5>RPL21</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-209.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tm4sf1-4" class="section level5">
+<h5>TM4SF1</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-210.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-17" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="ppfibp1" class="section level5">
+<h5>PPFIBP1</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-211.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cldn5" class="section level5">
+<h5>CLDN5</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-212.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="smim30" class="section level5">
+<h5>SMIM30</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-213.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="tff3-1" class="section level5">
+<h5>TFF3</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-214.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="akap12" class="section level5">
+<h5>AKAP12</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-215.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-3-13" class="section level4 tabset">
+<h4 class="tabset">Cluster 3</h4>
+<div id="cxcl14-2" class="section level5">
+<h5>CXCL14</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-216.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="zfp36" class="section level5">
+<h5>ZFP36</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-217.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd3-4" class="section level5">
+<h5>MT-ND3</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-218.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcn-4" class="section level5">
+<h5>DCN</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-219.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mt-nd4-1" class="section level5">
+<h5>MT-ND4</h5>
+<pre><code>Warning: Removed 803 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-220.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="sweat-gland-cells-4" class="section level3 tabset">
+<h3 class="tabset">Sweat gland cells</h3>
+<div id="cluster-1-18" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="dner" class="section level5">
+<h5>DNER</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-221.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="slc26a2" class="section level5">
+<h5>SLC26A2</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-222.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rhpn2" class="section level5">
+<h5>RHPN2</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-223.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="meltf" class="section level5">
+<h5>MELTF</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-224.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="atp1a1" class="section level5">
+<h5>ATP1A1</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-225.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-18" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="vim-3" class="section level5">
+<h5>VIM</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-226.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hspb1-1" class="section level5">
+<h5>HSPB1</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-227.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl32-1" class="section level5">
+<h5>RPL32</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-228.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rpl31-1" class="section level5">
+<h5>RPL31</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-229.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rps20" class="section level5">
+<h5>RPS20</h5>
+<pre><code>Warning: Removed 133 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-230.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="mast-cells-4" class="section level3 tabset">
+<h3 class="tabset">Mast cells</h3>
+<div id="cluster-1-19" class="section level4 tabset">
+<h4 class="tabset">Cluster 1</h4>
+<div id="btk" class="section level5">
+<h5>BTK</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-231.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ddx18" class="section level5">
+<h5>DDX18</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-232.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ptgs1" class="section level5">
+<h5>PTGS1</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-233.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="stk4" class="section level5">
+<h5>STK4</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-234.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="stard10" class="section level5">
+<h5>STARD10</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-235.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-2-19" class="section level4 tabset">
+<h4 class="tabset">Cluster 2</h4>
+<div id="paip2" class="section level5">
+<h5>PAIP2</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-236.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fam107b" class="section level5">
+<h5>FAM107B</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-237.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vps37b" class="section level5">
+<h5>VPS37B</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-238.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="clic1" class="section level5">
+<h5>CLIC1</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-239.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ptma-2" class="section level5">
+<h5>PTMA</h5>
+<pre><code>Warning: Removed 46 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/feature%20plots-240.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+</div>
+<div id="section-1" class="section level2 unnumbered">
+<h2 class="unnumbered"></h2>
+<div id="t-test-testing-for-significance-against-all-other-clusters" class="section level3 tabset">
+<h3 class="tabset">t-test testing for significance against all other clusters</h3>
+<p>While the “all” comparison method has some disadvantages as stated above, can be highly effective when it does work. The method only reports a small set of markers that are highly specific to the cluster of interest.</p>
+<pre class="r"><code>all_markers_ttest_all &lt;- run_marker_gene_analysis(test_name = &quot;t&quot;, type_comparison = &quot;all&quot;, worksheet_prefix = &quot;ttest_all&quot;, tabset=&quot;####&quot;)</code></pre>
+<div id="fibroblasts-5" class="section level4 tabset">
+<h4 class="tabset">Fibroblasts</h4>
+<div id="cluster-1-20" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-20" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-14" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-10" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-10" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6-8" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-7-6" class="section level5">
+<h5>Cluster 7</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="keratinocytes-5" class="section level4 tabset">
+<h4 class="tabset">Keratinocytes</h4>
+<div id="cluster-1-21" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-21" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-15" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-10.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-11" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-11" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6-9" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-13.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-7-7" class="section level5">
+<h5>Cluster 7</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-8-4" class="section level5">
+<h5>Cluster 8</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-15.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-9-2" class="section level5">
+<h5>Cluster 9</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-16.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-10-2" class="section level5">
+<h5>Cluster 10</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-17.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="t-cells-5" class="section level4 tabset">
+<h4 class="tabset">T cells</h4>
+<div id="cluster-1-22" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-18.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-22" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-19.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-16" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-20.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="vascular-endothelial-5" class="section level4 tabset">
+<h4 class="tabset">Vascular endothelial</h4>
+<div id="cluster-1-23" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-21.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-23" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-22.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-17" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-23.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-12" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-24.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-12" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-25.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6-10" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-26.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-7-8" class="section level5">
+<h5>Cluster 7</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-27.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-8-5" class="section level5">
+<h5>Cluster 8</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-28.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="pericytesvsmc-5" class="section level4 tabset">
+<h4 class="tabset">Pericytes/VSMC</h4>
+<div id="cluster-1-24" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-29.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-24" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-30.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-18" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-31.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-13" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-32.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-13" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-33.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-6-11" class="section level5">
+<h5>Cluster 6</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-34.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="melanocytesschwann-cellsneuronal-cells-5" class="section level4 tabset">
+<h4 class="tabset">Melanocytes/Schwann cells/Neuronal cells</h4>
+<div id="cluster-1-25" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-35.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-25" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-36.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="macrophagesdc-5" class="section level4 tabset">
+<h4 class="tabset">Macrophages/DC</h4>
+<div id="cluster-1-26" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-37.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-26" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-38.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-19" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-39.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-4-14" class="section level5">
+<h5>Cluster 4</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-40.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-5-14" class="section level5">
+<h5>Cluster 5</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-41.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="lymphatic-endothelial-5" class="section level4 tabset">
+<h4 class="tabset">Lymphatic endothelial</h4>
+<div id="cluster-1-27" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-42.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-27" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-43.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-3-20" class="section level5">
+<h5>Cluster 3</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-44.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="sweat-gland-cells-5" class="section level4 tabset">
+<h4 class="tabset">Sweat gland cells</h4>
+<div id="cluster-1-28" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-45.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-28" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-46.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="mast-cells-5" class="section level4 tabset">
+<h4 class="tabset">Mast cells</h4>
+<div id="cluster-1-29" class="section level5">
+<h5>Cluster 1</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-47.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cluster-2-29" class="section level5">
+<h5>Cluster 2</h5>
+<p><img src="figure/EDI_08_Subclustering.Rmd/t-test%20all-48.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="wilcoxon" class="section level3 tabset">
+<h3 class="tabset">Wilcoxon</h3>
+<p>The wilcox directly measures the difference of the expression value distributions of two clusters. It tells us how strong the overlap between the gene expression values for two clusters is. It thus directly measures what we are interested in: the separation of two clusters. The resulting value is proportional to the area-under-the-curve and can be understood as the probability of a random cell in the focus cluster having a higher expression value than the clusters being compared to. 0 means that the expression values of a cell in the cluster are strictly lower than any cell in the other cluster. 1 means that the value of any cell in the cluster is higher than any cell in the cluster it is being compared to. While this test allows us to examine the ‘clarity’ of separation, the t-test shows us the size of this difference.</p>
+<pre class="r"><code>all_markers_wilcox_any &lt;- run_marker_gene_analysis(test_name = &quot;wilcox&quot;, type_comparison = &quot;any&quot;, worksheet_prefix = &quot;wilcox_any&quot;, tabset=&quot;####&quot;)</code></pre>
+<pre><code>
+
+#### Fibroblasts {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 3 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 4 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 5 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 6 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 7 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Keratinocytes {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 3 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-10.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 4 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-11.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 5 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-12.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 6 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-13.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 7 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-14.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 8 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-15.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 9 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-16.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 10 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-17.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### T cells {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-18.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-19.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 3 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-20.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Vascular endothelial {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-21.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-22.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 3 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-23.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 4 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-24.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 5 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-25.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 6 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-26.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 7 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-27.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 8 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-28.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Pericytes/VSMC {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-29.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-30.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 3 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-31.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 4 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-32.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 5 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-33.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 6 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-34.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Melanocytes/Schwann cells/Neuronal cells {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-35.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-36.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Macrophages/DC {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-37.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-38.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 3 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-39.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 4 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-40.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 5 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-41.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Lymphatic endothelial {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-42.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-43.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 3 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-44.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Sweat gland cells {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-45.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-46.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+#### Mast cells {.tabset} 
+
+
+
+##### Cluster 1 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-47.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+
+##### Cluster 2 </code></pre>
+<p><img src="figure/EDI_08_Subclustering.Rmd/wilcox%20any-48.png" width="672" style="display: block; margin: auto;" /></p>
+<!-- ### Entropy f-stat method {.tabset} -->
+<pre class="r"><code># define the entropy function which we will apply to our SCE object on a per gene  basis
+shannon_entropy &lt;- function(x, e=1e-10){
+  x &lt;- x+e
+  p &lt;- (x)/sum(x)
+  -sum((p)*log(p))
+}
+
+# Calculating the entropy and f-statistics takes very long. We split the calculation
+# and printing of the results into two parts as there were issues with duplicates
+# during printing and this made debugging easier
+bpstart(bpparam)
+fstats &lt;- lapply(unique(sce_integrated$manual_labels_coarse), function(cell_type){
+  # cat(paste0(&quot;\n\n#### &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+
+  # create the subset
+  sce_subset &lt;- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+  sce_subset$subcluster_id_k50 &lt;- factor(sce_subset$subcluster_id_k50)
+
+  aggr_sce &lt;- aggregateAcrossCells(sce_subset, sce_subset$subcluster_id_k50)
+
+  # We compute the datarframe containing:
+  # (1) the gene name as symbol
+  # (2) the entropy of the expression values for a given gene and
+  # (3) the f-statistic of the analysis of variance test of the log-experession values vs. the subclusters
+  entropy_fstat_sce &lt;- BiocParallel::bplapply(
+    seq_along(rownames(aggr_sce)),
+    function(.x){
+      data.frame(
+        gene=rowData(sce_subset)$Symbol[.x],
+        entropy=shannon_entropy(counts(aggr_sce[.x,])),
+        fstat=summary(aov(logcounts(sce_subset)[.x,]~sce_subset$subcluster_id_k50))[[1]]$`F value`[1]
+      )},
+    BPPARAM=bpparam) %&gt;%
+      purrr::reduce(rbind)
+
+  # We compare the normalised values of the f-statistic and the entropy.
+  entropy_fstat_sce &lt;-  entropy_fstat_sce %&gt;%
+    dplyr::mutate(entropy_norm = (entropy + 1e3) / max(entropy + 1e3, na.rm=TRUE),
+                  fstat_norm = (fstat + 1e3) / max(fstat + 1e3, na.rm=TRUE),
+                  ent_fstat_ratio = fstat_norm / entropy_norm)
+  
+  entropy_fstat_sce
+})
+bpstop(bpparam)
+
+names(fstats) &lt;- unique(sce_integrated$manual_labels_coarse)
+  
+# Show the f-statistic vs the entropy in a plot for all genes
+# Also, show violin plots for the top 50 genes
+
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  # Create a tab for the markdown view in workflowr
+  cat(paste0(&quot;\n\n#### &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+     
+  entropy_fstat_sce &lt;- fstats[[cell_type]]
+  
+  # we select the top 50 markers as defined via the fstat_norm / entropy_norm metric
+  topmarkers_order &lt;- order(entropy_fstat_sce$ent_fstat_ratio, decreasing=TRUE)
+  topmarkers &lt;- unique(entropy_fstat_sce[topmarkers_order[1:50],])
+
+  # Save the values to our excel
+  cell_type_short &lt;- ifelse(nchar(cell_type) &gt; 10, substr(cell_type, 1, 10), cell_type)
+  sheet_name &lt;- paste0(&quot;F_entropy_&quot;, cell_type_short)
+  addWorksheet(wb, sheet_name)
+  writeData(wb, sheet_name, entropy_fstat_sce[topmarkers_order,], rowNames = TRUE)
+
+  # Plot the f-statistic against the entropy
+  cat(&quot;\n\n##### Entropy plot \n\n&quot;)
+  print(ggplot(entropy_fstat_sce) +
+    geom_point(aes(x=log(fstat), y=entropy), show.legend = F, colour=&quot;#02C39A&quot;) +
+    labs(x=&quot;log(F-statistic)&quot;, y=&quot;Entropy&quot;, title=&quot;Entropy vs. F-statistic of cluster separation&quot;) +
+    ggrepel::geom_text_repel(data=topmarkers,
+                             aes(x=log(fstat), y=entropy, label=gene, size=4),
+                             show.legend=F,
+                             max.overlaps = 30))
+}</code></pre>
+<!-- ### Violin plots for genes in f-stat method {.tabset} -->
+<pre class="r"><code># Violin plots by cell type
+for (cell_type in unique(sce_integrated$manual_labels_coarse)){
+  # Create a tab for the markdown view in workflowr
+  cat(paste0(&quot;\n\n#### &quot;, cell_type, &quot; {.tabset} \n\n&quot;))
+     
+  entropy_fstat_sce &lt;- fstats[[cell_type]]
+  
+  # we select the top 50 markers as defined via the fstat_norm / entropy_norm metric
+  topmarkers_order &lt;- order(entropy_fstat_sce$ent_fstat_ratio, decreasing=TRUE)
+  topmarkers &lt;- unique(entropy_fstat_sce[topmarkers_order[1:50],])
+  entropy_fstat_sce
+
+  # Plot violin plots with the subclusters on the x-axis and the expression values per cell on the y-axis
+  # We do this for the top 50 genes as identified by the fstat_norm / entropy_norm metric
+  genes_to_plot &lt;-  unique(entropy_fstat_sce$gene[topmarkers_order[1:50]])
+  
+  # only get the cells for the given cell type
+  sce_subset &lt;- sce_integrated[,sce_integrated$manual_labels_coarse == cell_type]
+  rownames(sce_subset) &lt;- rowData(sce_subset)$Symbol
+  
+  # If we change from ensemble_gene_id to gene_symbol there are some duplicates.
+  # We remove them to avoid errors with the plotting function
+  sce_subset &lt;- sce_subset[unique(rownames(sce_subset)),]
+  entropy_fstat_sce &lt;- entropy_fstat_sce[!duplicated(entropy_fstat_sce$gene),]
+  
+
+  for(i in seq_along(genes_to_plot)){
+    cat(&quot;\n\n##### &quot;, genes_to_plot[i], &quot;\n\n&quot;)
+    print(plotExpression(sce_subset,  
+                   entropy_fstat_sce$gene[entropy_fstat_sce$gene == genes_to_plot[i]],
+                   x = &quot;subcluster_id_k50&quot;, point_size=0.5))
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div id="save-files" class="section level1">
+<h1>Save Files</h1>
+<div id="save-excel" class="section level2">
+<h2>Save Excel</h2>
+<pre class="r fold-show"><code>filename &lt;- &quot;../docs/output/EDI_subclustering_markers_genes.xlsx&quot;
+saveWorkbook(wb, filename, overwrite=TRUE)</code></pre>
+</div>
+</div>
+<div id="save-sce-object" class="section level1">
+<h1>Save SCE object</h1>
+<pre class="r fold-show"><code># save main sce file and upload to iSEE
+file_path_sce &lt;- &quot;../data/EOS_Files/EDI_EOS8_sce.rds&quot;
+saveRDS(sce_integrated, file=file_path_sce)
+upload_file_to_iSEE(file_path_sce)</code></pre>
+<pre><code>Command executed: 
+
+scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/EDI_EOS8_sce.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/EDI_EOS8_sce___2022-01-31.rds</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] stringr_1.4.0               RColorBrewer_1.1-2         
+ [3] kableExtra_1.3.4            RhpcBLASctl_0.21-247.1     
+ [5] viridis_0.6.2               viridisLite_0.4.0          
+ [7] dplyr_1.0.7                 plyr_1.8.6                 
+ [9] ggrepel_0.9.1               BiocParallel_1.28.3        
+[11] pheatmap_1.0.12             ggplotify_0.1.0            
+[13] scran_1.22.1                scater_1.22.0              
+[15] ggplot2_3.3.5               scuttle_1.4.0              
+[17] SingleCellExperiment_1.16.0 SummarizedExperiment_1.24.0
+[19] Biobase_2.54.0              GenomicRanges_1.46.1       
+[21] GenomeInfoDb_1.30.0         IRanges_2.28.0             
+[23] S4Vectors_0.32.3            BiocGenerics_0.40.0        
+[25] MatrixGenerics_1.6.0        matrixStats_0.61.0         
+[27] openxlsx_4.2.5              hrbrthemes_0.8.6           
+
+loaded via a namespace (and not attached):
+  [1] ggbeeswarm_0.6.0          colorspace_2.0-2         
+  [3] ellipsis_0.3.2            rprojroot_2.0.2          
+  [5] bluster_1.4.0             XVector_0.34.0           
+  [7] BiocNeighbors_1.12.0      fs_1.5.2                 
+  [9] rstudioapi_0.13           farver_2.1.0             
+ [11] RSpectra_0.16-0           fansi_1.0.2              
+ [13] xml2_1.3.3                codetools_0.2-18         
+ [15] sparseMatrixStats_1.6.0   extrafont_0.17           
+ [17] knitr_1.37                jsonlite_1.7.3           
+ [19] workflowr_1.7.0           Rttf2pt1_1.3.8           
+ [21] cluster_2.1.2             uwot_0.1.11              
+ [23] compiler_4.1.0            httr_1.4.2               
+ [25] dqrng_0.3.0               assertthat_0.2.1         
+ [27] Matrix_1.4-0              fastmap_1.1.0            
+ [29] limma_3.50.0              later_1.3.0              
+ [31] BiocSingular_1.10.0       htmltools_0.5.2          
+ [33] tools_4.1.0               rsvd_1.0.5               
+ [35] igraph_1.2.10             gtable_0.3.0             
+ [37] glue_1.6.0                GenomeInfoDbData_1.2.7   
+ [39] Rcpp_1.0.8                jquerylib_0.1.4          
+ [41] vctrs_0.3.8               svglite_2.0.0            
+ [43] extrafontdb_1.0           DelayedMatrixStats_1.16.0
+ [45] xfun_0.29                 beachmat_2.10.0          
+ [47] rvest_1.0.2               lifecycle_1.0.1          
+ [49] irlba_2.3.5               statmod_1.4.36           
+ [51] edgeR_3.36.0              zlibbioc_1.40.0          
+ [53] scales_1.1.1              promises_1.2.0.1         
+ [55] yaml_2.2.1                gridExtra_2.3            
+ [57] gdtools_0.2.3             yulab.utils_0.0.4        
+ [59] sass_0.4.0                stringi_1.7.6            
+ [61] highr_0.9                 ScaledMatrix_1.2.0       
+ [63] zip_2.2.0                 rlang_0.4.12             
+ [65] pkgconfig_2.0.3           systemfonts_1.0.3        
+ [67] bitops_1.0-7              evaluate_0.14            
+ [69] lattice_0.20-45           purrr_0.3.4              
+ [71] labeling_0.4.2            cowplot_1.1.1            
+ [73] tidyselect_1.1.1          RcppAnnoy_0.0.19         
+ [75] magrittr_2.0.1            R6_2.5.1                 
+ [77] generics_0.1.1            metapod_1.2.0            
+ [79] DelayedArray_0.20.0       DBI_1.1.2                
+ [81] pillar_1.6.4              whisker_0.4              
+ [83] withr_2.4.3               RCurl_1.98-1.5           
+ [85] tibble_3.1.6              crayon_1.4.2             
+ [87] utf8_1.2.2                rmarkdown_2.11           
+ [89] locfit_1.5-9.4            grid_4.1.0               
+ [91] FNN_1.1.3                 git2r_0.29.0             
+ [93] webshot_0.5.2             digest_0.6.29            
+ [95] httpuv_1.6.4              gridGraphics_0.5-1       
+ [97] munsell_0.5.0             beeswarm_0.4.0           
+ [99] vipor_0.4.5               bslib_0.3.1              </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

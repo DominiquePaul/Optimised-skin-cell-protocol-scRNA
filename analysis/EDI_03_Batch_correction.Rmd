@@ -36,6 +36,7 @@ source("../code/general_purpose_code.R")
 
 ```{r load data}
 sce <- readRDS(file="../data/EOS_Files/EDI_EOS2_sce.rds")
+
 ```
 
 

@@ -367,7 +367,7 @@ div.tocify {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -376,7 +376,7 @@ div.tocify {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -385,10 +385,10 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-30
+<strong>Last updated:</strong> 2022-01-31
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -404,12 +404,12 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
@@ -476,16 +476,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -499,129 +499,64 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.RData
     Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Supple_table_1.png
     Ignored:    analysis/Unused/.DS_Store
     Ignored:    code/.DS_Store
     Ignored:    code/seeds/.DS_Store
     Ignored:    data/
     Ignored:    output/.DS_Store
+    Ignored:    output/plots/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/EDI_02_Normalisation_HVG_DimRed.Rmd
-    Untracked:  analysis/EDI_03_Batch_correction.Rmd
-    Untracked:  analysis/EDI_04_Cell_Cycle.Rmd
-    Untracked:  analysis/EDI_05_Annotation.Rmd
-    Untracked:  analysis/EDI_06_marker_genes.Rmd
-    Untracked:  analysis/EDI_07_DA.Rmd
-    Untracked:  analysis/EDI_08_Subclustering.Rmd
-    Untracked:  analysis/P2_03_Fresh_only_subclustering.Rmd
-    Untracked:  analysis/P2_03_FvC_Annotations.Rmd
-    Untracked:  analysis/P2_04_FvC_gene_expression_plot.Rmd
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-23h-45m-47s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-30-09h-31m-28s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-01h-26m-29s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-38m-30s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-11h-58m-52s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-06m-05s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-30-12h-30m-16s-out.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-err.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-out.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-err.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-out.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-err.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-out.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-30-13h-02m-39s-err.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-30-13h-02m-39s-out.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-err.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-out.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-err.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-out.txt
-    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-err.txt
-    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-out.txt
-    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-30-15h-58m-04s-err.txt
-    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-30-15h-58m-04s-out.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-err.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-out.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-err.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-out.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-err.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-out.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-30-16h-01m-54s-err.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-30-16h-01m-54s-out.txt
-    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-err.txt
-    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-out.txt
-    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-30-16h-04m-45s-err.txt
-    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-30-16h-04m-45s-out.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-err.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-out.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-err.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-out.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-err.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-out.txt
-    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-err.txt
-    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-18h-16m-26s-out.txt
-    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-err.txt
-    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-46m-01s-out.txt
-    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-err.txt
-    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-29-19h-56m-34s-out.txt
+    Untracked:  Metadata/~$cluster_annotation_map.xlsx
+    Untracked:  analysis/FVC_quick_marker.Rmd
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-out.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-err.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-out.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-err.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-out.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-err.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-out.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-err.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-out.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-err.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-out.txt
+    Untracked:  output/plots/Suppl_Figure5.png
+    Untracked:  output/plots/Suppl_table_1.csv
+    Untracked:  output/plots/Suppl_table_1.png
+    Untracked:  output/plots/Suppl_table_2.csv
+    Untracked:  output/plots/Suppl_table_2.png
+    Untracked:  output/plots/old/
+    Untracked:  output/plots/overview_figure_fvc.png
+    Untracked:  output/plots_31Jan/
 
 Unstaged changes:
-    Modified:   .gitignore
+    Modified:   Metadata/cluster_annotation_map.xlsx
     Modified:   analysis/EDI_01_Loading_and_Preprocessing.Rmd
+    Modified:   analysis/EDI_03_Batch_correction.Rmd
+    Modified:   analysis/EDI_05_Annotation.Rmd
     Modified:   analysis/P2_01_data_comparison.Rmd
-    Deleted:    analysis/Protocol paper/.Rprofile
-    Deleted:    analysis/Protocol paper/.gitattributes
-    Deleted:    analysis/Protocol paper/.gitignore
-    Deleted:    analysis/Protocol paper/Protocol paper.Rproj
-    Deleted:    analysis/Protocol paper/README.md
-    Deleted:    analysis/Protocol paper/_workflowr.yml
-    Deleted:    analysis/Protocol paper/analysis/_site.yml
-    Deleted:    analysis/Protocol paper/analysis/about.Rmd
-    Deleted:    analysis/Protocol paper/analysis/index.Rmd
-    Deleted:    analysis/Protocol paper/analysis/license.Rmd
-    Deleted:    analysis/Protocol paper/code/README.md
-    Deleted:    analysis/Protocol paper/docs/.nojekyll
-    Deleted:    analysis/Protocol paper/output/README.md
-    Deleted:    analysis/Unused/EDI_02_Normalisation_HVG_DimRed.Rmd
-    Deleted:    analysis/Unused/EDI_03_Batch_correction.Rmd
-    Deleted:    analysis/Unused/EDI_04_Cell_Cycle.Rmd
-    Deleted:    analysis/Unused/EDI_05_Annotation.Rmd
-    Deleted:    analysis/Unused/EDI_06_marker_genes.Rmd
-    Deleted:    analysis/Unused/EDI_07_DA.Rmd
-    Deleted:    analysis/Unused/EDI_08_Subclustering.Rmd
-    Deleted:    analysis/Unused/P2_03_Subclustering.Rmd
-    Deleted:    analysis/Unused/P2_04_Annotated_Fresh_v_Culture.Rmd
-    Deleted:    analysis/Unused/P2_05_gene_expression_plot.Rmd
+    Modified:   analysis/P2_03_Fresh_only_subclustering.Rmd
+    Modified:   analysis/P2_03_FvC_Annotations.Rmd
     Modified:   analysis/admin.rmd
-    Modified:   analysis/index.Rmd
-    Deleted:    code/CF_readin_with_UMIs.Rmd
-    Deleted:    code/code_snippets.Rmd
+    Modified:   analysis/plots.Rmd
     Modified:   code/general_purpose_code.R
-    Deleted:    code/rename_protocols.r
-    Deleted:    code/test_muscat.Rmd
-    Deleted:    code/utils_muscat.r
+    Deleted:    output/plots/figure3.png
+    Deleted:    output/plots/figure3_supplemental.png
+    Deleted:    output/plots/figure4.png
+    Deleted:    output/plots/figure5.png
+    Deleted:    output/plots/figure6.png
 
 </code></pre>
 <p>
@@ -634,9 +569,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/EDI_06_marker_genes.Rmd</code>) and HTML (<code>docs/EDI_06_marker_genes.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/analysis/EDI_06_marker_genes.Rmd" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Added new clustering after meeting 29-Jan-2022
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/DominiquePaul/Skin-cell-protocol-scRNA/239a294b77f8417881912b9058abc84dad2da0ac/docs/EDI_06_marker_genes.html" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Added new clustering after meeting 29-Jan-2022
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -656,6 +651,43 @@ colLabels(sce) &lt;- sce$kgraph_clusters_walktrap_harmony</code></pre>
   labs(title=&quot;UMAP plot coloured by clusters&quot;) +
   theme_ipsum_rc()</code></pre>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Visualisation%20of%20clusters-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Visualisation-of-clusters-1">
+Past versions of “Visualisation of clusters-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-Visualisation-of-clusters-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Visualisation of clusters-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cat(&quot;\n\n## UMAP coloured by Protocol \n\n&quot;)</code></pre>
 </div>
 <div id="umap-coloured-by-protocol" class="section level2">
@@ -667,6 +699,43 @@ colLabels(sce) &lt;- sce$kgraph_clusters_walktrap_harmony</code></pre>
 <pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
 which will replace the existing scale.</code></pre>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Visualisation%20of%20clusters-2.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Visualisation-of-clusters-2">
+Past versions of “Visualisation of clusters-2.png”
+</button>
+</p>
+<div id="fig-no-spaces-Visualisation-of-clusters-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Visualisation of clusters-2.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>wb &lt;- createWorkbook()
 addWorksheet(wb, &quot;Intro&quot;)
 writeData(wb, &quot;Intro&quot;, data.frame(&quot;Marker genes obtained using only the highly-variable genes&quot;), colNames=FALSE)</code></pre>
@@ -708,62 +777,617 @@ for (i in 1:length(unique(colLabels(sce_marker_genes)))){
 <div id="cluster-1" class="section level3">
 <h3>Cluster 1</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-1">
+Past versions of “Marker Genes upregulated t-test-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-2" class="section level3">
 <h3>Cluster 2</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-2">
+Past versions of “Marker Genes upregulated t-test-2.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-2.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-3" class="section level3">
 <h3>Cluster 3</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-3">
+Past versions of “Marker Genes upregulated t-test-3.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-3.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-4" class="section level3">
 <h3>Cluster 4</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-4">
+Past versions of “Marker Genes upregulated t-test-4.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-4.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-5" class="section level3">
 <h3>Cluster 5</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-5">
+Past versions of “Marker Genes upregulated t-test-5.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-5.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-6" class="section level3">
 <h3>Cluster 6</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-6">
+Past versions of “Marker Genes upregulated t-test-6.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-6.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-7" class="section level3">
 <h3>Cluster 7</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-7">
+Past versions of “Marker Genes upregulated t-test-7.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-7.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-8" class="section level3">
 <h3>Cluster 8</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-8">
+Past versions of “Marker Genes upregulated t-test-8.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-8.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-9" class="section level3">
 <h3>Cluster 9</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-9">
+Past versions of “Marker Genes upregulated t-test-9.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-9.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-10" class="section level3">
 <h3>Cluster 10</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-10">
+Past versions of “Marker Genes upregulated t-test-10.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-10.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-11" class="section level3">
 <h3>Cluster 11</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-11">
+Past versions of “Marker Genes upregulated t-test-11.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-11.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-12" class="section level3">
 <h3>Cluster 12</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-12">
+Past versions of “Marker Genes upregulated t-test-12.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-12.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-13" class="section level3">
 <h3>Cluster 13</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-13">
+Past versions of “Marker Genes upregulated t-test-13.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-13.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-14" class="section level3">
 <h3>Cluster 14</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-14">
+Past versions of “Marker Genes upregulated t-test-14.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-14.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-15" class="section level3">
 <h3>Cluster 15</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/Marker%20Genes%20upregulated%20t-test-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Marker-Genes-upregulated-t-test-15">
+Past versions of “Marker Genes upregulated t-test-15.png”
+</button>
+</p>
+<div id="fig-no-spaces-Marker-Genes-upregulated-t-test-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/Marker Genes upregulated t-test-15.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="heatmap-for-t-test-results" class="section level2">
@@ -801,6 +1425,43 @@ as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations,
           panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
           panel.grid.minor=element_blank(),plot.background=element_blank())</code></pre>
 <p><img src="figure/EDI_06_marker_genes.Rmd/pheatmap%20for%20t-test%20results-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pheatmap-for-t-test-results-1">
+Past versions of “pheatmap for t-test results-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-pheatmap-for-t-test-results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/pheatmap for t-test results-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="marker-genes-for-each-cluster-using-the-wilcox" class="section level2 tabset">
 <h2 class="tabset">Marker genes for each cluster using the Wilcox</h2>
@@ -834,62 +1495,617 @@ for (i in 1:length(unique(colLabels(sce_marker_genes)))){
 <div id="cluster-1-1" class="section level3">
 <h3>Cluster 1</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-1">
+Past versions of “marker genes wilcox upregulated-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-2-1" class="section level3">
 <h3>Cluster 2</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-2">
+Past versions of “marker genes wilcox upregulated-2.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-2.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-3-1" class="section level3">
 <h3>Cluster 3</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-3">
+Past versions of “marker genes wilcox upregulated-3.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-3.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-4-1" class="section level3">
 <h3>Cluster 4</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-4">
+Past versions of “marker genes wilcox upregulated-4.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-4.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-5-1" class="section level3">
 <h3>Cluster 5</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-5">
+Past versions of “marker genes wilcox upregulated-5.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-5.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-6-1" class="section level3">
 <h3>Cluster 6</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-6">
+Past versions of “marker genes wilcox upregulated-6.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-6.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-7-1" class="section level3">
 <h3>Cluster 7</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-7">
+Past versions of “marker genes wilcox upregulated-7.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-7.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-8-1" class="section level3">
 <h3>Cluster 8</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-8">
+Past versions of “marker genes wilcox upregulated-8.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-8.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-9-1" class="section level3">
 <h3>Cluster 9</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-9">
+Past versions of “marker genes wilcox upregulated-9.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-9.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-10-1" class="section level3">
 <h3>Cluster 10</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-10">
+Past versions of “marker genes wilcox upregulated-10.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-10.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-11-1" class="section level3">
 <h3>Cluster 11</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-11">
+Past versions of “marker genes wilcox upregulated-11.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-11.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-12-1" class="section level3">
 <h3>Cluster 12</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-12">
+Past versions of “marker genes wilcox upregulated-12.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-12.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-13-1" class="section level3">
 <h3>Cluster 13</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-13">
+Past versions of “marker genes wilcox upregulated-13.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-13.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-14-1" class="section level3">
 <h3>Cluster 14</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-14">
+Past versions of “marker genes wilcox upregulated-14.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-14.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cluster-15-1" class="section level3">
 <h3>Cluster 15</h3>
 <p><img src="figure/EDI_06_marker_genes.Rmd/marker%20genes%20wilcox%20upregulated-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-marker-genes-wilcox-upregulated-15">
+Past versions of “marker genes wilcox upregulated-15.png”
+</button>
+</p>
+<div id="fig-no-spaces-marker-genes-wilcox-upregulated-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/marker genes wilcox upregulated-15.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="heatmap-for-wilcoxon-test-results" class="section level2">
@@ -927,6 +2143,43 @@ as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations,
           panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
           panel.grid.minor=element_blank(),plot.background=element_blank())</code></pre>
 <p><img src="figure/EDI_06_marker_genes.Rmd/pheatmap%20for%20wilcox%20results-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-pheatmap-for-wilcox-results-1">
+Past versions of “pheatmap for wilcox results-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-pheatmap-for-wilcox-results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_06_marker_genes.Rmd/pheatmap for wilcox results-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>filename_marker_results &lt;- &quot;../docs/output/EDI_marker_results_hvg_genes.xlsx&quot;
 saveWorkbook(wb, file = filename_marker_results, overwrite = TRUE)</code></pre>
 <br>
@@ -967,56 +2220,56 @@ other attached packages:
 [23] MatrixGenerics_1.6.0           matrixStats_0.61.0            
 
 loaded via a namespace (and not attached):
- [1] ggbeeswarm_0.6.0          colorspace_2.0-2         
- [3] ellipsis_0.3.2            rprojroot_2.0.2          
- [5] bluster_1.4.0             XVector_0.34.0           
- [7] BiocNeighbors_1.12.0      fs_1.5.2                 
- [9] rstudioapi_0.13           farver_2.1.0             
-[11] ggrepel_0.9.1             fansi_1.0.2              
-[13] sparseMatrixStats_1.6.0   extrafont_0.17           
-[15] knitr_1.37                jsonlite_1.7.3           
-[17] workflowr_1.7.0           Rttf2pt1_1.3.8           
-[19] cluster_2.1.2             compiler_4.1.0           
-[21] httr_1.4.2                dqrng_0.3.0              
-[23] assertthat_0.2.1          Matrix_1.4-0             
-[25] fastmap_1.1.0             lazyeval_0.2.2           
-[27] limma_3.50.0              cli_3.1.0                
-[29] later_1.3.0               BiocSingular_1.10.0      
-[31] htmltools_0.5.2           tools_4.1.0              
-[33] rsvd_1.0.5                igraph_1.2.10            
-[35] gtable_0.3.0              glue_1.6.0               
-[37] GenomeInfoDbData_1.2.7    Rcpp_1.0.8               
-[39] jquerylib_0.1.4           vctrs_0.3.8              
-[41] extrafontdb_1.0           DelayedMatrixStats_1.16.0
-[43] xfun_0.29                 beachmat_2.10.0          
-[45] lifecycle_1.0.1           irlba_2.3.5              
-[47] statmod_1.4.36            edgeR_3.36.0             
-[49] zlibbioc_1.40.0           scales_1.1.1             
-[51] promises_1.2.0.1          parallel_4.1.0           
-[53] yaml_2.2.1                gridExtra_2.3            
-[55] yulab.utils_0.0.4         gdtools_0.2.3            
-[57] sass_0.4.0                stringi_1.7.6            
-[59] highr_0.9                 ScaledMatrix_1.2.0       
-[61] zip_2.2.0                 BiocParallel_1.28.3      
-[63] rlang_0.4.12              pkgconfig_2.0.3          
-[65] systemfonts_1.0.3         bitops_1.0-7             
-[67] evaluate_0.14             lattice_0.20-45          
-[69] purrr_0.3.4               labeling_0.4.2           
-[71] htmlwidgets_1.5.4         cowplot_1.1.1            
-[73] tidyselect_1.1.1          magrittr_2.0.1           
-[75] R6_2.5.1                  generics_0.1.1           
-[77] metapod_1.2.0             DelayedArray_0.20.0      
-[79] DBI_1.1.2                 pillar_1.6.4             
-[81] withr_2.4.3               RCurl_1.98-1.5           
-[83] tibble_3.1.6              crayon_1.4.2             
-[85] utf8_1.2.2                plotly_4.10.0            
-[87] rmarkdown_2.11            locfit_1.5-9.4           
-[89] grid_4.1.0                data.table_1.14.2        
-[91] git2r_0.29.0              digest_0.6.29            
-[93] tidyr_1.1.4               httpuv_1.6.4             
-[95] gridGraphics_0.5-1        munsell_0.5.0            
-[97] beeswarm_0.4.0            vipor_0.4.5              
-[99] bslib_0.3.1              </code></pre>
+  [1] ggbeeswarm_0.6.0          colorspace_2.0-2         
+  [3] ellipsis_0.3.2            rprojroot_2.0.2          
+  [5] bluster_1.4.0             XVector_0.34.0           
+  [7] BiocNeighbors_1.12.0      fs_1.5.2                 
+  [9] rstudioapi_0.13           farver_2.1.0             
+ [11] ggrepel_0.9.1             fansi_1.0.2              
+ [13] sparseMatrixStats_1.6.0   extrafont_0.17           
+ [15] knitr_1.37                jsonlite_1.7.3           
+ [17] workflowr_1.7.0           Rttf2pt1_1.3.8           
+ [19] cluster_2.1.2             compiler_4.1.0           
+ [21] httr_1.4.2                dqrng_0.3.0              
+ [23] assertthat_0.2.1          Matrix_1.4-0             
+ [25] fastmap_1.1.0             lazyeval_0.2.2           
+ [27] limma_3.50.0              cli_3.1.0                
+ [29] later_1.3.0               BiocSingular_1.10.0      
+ [31] htmltools_0.5.2           tools_4.1.0              
+ [33] rsvd_1.0.5                igraph_1.2.10            
+ [35] gtable_0.3.0              glue_1.6.0               
+ [37] GenomeInfoDbData_1.2.7    Rcpp_1.0.8               
+ [39] jquerylib_0.1.4           vctrs_0.3.8              
+ [41] extrafontdb_1.0           DelayedMatrixStats_1.16.0
+ [43] xfun_0.29                 beachmat_2.10.0          
+ [45] lifecycle_1.0.1           irlba_2.3.5              
+ [47] statmod_1.4.36            edgeR_3.36.0             
+ [49] zlibbioc_1.40.0           scales_1.1.1             
+ [51] promises_1.2.0.1          parallel_4.1.0           
+ [53] yaml_2.2.1                gridExtra_2.3            
+ [55] yulab.utils_0.0.4         gdtools_0.2.3            
+ [57] sass_0.4.0                stringi_1.7.6            
+ [59] highr_0.9                 ScaledMatrix_1.2.0       
+ [61] zip_2.2.0                 BiocParallel_1.28.3      
+ [63] rlang_0.4.12              pkgconfig_2.0.3          
+ [65] systemfonts_1.0.3         bitops_1.0-7             
+ [67] evaluate_0.14             lattice_0.20-45          
+ [69] purrr_0.3.4               labeling_0.4.2           
+ [71] htmlwidgets_1.5.4         cowplot_1.1.1            
+ [73] tidyselect_1.1.1          magrittr_2.0.1           
+ [75] R6_2.5.1                  generics_0.1.1           
+ [77] metapod_1.2.0             DelayedArray_0.20.0      
+ [79] DBI_1.1.2                 pillar_1.6.4             
+ [81] whisker_0.4               withr_2.4.3              
+ [83] RCurl_1.98-1.5            tibble_3.1.6             
+ [85] crayon_1.4.2              utf8_1.2.2               
+ [87] plotly_4.10.0             rmarkdown_2.11           
+ [89] locfit_1.5-9.4            grid_4.1.0               
+ [91] data.table_1.14.2         git2r_0.29.0             
+ [93] digest_0.6.29             tidyr_1.1.4              
+ [95] httpuv_1.6.4              gridGraphics_0.5-1       
+ [97] munsell_0.5.0             beeswarm_0.4.0           
+ [99] vipor_0.4.5               bslib_0.3.1              </code></pre>
 </div>
 </div>
 </div>

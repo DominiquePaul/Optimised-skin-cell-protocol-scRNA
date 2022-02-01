@@ -327,9 +327,9 @@ plot_mitochondrial_qc_charts(sce_fresh, "Fresh samples only")
 plot_mitochondrial_qc_charts(sce_all, "Fresh and cultured samples")
 ```
 
-## Library size vs. mito share by sample
+## Library size vs. mito share by sample {.tabset}
 
-```{r lib size vs. mito, fig.width=16, fig.height=10}
+```{r lib size vs. mito, fig.width=16, fig.height=10, results="asis"}
 cat(paste0("\n\n### Fresh samples only \n\n"))
 ggplot(as.data.frame(colData(sce_fresh)),
        aes(x=total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
@@ -359,9 +359,9 @@ ggplot(as.data.frame(colData(sce_all)),
 ```
 
 
-## Mito. percent vs. genes by sample
+## Mito. percent vs. genes by sample {.tabset}
 
-```{r, fig.width=16, fig.height=10}
+```{r, fig.width=16, fig.height=10, results="asis"}
 cat(paste0("\n\n### Fresh samples only \n\n"))
 ggplot(as.data.frame(colData(sce_fresh)),
          aes(x=subsets_Mt_percent,
@@ -858,10 +858,9 @@ sce_all[, !sce_all$to_be_dropped] %>%
   
 ```
 
-## By protocol for fresh and cultured samples {.tabset}
+## By protocol for fresh and cultured samples
 
-```{r geme counts by protocol, fig.width=16, fig.height=10, results="asis"}
-cat("\n\n### After QC\n\n")
+```{r geme counts by protocol, fig.width=16, fig.height=10}
 sce_all[, !sce_all$to_be_dropped] %>% 
   ggplot() +
   theme_ipsum_rc() +
@@ -1230,11 +1229,11 @@ plotReducedDim(sce_all_filtered, "UMAP", point_size=1,
 ```
 
 
-## Show cluster to sample mapping
+## Show cluster to sample mapping {.tabset}
 
 The table below shows the mappings from unsupervised clustering to each individual sample. The clusters refer to the clustering performed on the dataset with all samples merged.
 
-```{r cluster to sample assignment, fig.height=12, fig.width=7}
+```{r cluster to sample assignment, fig.width=5, fig.height=7, results="asis"}
 plot_cluster_to_sample_mapping <- function(sce, sce_name){
   
   cat(paste0("\n\n### ", sce_name, " \n\n"))
@@ -1545,65 +1544,64 @@ cat("\n\n### Fresh and cultured samples")
 sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
 ```
 
-## Raynolds {.tabset}
+<!-- ## Raynolds {.tabset} -->
 
-```{r labels Raynolds, fig.width=16, fig.height=10, results="asis"}
-csv_name <- "../Metadata/cell_annotation_markers/Markers_Raynolds.csv"
-group_colname <- "Cell.Type"
-gene_colname <- "Gene"
-annotations_name <- "labels_raynolds"
+<!-- ```{r labels Raynolds, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../Metadata/cell_annotation_markers/Markers_Raynolds.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Gene" -->
+<!-- annotations_name <- "labels_raynolds" -->
 
-cat("\n\n### Fresh samples only")
-sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
+<!-- cat("\n\n### Fresh samples only") -->
+<!-- sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP")) -->
 
-cat("\n\n### Fresh and cultured samples")
-sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
-```
-
-
-## He et al. {.tabset}
-
-```{r He et al., fig.width=16, fig.height=10, results="asis"}
-csv_name <- "../Metadata/cell_annotation_markers/Markers_He.csv"
-group_colname <- "cluster_fine"
-gene_colname <- "gene"
-annotations_name <- "labels_he_et_al_fine"
-
-cat("\n\n### Fresh samples only")
-sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
-
-cat("\n\n### Fresh and cultured samples")
-sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
-```
-
-## Tabib {.tabset}
-
-```{r Tabib, fig.width=16, fig.height=10, results="asis"}
-csv_name <- "../Metadata/cell_annotation_markers/Markers_Tabib.csv"
-group_colname <- "Cell.Type"
-gene_colname <- "Marker"
-annotations_name <- "labels_tabib"
-
-cat("\n\n### Fresh samples only")
-sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
-
-cat("\n\n### Fresh and cultured samples")
-sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
-```
+<!-- cat("\n\n### Fresh and cultured samples") -->
+<!-- sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###") -->
+<!-- ``` -->
 
 
-## Xue {.tabset}
+<!-- ## He et al. {.tabset} -->
 
-```{r Xue, fig.width=16, fig.height=10, results="asis"}
-csv_name <- "../Metadata/cell_annotation_markers/Markers_Xue.csv"
-group_colname <- "Cell.Type"
-gene_colname <- "Marker"
-annotations_name <- "labels_xue"
+<!-- ```{r He et al., fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../Metadata/cell_annotation_markers/Markers_He.csv" -->
+<!-- group_colname <- "cluster_fine" -->
+<!-- gene_colname <- "gene" -->
+<!-- annotations_name <- "labels_he_et_al_fine" -->
 
-sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"))
-sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###")
-```
+<!-- cat("\n\n### Fresh samples only") -->
+<!-- sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP")) -->
 
+<!-- cat("\n\n### Fresh and cultured samples") -->
+<!-- sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###") -->
+<!-- ``` -->
+
+<!-- ## Tabib {.tabset} -->
+
+<!-- ```{r Tabib, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../Metadata/cell_annotation_markers/Markers_Tabib.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Marker" -->
+<!-- annotations_name <- "labels_tabib" -->
+
+<!-- cat("\n\n### Fresh samples only") -->
+<!-- sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP")) -->
+
+<!-- cat("\n\n### Fresh and cultured samples") -->
+<!-- sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###") -->
+<!-- ``` -->
+
+
+<!-- ## Xue {.tabset} -->
+
+<!-- ```{r Xue, fig.width=16, fig.height=10, results="asis"} -->
+<!-- csv_name <- "../Metadata/cell_annotation_markers/Markers_Xue.csv" -->
+<!-- group_colname <- "Cell.Type" -->
+<!-- gene_colname <- "Marker" -->
+<!-- annotations_name <- "labels_xue" -->
+
+<!-- sce_fresh_filtered <- annotate_with_other_labels(sce_fresh_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP")) -->
+<!-- sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group_colname, gene_colname, annotations_name, visualisations=c("Barchart", "UMAP"), tabset="###") -->
+<!-- ``` -->
 
 
 # Save SCE objects and upload them to iSEE
@@ -1612,11 +1610,17 @@ sce_all_filtered <- annotate_with_other_labels(sce_all_filtered, csv_name, group
 # Save all objects as one rds
 
 # Fresh samples only
+file_path_fresh_unfiltered <- "../data/EOS_files/Fresh_EOS1_sce_unfiltered.rds"
+saveRDS(sce_fresh, file=file_path_fresh_unfiltered)
+
 file_path_fresh <- "../data/EOS_files/Fresh_EOS1_sce.rds"
 saveRDS(sce_fresh_filtered, file=file_path_fresh)
 upload_file_to_iSEE(file_path_fresh)
 
 # Fresh and cultured samples
+file_path_all_unfiltered <- "../data/EOS_files/FvC_EOS1_sce_unfiltered.rds"
+saveRDS(sce_all, file=file_path_all_unfiltered)
+
 file_path_all <- "../data/EOS_files/FvC_EOS1_sce.rds"
 saveRDS(sce_all_filtered, file=file_path_all)
 upload_file_to_iSEE(file_path_all)

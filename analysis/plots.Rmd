@@ -1,27 +1,115 @@
 ---
 title: "Plots"
 author: "Dominique Paul"
-date: "1/30/2022"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
 ```{r setup, include=TRUE}
 knitr::opts_chunk$set(echo = TRUE)
 
+suppressMessages({
+  library(ggplotify)
+  library(plyr)
+  library(dplyr)
+  library(scater)
+  library(viridis)
+  library(ggpubr)
+  library(magrittr)
+  library(pheatmap)
+  library(hrbrthemes)
+  library(kableExtra)
+  library(tidyr)
+  library(tidySingleCellExperiment)
+  })
+
 # load utils functions
 source("../code/general_purpose_code.R")
+
+# Where to save plots
+folder_path <- "../output/plots_31Jan/"
 ```
 
 # Load data
 
 ```{r}
 sce_integrated <- readRDS(file="../data/EOS_Files/EDI_EOS8_sce.rds")
-sce_fresh <- readRDS(file="../data/EOS_Files/EDI_EOS4_sce.rds")
-sce_fvc <- 
+sce_fresh <- readRDS(file="../data/EOS_Files/Fresh_EOS3_sce.rds")
+sce_fvc <- readRDS(file="../data/EOS_Files/FvC_EOS3_sce.rds")
+
+# Load unfiltered data
+sce_edi_unfiltered <- readRDS("../data/EOS_Files/EDI_EOS1_sce_unfiltered.rds")
+sce_fvc_unfiltered <- readRDS("../data/EOS_Files/FvC_EOS1_sce_unfiltered.rds")
+```
+
+```{r helper functions}
+normalise_by_row <- function(sce_){
+  t(apply(sce_, 1, function(x)((x-min(x))/(max(x)-min(x)))))
+}
+
+plot_aggregated_expr <- function(sce, genes, group_var, title, short = FALSE, normalise=TRUE){
+  if( short ){
+    rownames(sce) <- gsub("^.*\\.","",rownames(sce))
+  }
+  logNormExpres <- as.data.frame(as.matrix(t(logcounts(sce)[genes,]))) %>% 
+    dplyr::mutate(cluster= colData(sce)[,group_var]) %>%
+    group_by(cluster) %>% 
+    summarise_all(mean)
+  logNormExpresMa <- logNormExpres %>% 
+    set_rownames(logNormExpres$cluster) %>% 
+    dplyr::select(-cluster) %>% 
+    as.matrix() %>% 
+    t()
+  if (normalise) logNormExpresMa <- normalise_by_row(logNormExpresMa)
+  rownames(logNormExpresMa) <- gsub("^.*\\.","",rownames(logNormExpresMa))
+  # If no column names are set
+  if (is.null(colnames(logNormExpresMa))) colnames(logNormExpresMa) <- 1:dim(logNormExpresMa)[2]
+  return(pheatmap(logNormExpresMa, scale="row" ,treeheight_row = 0, 
+           cluster_cols = F, cluster_rows = F, 
+           color = colorRampPalette(c("#2166AC", "#F7F7F7", "#B2182B"))(50), 
+           main=title, cellwidth=25, cellheight=20,
+           display_numbers = round(logNormExpresMa,2), silent=TRUE
+           ))
+}
+```
+
+# Hypothesised mast cells
+
+````{r, fig.width=10, fig.height=7}
+sce <- readRDS(file="../data/EOS_Files/EDI_EOS3_sce.rds")
+rownames(sce) <- rowData(sce)$Symbol
+
+
+# define unique cluster for hypothesised mast cells
+
+# reduced dimension UMAP (RDU)
+RDU <- reducedDim(sce, "UMAP")
+
+cluster_labels <- as.numeric(sce$kgraph_clusters_walktrap_harmony)
+cluster_labels[6 < RDU[,1] & RDU[,1] < 7 & 5 < RDU[,2] & RDU[,2] < 6] <- 16
+sce$kgraph_clusters_walktrap_harmony <- as.factor(cluster_labels)
+  
+# Plot UMAP
+plotReducedDim(sce, "UMAP", colour_by="kgraph_clusters_walktrap_harmony", text_by="kgraph_clusters_walktrap_harmony")
+
+
+
+
+#
+gene_names <- c("CTSG", "HPGD", "TPSAB1", "ALOX5", "TPSB2") 
+gene_names <- gene_names[gene_names %in% rownames(sce)]
+
+for (gene in gene_names){
+  colData(sce)[,paste0("gene_", gene)] <- logcounts(sce)[gene,]
+}
+
+
+
+print(plot_aggregated_expr(sce, gene_names, "kgraph_clusters_walktrap_harmony", title="Average expression", normalise=F))
 ```
 
 
-# Figure 2
+# Figure 2 (Fresh only)
 
 * A: UMAP (Fresh only)
 * B: Heatmap (Fresh only)
@@ -34,8 +122,8 @@ sce_fvc <-
 #########
 
 Fig2a <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
-  labs(title="Manual labels for high-level clusters",
-       subtitle = "UMAP of fresh samples combined") +
+  labs(title="Cell types",
+       subtitle = "Fresh samples") +
   theme_ipsum_rc() +
   get_cell_colours(levels(sce_fresh$manual_labels_coarse)) +
   theme(legend.position="bottom",
@@ -44,6 +132,8 @@ Fig2a <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", tex
                             nrow=3,
                             byrow=TRUE, 
                             override.aes = list(size=4, shape = 15, alpha = 1)))
+Fig2a
+
 #########
 ### B ###
 #########
@@ -61,6 +151,7 @@ column_annotations <- data.frame("cell_name"=rownames(colData(sce_fresh)), "Cell
 
 # the logcounts which we need for the pheatmap function
 sce_plot <- logcounts(sce_fresh[genes, rownames(column_annotations)])
+sce_plot <- normalise_by_row(sce_plot)
 
 # Use own colours for the column annotations
 colours <- get_cell_colours(unique(heatmap_marker_genes$Group), type="raw")
@@ -68,7 +159,7 @@ annotation_colours <- list("Cell_type"=colours)
 
 
 # create the plot. We convert to ggplot to take advantage of some of the display functions
-fig4 <- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+Fig2b <- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
          show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
          color=viridis(50))) +
   theme_ipsum_rc() +
@@ -85,7 +176,7 @@ fig4 <- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotati
         panel.grid.minor=element_blank(),
         plot.background=element_blank()) +
   labs(title="Selected marker genes for cell types")
-fig4
+Fig2b
 
 
 #########
@@ -99,11 +190,12 @@ Fig2c <- as.data.frame(colData(sce_fresh)) %>%
    geom_bar(colour="black", stat="identity") +
    theme_ipsum_rc() +
    labs(title="Annotated cell type counts",
-        subtitle="For both samples combined",
+        subtitle="Fresh samples",
         x="", y="Number of cells") +
    theme(axis.text.x=element_text(angle=50, hjust=1),) +
-  guides(fill=guide_legend(title="Cell type")) 
-
+  guides(fill="none") +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse), type="fill")
+Fig2c
 
 #########
 ### D ###
@@ -126,6 +218,29 @@ get_annotated_subcluster <- function(cell_type){
 }
 
 Fig2d <- get_annotated_subcluster("Macrophages/DC")
+Fig2d
+```
+
+## Output
+
+```{r, fig.width=20, fig.height=26}
+figure2 <- ggarrange(
+  Fig2a,
+  ggarrange(Fig2b, 
+            ggarrange(Fig2c, Fig2d, ncol = 1, labels = c("C", "D"), font.label = list(size = 30)),
+ncol = 2),
+  ncol = 1, nrow = 2,labels = c("A", "B"), font.label = list(size = 30)
+)
+
+suppressWarnings(figure2)
+
+scale <- 0.8
+ggsave(paste0(folder_path, "figure2.png"),
+       plot=figure2,
+       width=20*scale,
+       height=24*scale,
+       units="in",
+       bg="white")
 ```
 
 
@@ -138,8 +253,8 @@ Fig2d <- get_annotated_subcluster("Macrophages/DC")
 
 ```{r Figure 3}
 # A: Fibroblasts
-fig3a <- get_annotated_subcluster("Fibroblasts") +
-  ylim(c(3,7))
+Fig3a <- get_annotated_subcluster("Fibroblasts") 
+  # ylim(c(3,7))
 
 
 
@@ -158,6 +273,7 @@ fibro_sce <- sce_fresh[,colData(sce_fresh)$manual_labels_coarse == "Fibroblasts"
 genes <- c(papillary_genes, reticular_genes)
 
 gene_counts <- logcounts(fibro_sce)[genes,]
+gene_counts <- normalise_by_row(gene_counts)
 
 res <- lapply(unique(fibro_sce$subcluster_id_k50), function(fibro_type){
   mask <- fibro_sce$subcluster_id_k50 == fibro_type
@@ -167,32 +283,97 @@ res <- lapply(unique(fibro_sce$subcluster_id_k50), function(fibro_type){
 plt1 <- ggplot(res[res$genes %in% papillary_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
   geom_bar(stat="identity", position="dodge") +
   theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
-  labs(title="Papillary fibroblasts",
-       y="Average of logcounts",
-       x="")
+  labs(title="Marker genes for papillary fibroblasts",
+       subtitle="Mean of normalised logcounts",
+       x="",
+       y="") +
+  theme_ipsum_rc()
 
 plt2 <- ggplot(res[res$genes %in% reticular_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
   geom_bar(stat="identity", position="dodge") +
-  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
-  labs(title="Reticular fibroblasts",
-       y="Average of logcounts",
-       x="")
+  theme(axis.text.x = element_text(angle = 45, hjust=1), axis.ticks.x=element_blank()) +
+  labs(title="Marker genes for reticular fibroblasts",
+       subtitle="Mean of normalised logcounts",
+       x="",
+       y="") +
+  theme_ipsum_rc()
 
-gridExtra::grid.arrange(plt1, plt2)
+sfig6 <- ggarrange(plt1, plt2, nrow=2)
 
 
+
+
+# average of logcounts for papillary fibroblast genes
+fibro_sce$papillary_gene_avg <- colMeans(logcounts(fibro_sce)[papillary_genes,])
+# average of logcounts for reticular fibroblast genes
+fibro_sce$reticular_gene_avg <- colMeans(logcounts(fibro_sce)[reticular_genes,])
+
+plt1 <- plotColData(fibro_sce, x="subcluster_id_k50", y="papillary_gene_avg", colour_by="subcluster_id_k50") +
+  labs(title="Papillary Fibroblasts",
+       subtitle="Average gene expression for a selection of genes",
+       y="",
+       x="") +
+  ylim(0,3.25) +
+  theme_ipsum_rc() +
+  theme(legend.position="none")
+
+
+plt2 <- plotColData(fibro_sce, x="subcluster_id_k50", y="reticular_gene_avg", colour_by="subcluster_id_k50") +
+  labs(title="Reticular Fibroblasts",
+       subtitle="Average gene expression for a selection of genes",
+       y="",
+       x="") +
+  ylim(0,3.25) +
+  theme_ipsum_rc() +
+  theme(legend.position="none")
+
+Fig3b <- ggarrange(plt1, plt2, nrow=2)
 
 # C: Keratinocytes
-fig3c <- get_annotated_subcluster("Keratinocytes") +
-  xlim(c(-11,-7)) +
-  ylim(c(-5,1))
-
-
+Fig3c <- get_annotated_subcluster("Keratinocytes")
+  # xlim(c(-11,-7)) +
+  # ylim(c(-5,1))
 
 # D: Keratinocytes
-fig3d <- get_annotated_subcluster("Pericytes/VSMC") +
-  xlim(c(-7,-3)) +
-  ylim(c(12.5,15.5))
+Fig3d <- get_annotated_subcluster("Pericytes/VSMC")
+  # xlim(c(-7,-3)) +
+  # ylim(c(12.5,15.5))
+```
+
+## Output
+
+```{r, fig.width=20, fig.height=20}
+figure3 <- ggarrange(
+  Fig3a,
+  Fig3b,
+  Fig3c,
+  Fig3d,
+  ncol = 2, nrow = 2,labels = "AUTO", font.label = list(size = 30)
+)
+
+suppressWarnings(figure3)
+
+scale <- 0.8
+ggsave(paste0(folder_path, "figure3.png"),
+       plot=figure3,
+       width=20*scale,
+       height=20*scale,
+       units="in",
+       bg="white")
+```
+# Suppl. Figure 5
+
+```{r, fig.width=10, fig.height=10}
+suppressWarnings(sfig6)
+
+scale <- 0.9
+ggsave(paste0(folder_path, "Suppl_figure6.png"),
+       plot=sfig6,
+       width=12*scale,
+       height=12*scale,
+       units="in",
+       bg="white")
+
 ```
 
 # Figure 5 (FvC)
@@ -202,18 +383,933 @@ fig3d <- get_annotated_subcluster("Pericytes/VSMC") +
 * C: Heatmap of currently "special" dot plot (FvC)
 * D: Heatmap of Fibroblasts only with the genes: COL1A1, COL1A2, DCN, COL6A1, COL6A2,MMP1, MMP3, IGFBP3, CXCL3, IL6, TNFAIP6, CXCL2 (FvC)
 
+## A and B 
 
 ```{r Figure 5}
+# A
+Fig5a <- plotReducedDim(sce_fvc, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
+  labs(title="Manual labels for high-level clusters",
+       subtitle = "Fresh and cultured samples") +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce_fvc$manual_labels_coarse)) +
+  theme(legend.position="right",
+        panel.spacing = unit(5, "mm")) +
+  guides(color=guide_legend(title="",
+                            # nrow=3,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))
+Fig5a
+
+# B
+Fig5b <- plotReducedDim(sce_fvc, "UMAP", colour_by="Protocol", point_size=0.25) +
+  labs(title="Protocol",
+       subtitle = "Fresh and cultured samples") +
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce_fvc$Protocol)) +
+  theme(legend.position="right",
+        panel.spacing = unit(5, "mm")) +
+  guides(color=guide_legend(title="",
+                            # nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))
+Fig5b
 ```
 
-# Figure 6: Overview of results from EDI filtering
+## Figure 5c
 
-[In other file]
+```{r, fig.width=14, fig.height=5}
+# Read in a list with marker genes
+marker_overview <- read.xlsx(xlsxFile="../Metadata/Special_plot_markers.xlsx")
+
+genes_df <- marker_overview %>%
+  dplyr::rename(cell_type=Cell.type, gene=Marker)
+
+cat("Genes not found in data: ")
+cat(genes_df$gene[!genes_df$gene %in% rownames(sce_fvc)])
+genes_df <- genes_df[genes_df$gene %in% rownames(sce_fvc),]
+
+normalit<-function(m){
+   (m - min(m))/(max(m)-min(m))
+}
+
+# normalit2<-function(m){
+#    (m /(max(m)))
+# }
+
+
+
+# for cell.types in cell.types
+#  get mean expression of genes by sample
+# considering only the cells in the specific cell types
+heatmap_values <- lapply(unique(genes_df$cell_type), function(cell_type){
+  sce_subset <- sce_fvc[,sce_fvc$manual_labels_coarse == cell_type]
+  genes <- genes_df[genes_df$cell_type == cell_type, "gene"]
+  # log_counts <- normalise_by_row(logcounts(sce_fvc)[genes,])
+  log_counts <- logcounts(sce_subset)[genes,]
+  
+  logNormExpres <- as.data.frame(as.matrix(t(log_counts))) %>% 
+    dplyr::mutate(Protocol=colData(sce_subset)[,"Protocol"], Sample=colData(sce_subset)[,"Sample"]) %>%
+    group_by(Protocol, Sample) %>% 
+    summarise_all(mean) %>%
+    ungroup() %>%
+    # normalise by gene
+    mutate_each_(normalit, vars=3:dim(.)[2]) %>%
+    # Transform into log
+    tidyr::gather(key="Gene", "Value", -c(Protocol, Sample)) %>%
+    mutate("Cell.type"=cell_type)
+  
+  logNormExpres
+}) %>% purrr::reduce(rbind)
+
+# Shorten some names
+replacements <- list(c("Vascular endothelial", "Vasc. Endo."),
+                  c("Lymphatic endothelial", "Lym. Endo."),
+                  c("Sweat gland cells", "Sweat gland"),
+                  c("Dendritic cells", "Dendritic"),
+                  c("Schwann cells", "Schwann"))
+for (idx in 1:length(replacements)){
+  old <- replacements[[idx]][1]
+  new <- replacements[[idx]][2]
+  heatmap_values$Cell.type <- sub(old, new, heatmap_values$Cell.type) 
+}
+
+# factorise
+heatmap_values$Cell.type <- factor(heatmap_values$Cell.type, levels=unique(heatmap_values$Cell.type))
+
+# plot
+Fig5c <- ggplot(heatmap_values, aes(x=Gene, y=Sample, fill=Value), otherInfo( Protocol)) +
+  geom_tile() +
+  facet_grid(Protocol~Cell.type, scales="free", space="free") +
+  theme_ipsum_rc() +
+  theme(axis.text.x = element_text(angle = 90, hjust=1), 
+        axis.ticks.x=element_blank(),
+        panel.spacing = unit(3, "mm"),
+        strip.text.y = element_blank(),
+        strip.text.x = element_text(size=11)
+        ) +
+  labs(title="Comparison of selected genes",
+       subtitle="Normalised by column",
+       y="", x="") +
+  scale_fill_viridis() +
+  guides(fill="none") 
+Fig5c
+```
+
+## Figure 5d
+
+```{r fvc special heatmap}
+genes <- c("COL1A1", "COL1A2", "DCN", "COL6A1", "COL6A2", "MMP1", "MMP3", "IGFBP3", "CXCL3", "IL6", "TNFAIP6", "CXCL2")
+
+sce_fvc_fibroblasts <- sce_fvc[,sce_fvc$manual_labels_coarse == "Fibroblasts"]
+
+# the cells which we want to display, ordered by cell type
+column_annotations <- data.frame("cell_name"=rownames (colData(sce_fvc_fibroblasts)), 
+                                 "Sample"=factor(colData(sce_fvc_fibroblasts)[,"Sample"])) %>%
+    # filter(Cell_type!="NA") %>%
+    # arrange(Cell_type) %>%
+    tibble::column_to_rownames(var="cell_name")
+
+# the logcounts which we need for the pheatmap function
+sce_plot <- logcounts(sce_fvc_fibroblasts[genes, rownames(column_annotations)])
+sce_plot <- normalise_by_row(sce_plot)
+
+# Use own colours for the column annotations
+colours <- get_sample_colours(unique(sce_fvc_fibroblasts$Sample), type="raw")
+annotation_colours <- list("Sample"=colours)
+
+
+# create the plot. We convert to ggplot to take advantage of some of the display functions
+Fig5d <- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
+         color=viridis(50))) +
+  theme_ipsum_rc() +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), 
+        legend.position="none",
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        plot.background=element_blank()) +
+  labs(title="Selected genes for Fibroblasts")
+```
+
+## Output
+
+```{r figure5 one figure, fig.width=20, fig.height=26}
+figure5 <- ggarrange(
+  Fig5a,
+  Fig5b,
+  Fig5c,
+  Fig5d,
+  #ggarrange(Fig5c, Fig5d, labels=c("C", "D"), font.label = list(size = 30), ncol = 2),
+  ncol = 1,labels = c("AUTO"), font.label = list(size = 30),
+  heights = c(1,1,0.8,0.8)
+)
+
+suppressWarnings(figure5)
+
+scale <- 0.9
+ggsave(paste0(folder_path, "figure5.png"),
+       plot=figure5,
+       width=20*scale,
+       height=26*scale,
+       units="in",
+       bg="white")
+```
+
+# Figure 6: 
+
+## Panel A
+
+```{r}
+# A1
+fig6a1 <- colData(sce_edi_unfiltered) %>% 
+  as.data.frame() %>%
+  ggplot(aes(x=log_total, y=subsets_genes_detected, color=to_be_dropped)) +
+  geom_point(size=0.25) +
+  labs(y="",
+       x="Library size (log10)",
+       title="Library size vs. number of non-mitochondrial genes",
+       subtitle="Cells dropped are coloured in red") +
+  scale_y_log10() +
+  geom_density_2d() +
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_rc() +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +
+  guides(color=guide_legend(title="Dropped")) +
+  scale_colour_manual(values=c("#DB1E0D", "#2065AE"))
+
+# A2
+fig6a2 <- ggplot(colData(sce_edi_unfiltered) %>% as.data.frame,
+       aes(x=log_total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(title="Library size vs. number of non-mitochondrial genes",
+       subtitle="Colour indicates mito. percentage of library size",
+       x="Library size (log10)",
+       y="") +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_rc() +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +# Left margin) +
+  guides(color=guide_colourbar(title="% mito.")) 
+```
+
+## Panel B
+
+```{r}
+sample_to_protocol <- colData(sce_integrated) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Protocol, Sample) %>%
+  dplyr::summarise()
+
+cc_sample <- sce_integrated %>% 
+  nest(data=-Sample) %>% 
+  mutate(n_cells = purrr::map_dbl(data, ~ dim(.x)[2]),
+         sum_of_genes = purrr::map_dbl(data, ~ sum(colData(.x)$detected)),
+         average_n_genes = purrr::map_dbl(data, ~ mean(colData(.x)$detected)),
+         mean_n_nonzero_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 0)),
+         mean_n_10cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 10)),
+         mean_n_1perc_cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > ceiling(dim(.x)[2]/100)))) %>%
+  left_join(sample_to_protocol, by="Sample")
+
+
+fig6b <- ggpubr::ggarrange(
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = average_n_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(title = "", x="", fill="Mean genes\nper cell", y="Cells") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45, hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = mean_n_1perc_cells_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(title = "", x="", 
+         fill="Num. genes\nin at least \n1% of cells",  y="Cells") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45,hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x=element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  nrow = 2)
+```
+
+## Panel C
+
+```{r 6 panel c}
+fig6c1 <- sce_integrated %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol))
+
+fig6c2 <- sce_integrated %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm")) +
+  guides(fill=guide_legend(ncol=1, )) +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_integrated)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_integrated)$Sample))
+
+```
+
+## Panel D
+
+```{r}
+fig6d1 <- sce_integrated %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Protocol, color=Protocol), alpha=0.3) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol)) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol), type="fill")
+
+fig6d2 <- sce_integrated %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm")) +
+  guides(fill=guide_legend(ncol=1)) +
+  labs(title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_sample_colours(levels(colData(sce_integrated)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_integrated)$Sample))
+```
+
+## Output
+
+```{r Figure 6, fig.width=20, fig.height=24}
+Fig6 <- ggpubr::ggarrange(
+  ggpubr::ggarrange(fig6a1,fig6a2, ncol = 2),
+  fig6b,
+  ggpubr::ggarrange(fig6c1, fig6c2, ncol=2),
+  ggpubr::ggarrange(fig6d1, fig6d2, ncol=2),
+  ncol = 1, nrow = 4,labels = "AUTO", font.label = list(size = 30)
+)
+
+suppressWarnings(Fig6)
+
+ggsave(paste0(folder_path, "figure6.png"),
+       plot=Fig6,
+       width=20*0.9,
+       height=24*0.9,
+       units="in",
+       bg="white")
+```
+
 
 # Figure 7
 
 * UMAP by cell type (Integrated data)
 * UMAP by protocol (Integrated data)
+* Boxplot of all cell types with one scale
 * Differential abundance (Integrated data)
 
+```{r figure 7, fig.width=10, fig.height=7}
+# A
+Fig7a <- plotReducedDim(sce_integrated, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
+  labs(title="Cell types",
+       subtitle = "Integrated datasets") +
+  theme_ipsum_rc() +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse)) +
+  theme(legend.position="right",
+        panel.spacing = unit(5, "mm")) +
+  guides(color=guide_legend(title="",
+                            # nrow=3,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))
 
+# B
+Fig7b <- plotReducedDim(sce_integrated, "UMAP", colour_by="Protocol", point_size=0.25) +
+  labs(title="Protocol",
+       subtitle = "Integrated datasets") +
+  theme_ipsum_rc() +
+  get_protocol_colours(levels(sce_integrated$Protocol)) +
+  theme(legend.position="right",
+        panel.spacing = unit(5, "mm")) +
+  guides(color=guide_legend(title="",
+                            # nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))
+
+# C
+Fig7c <- as.data.frame(colData(sce_integrated)) %>%
+  dplyr::group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>%
+  mutate(perc=round(counts/sum(counts), 2)) %>%
+  ggplot(aes(x=1, y=perc, fill=manual_labels_coarse)) +
+  geom_bar(colour="black", stat="identity") +
+  theme_ipsum_rc() +
+  labs(title="Relative frequencies of cell types",
+        subtitle="Integrated data",
+        x="", y="Number of cells") +
+  theme(axis.text.x=element_blank()) +
+  guides(fill=guide_legend(title="Cell type"))
+
+# D
+
+count_table <- table(sce_integrated$manual_labels_coarse, sce_integrated$Sample)
+lib_sizes <- colSums(count_table)
+
+sample_protocol_mapping <- as.data.frame(colData(sce_integrated)) %>%
+  select(Protocol, Sample) %>%
+  unique() %>%
+  tibble::remove_rownames() %>%
+  tibble::column_to_rownames('Sample')
+
+Fig7d <- purrr::map(unique(sce_integrated$manual_labels_coarse), ~ {
+  tibble::tibble(counts = count_table[.x,],
+                 abundances = counts/lib_sizes,
+                 Protocol= sample_protocol_mapping[levels(sce$Sample), "Protocol"],
+                 Cluster = .x)}) %>% 
+  purrr::reduce(rbind) %>% 
+  dplyr::arrange("Cluster") %>%
+  ggplot() + 
+  # geom_boxplot(aes(y=abundances,x=Protocol, color=Protocol)) +
+  geom_jitter(aes(y=abundances,x=Protocol, color=Protocol), size = 2) +
+  theme_ipsum_rc() +
+  theme(axis.text.x = element_text(angle=45, hjust = 1), strip.text.x = element_text(family = "Helvetica",face = "bold"),
+        legend.position="none") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title="Relative cell type abundance", x="", y="") +
+  facet_wrap(~Cluster, scales = "free_y",ncol = 5, nrow = 2) +
+  get_protocol_colours(levels(sce$Protocol))
+
+Fig7a
+Fig7b
+Fig7c
+Fig7d
+```
+
+## Output
+
+```{r figure7 one figure, fig.width=20, fig.height=26}
+figure7 <- ggarrange(
+  ggarrange(ggarrange(Fig7a, Fig7b, labels = c("A", "B"), font.label = list(size = 30), nrow=2), 
+            Fig7c, labels = c("", "C"), font.label = list(size = 30), ncol=2, widths=c(2,1)),
+  Fig7d,
+  ncol = 1,labels = c("", "D"), font.label = list(size = 30), heights=c(2,1)
+)
+
+suppressWarnings(figure7)
+
+scale <- 0.9
+ggsave(paste0(folder_path, "figure7.png"),
+       plot=figure7,
+       width=20*scale,
+       height=26*scale,
+       units="in",
+       bg="white")
+```
+
+# Suppl. Figure 3 (version 1)
+
+```{r suppl. figure 3}
+subclustering_labels <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - subclusters")
+
+# sort subclustering_labels alphabetically by the names
+heatmap_marker_genes_subclusters <- subclustering_labels %>% 
+  arrange(Label)
+
+plot_heatmap <- function(cell_type, normalise=TRUE){
+  
+  sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+  # the genes which we want to display
+  genes <- heatmap_marker_genes_subclusters %>%
+    filter(Cell.type==cell_type) %>%
+    pull(Gene)
+  
+  # check whether genes are in rownames
+  genes_not_found <- genes[genes %in% rownames(sce_subset) == FALSE]
+  if (length(genes_not_found) > 0) cat(paste0("\nGenes not found for cell type ", cell_type, ": ", genes_not_found))
+  
+  genes <- genes[genes %in% rownames(sce_subset)] 
+  
+  # the cells which we want to display, ordered by subcluster
+  column_annotations <- data.frame(row.names=colnames(sce_subset), "Subcluster"=sce_subset$subcluster_names) %>%
+    arrange(Subcluster)
+  
+  # the logcounts which we need for the pheatmap function
+  sce_plot <- logcounts(sce_subset[genes, rownames(column_annotations)])
+  # normalise by row
+  sce_plot <- normalise_by_row(sce_plot)
+  
+  # Use own colours for the column annotations
+  colours <- get_unnamed_colours(unique(column_annotations$Subcluster), type="raw")
+  annotation_colours <- list("Subcluster"=colours)
+
+  #plt <- grid.grabExpr(draw(hmap, annotation_legend_side="bottom", heatmap_legend_side="right")) +
+  plt <- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
+                  show_rownames=TRUE, show_colnames=FALSE, color=viridis(50), 
+                  annotation_col=column_annotations, annotation_colors=annotation_colours)) +
+    theme_ipsum_rc()+ 
+    theme(axis.line=element_blank(),axis.text.x=element_blank(),
+            axis.text.y=element_blank(),axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),legend.position="none",
+            panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),plot.background=element_blank()) +
+    labs(title=cell_type)
+  
+  plt
+}
+
+
+sfig3a <- plot_heatmap("Macrophages/DC")
+sfig3b <- plot_heatmap("Fibroblasts")
+sfig3c <- plot_heatmap("Keratinocytes")
+sfig3d <- plot_heatmap("Pericytes/VSMC")
+```
+
+
+## Output
+
+```{r suppl. figure3 one figure, fig.width=20, fig.height=26}
+
+SFig3 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  sfig3a, 
+  sfig3b,
+  sfig3c,
+  sfig3d,
+  ncol = 1,labels = c("AUTO"), font.label = list(size = 30)
+)))
+
+suppressMessages(suppressWarnings(SFig3))
+
+scale <- 0.9
+ggsave(paste0(folder_path, "Suppl_Figure3.png"),
+       plot=SFig3,
+       width=20*scale,
+       height=26*scale,
+       units="in",
+       bg="white")
+```
+
+
+# Suppl. Figure 3 (version 2)
+
+```{r suppl. figure 3, fig.width=14, fig.height=16}
+subclustering_labels <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - subclusters")
+
+relevant_cell_types <- c("Macrophages/DC", "Fibroblasts", "Keratinocytes", "Pericytes/VSMC")
+sce_fresh_heatmap <- sce_fresh
+
+# Get the list into the right order
+heatmap_marker_genes_subclusters <- lapply(relevant_cell_types, function(cell_type){
+  subclustering_labels %>% 
+    filter(Cell.type == cell_type) %>%
+    arrange(Label)
+}) %>% purrr::reduce(rbind)
+
+# the genes which we want to display
+genes <- heatmap_marker_genes_subclusters %>%
+  pull(Gene)
+# check whether genes are in rownames
+genes_not_found <- genes[genes %in% rownames(sce_fresh_heatmap) == FALSE]
+if (length(genes_not_found) > 0) cat(paste0("\nGenes not found for cell type ", cell_type, ": ", genes_not_found))
+
+genes <- genes[genes %in% rownames(sce_fresh_heatmap)] 
+
+idx <- seq(1, dim(sce_fresh_heatmap)[2], 10)
+sce_fresh_heatmap <- sce_fresh_heatmap[, idx] 
+
+# the cells which we want to display, ordered by subcluster
+column_annotations <- data.frame(row.names=colnames(sce_fresh_heatmap), 
+                                 "Subcluster"=sce_fresh_heatmap$subcluster_names,
+                                 "Cell"=sce_fresh_heatmap$manual_labels_coarse) %>%
+  mutate(Cell = case_when(Cell %in% relevant_cell_types == FALSE ~ "Other", 
+                          TRUE ~ as.character(Cell))) %>%
+  mutate(Subcluster = case_when(Cell== "Other" ~ "Other", 
+                          TRUE ~ as.character(Subcluster))) %>%
+  arrange(factor(Cell, levels = c(relevant_cell_types,"Other")), Subcluster) %>%
+  mutate(Cell=factor(Cell, levels = c(relevant_cell_types,"Other")),
+         Subcluster=factor(Subcluster, levels=unique(Subcluster)))
+
+# the logcounts which we need for the pheatmap function
+sce_plot <- logcounts(sce_fresh_heatmap[genes, rownames(column_annotations)])
+# normalise by row
+sce_plot <- normalise_by_row(sce_plot)
+
+# Use own colours for the column annotations
+# colours <- get_unnamed_colours(unique(column_annotations$Subcluster), type="raw")
+# annotation_colours <- list("Subcluster"=colours)
+
+#plt <- grid.grabExpr(draw(hmap, annotation_legend_side="bottom", heatmap_legend_side="right")) +
+SFig3_v2 <- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
+                show_rownames=TRUE, show_colnames=FALSE, color=viridis(50), 
+                annotation_col=column_annotations #, annotation_colors=annotation_colours
+                )) +
+  theme_ipsum_rc()+ 
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),legend.position="none",
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank())
+
+
+suppressMessages(suppressWarnings(SFig3_v2))
+
+ggsave(paste0(folder_path, "Suppl_Figure3_v2.png"),
+       plot=SFig3_v2,
+       width=18*scale,
+       height=18*scale,
+       units="in",
+       bg="white")
+```
+
+
+
+# Suppl. Figure 4
+
+## Panel A
+
+```{r}
+# Expression values vs genes
+cat("\n\n### Expression values vs. number of genes \n\n")
+figA1 <- colData(sce_fvc_unfiltered) %>% 
+  as.data.frame() %>%
+  ggplot(aes(x=log_total, y=subsets_genes_detected, color=to_be_dropped)) +
+  geom_point(size=0.25) +
+  labs(y="",
+       x="Library size (log10)",
+       title="Library size vs. number of non-mitochondrial genes",
+       subtitle="Cells dropped are coloured in red") +
+  scale_y_log10() +
+  geom_density_2d() +
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_rc() +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +
+  guides(color=guide_legend(title="Dropped")) +
+  scale_colour_manual(values=c("#DB1E0D", "#2065AE"))
+
+figA2 <- ggplot(colData(sce_fvc_unfiltered) %>% as.data.frame,
+       aes(x=log_total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(title="Library size vs. number of non-mitochondrial genes",
+       subtitle="Colour indicates mito. percentage of library size",
+       x="Library size (log10)",
+       y="") +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_rc() +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +# Left margin) +
+  guides(color=guide_colourbar(title="% mito.")) 
+
+suppressWarnings(figA1)
+suppressWarnings(figA2)
+```
+
+
+## Panel B
+
+```{r}
+sample_to_protocol <- colData(sce_fvc) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Protocol, Sample) %>%
+  dplyr::summarise()
+
+cc_sample <- sce_fvc %>% 
+  nest(data=-Sample) %>% 
+  mutate(n_cells = purrr::map_dbl(data, ~ dim(.x)[2]),
+         sum_of_genes = purrr::map_dbl(data, ~ sum(colData(.x)$detected)),
+         average_n_genes = purrr::map_dbl(data, ~ mean(colData(.x)$detected)),
+         mean_n_nonzero_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 0)),
+         mean_n_10cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 10)),
+         mean_n_1perc_cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > ceiling(dim(.x)[2]/100)))) %>%
+  left_join(sample_to_protocol, by="Sample")
+
+
+figB <- ggpubr::ggarrange(
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = average_n_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(title = "", x="", fill="Mean genes\nper cell", y="Cells") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45, hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = mean_n_1perc_cells_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(title = "", x="", 
+         fill="Num. genes\nin at least \n1% of cells",  y="Cells") +
+    theme_ipsum_rc() +
+    theme(axis.text.x = element_text(angle = 45,hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x=element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  nrow = 2)
+print(figB)
+```
+
+## Panel C
+
+```{r log10 counts by protocol}
+# Log-total count density by protocol
+figC1 <- sce_fvc %>% 
+  ggplot() +
+  theme_ipsum_rc() +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol))
+figC1
+
+# Log-total counts density by sample and grouped by protocol
+figC2 <- sce_fvc %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm")) +
+  guides(fill=guide_legend(ncol=1, )) +
+  labs(title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_fvc)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_fvc)$Sample))
+figC2
+```
+
+## Panel D
+
+```{r panel D, fig.width=14, fig.height=10}
+# Log-number of genes density by protocol
+figD1 <- sce_fvc %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Protocol, color=Protocol), alpha=0.3) +
+  theme_ipsum_rc() +
+  labs(title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol)) +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol), type="fill")
+
+# Log-number of genes density by sample and grouped by protocol
+figD2 <- sce_fvc %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_rc() +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm")) +
+  guides(fill=guide_legend(ncol=1)) +
+  labs(title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_sample_colours(levels(colData(sce_fvc)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_fvc)$Sample))
+
+figD1
+figD2
+```
+
+## Output
+
+```{r supplementary figure 4, fig.width=20, fig.height=26}
+Suppl_Figure4 <- ggpubr::ggarrange(
+  ggpubr::ggarrange(figA1,figA2, ncol = 2),
+  figB,
+  ggpubr::ggarrange(figC1, figC2, ncol=2),
+  ggpubr::ggarrange(figD1, figD2, ncol=2),
+  ncol = 1, nrow = 4,labels = "AUTO", font.label = list(size = 30)
+)
+
+suppressWarnings(Suppl_Figure4)
+
+ggsave(paste0(folder_path, "Suppl_Figure4.png"),
+       plot=Suppl_Figure4,
+       width=20*0.9,
+       height=26*0.9,
+       units="in",
+       bg="white")
+```
+
+
+
+# Suppl. Figure 5
+
+* Barchart of cells dropped in Fresh and culture
+* Barchart of cells dropped and kept in integrated analysis
+
+```{r Suppl. figure 5}
+# A
+plt_dataA <- colData(sce_edi_unfiltered) %>%
+  as.data.frame() %>%
+  group_by(Protocol, Sample, to_be_dropped) %>%
+  summarise(counts=n())
+
+sfig5a <- ggplot(plt_dataA) +
+  geom_bar(aes(x=Sample, y=counts, fill=to_be_dropped), stat="identity") +
+  get_boolean_colour_scale(type="fill") +
+  theme_ipsum_rc() +
+  facet_grid(.~Protocol, scales="free_x", space="free") +
+  guides(fill=guide_legend(title="Cells dropped")) +
+  labs(title="Cells dropped by quality control",
+       x="", y="Cells") +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+# B
+sce_fvc_unfiltered$to_be_dropped <- factor(sce_fvc_unfiltered$to_be_dropped, levels=c(TRUE, FALSE))
+
+plt_dataB <- colData(sce_fvc_unfiltered) %>%
+  as.data.frame() %>%
+  group_by(Protocol, Sample, to_be_dropped) %>%
+  summarise(counts=n())
+
+sfig5b <- ggplot(plt_dataB) +
+  geom_bar(aes(x=Sample, y=counts, fill=to_be_dropped), stat="identity") +
+  get_boolean_colour_scale(type="fill") +
+  theme_ipsum_rc() +
+  facet_grid(.~Protocol, scales="free_x", space="free") +
+  guides(fill=guide_legend(title="Cells dropped")) +
+  labs(title="Cells dropped by quality control",
+       x="", y="Cells")
+  # theme(axis.text.x=element_text(angle=45, hjust=1))
+  
+```
+
+## Output
+
+```{r suppl. figure5 one figure, fig.width=10, fig.height=13}
+
+SFig5 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  sfig5a, 
+  sfig5b,
+  ncol = 1,labels = c("AUTO"), font.label = list(size = 15)
+)))
+
+suppressMessages(suppressWarnings(SFig5))
+
+scale <- 0.5
+ggsave(paste0(folder_path, "Suppl_Figure5.png"),
+       plot=SFig5,
+       width=20*scale,
+       height=26*scale,
+       units="in",
+       bg="white")
+```
+
+# Suppl. Table 1
+
+```{r}
+# Table 1
+
+# colnames(colData(sce_edi_unfiltered))
+integrated_data_mean <- colData(sce_integrated) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Sample) %>%
+  summarise_at(vars(sum, detected), mean) %>%
+  rename(Library_Size_mean=sum, Num_Genes_mean=detected)
+
+data_integrated <- colData(sce_integrated) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Sample) %>%
+  summarise_at(vars(sum, detected), median) %>%
+  rename(Library_Size_median=sum, Num_Genes_median=detected) %>%
+  left_join(integrated_data_mean)
+
+# Save as image
+kable(data_integrated, digits=0) %>%
+  kable_styling() %>%
+  save_kable(file = paste0(folder_path, "Suppl_table_1.png"))
+
+# Write as csv
+write.csv(data_integrated, paste0(folder_path, "Suppl_table_1.csv"))
+
+
+# Table 2
+
+# colnames(colData(sce_edi_unfiltered))
+fvc_data_mean <- colData(sce_fvc) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Sample) %>%
+  summarise_at(vars(sum, detected), mean) %>%
+  rename(Library_Size_mean=sum, Num_Genes_mean=detected)
+ 
+data_fvc <- colData(sce_fvc) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Sample) %>%
+  summarise_at(vars(sum, detected), median) %>%
+  rename(Library_Size_median=sum, Num_Genes_median=detected) %>%
+  left_join(fvc_data_mean)
+
+# Save as image
+kable(data_fvc, digits=0) %>%
+  kable_styling() %>%
+  save_kable(file = paste0(folder_path, "Suppl_table_2.png"))
+
+# Write as csv
+write.csv(data_fvc, paste0(folder_path, "Suppl_table_2.csv"))
+
+```

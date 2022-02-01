@@ -27,7 +27,7 @@ source("../code/general_purpose_code.R")
 We load the data for the two 'Fresh' samples and four SSc skin samples that we have processed in the previous script.  All six samples were jointly batch-corrected.
 
 ```{r load-data}
-sce <- readRDS(file="../data/EOS_files/FvC_EOS3.rds")
+sce <- readRDS(file="../data/EOS_files/FvC_EOS3_sce.rds")
 
 sce$manual_labels_coarse <- sub("Vascular endothelial cells", "Vascular endothelial", sce$manual_labels_coarse)
 sce$manual_labels_coarse <- factor(sce$manual_labels_coarse)

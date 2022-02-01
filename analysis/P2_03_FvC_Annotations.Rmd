@@ -35,7 +35,7 @@ source("../code/general_purpose_code.R")
 We load the data for the two 'Fresh' samples and four SSc skin samples that we have processed in the previous script.  All six samples were jointly batch-corrected.
 
 ```{r load-data}
-sce <- readRDS(file="../data/EOS_files/FvC_EOS2.rds")
+sce <- readRDS(file="../data/EOS_files/FvC_EOS2_sce.rds")
 ```
 
 
@@ -46,6 +46,30 @@ cluster_annotation_mapping <- read.xlsx("../metadata/cluster_annotation_map.xlsx
 kableExtra::kable(cluster_annotation_mapping)
 
 sce$manual_labels_coarse <- mapvalues(sce$label, cluster_annotation_mapping$Cluster.ID, cluster_annotation_mapping$Annotation)
+```
+
+# Manually split cluster
+
+```{r split cluster}
+umap_values <- reducedDim(sce, "UMAP")
+mask_location <- as.vector((-4.8 < umap_values[,1]) & (umap_values[,1] < -3) & (-1 < umap_values[,2]) & (umap_values[,2] < 1.4))
+  
+mask_fibroblasts <- as.vector(mask_location & logcounts(sce)["DCN",] > 3)
+mask_pericytes <- as.vector(mask_location & logcounts(sce)["DCN",] < 3)
+
+# qplot(logcounts(sce[,mask_location])["DCN",], geom="histogram") +
+  # geom_vline(xintercept=3)
+
+# plotReducedDim(sce, "UMAP", colour_by="label", text_by="label") +
+#   geom_vline(xintercept=-4.8) +
+#   geom_vline(xintercept=-3) +
+#   geom_hline(yintercept=-1) +
+#   geom_hline(yintercept=1.4)
+
+new_values <- as.vector(sce$manual_labels_coarse)
+new_values[mask_fibroblasts] <- "Fibroblasts"
+new_values[mask_pericytes] <- "Pericytes/VSMC"
+sce$manual_labels_coarse <- factor(new_values)
 ```
 
 # UMAPs coloured by cluster and cell type group {.tabset}
@@ -77,6 +101,8 @@ fig9a1 <- plotReducedDim(sce, "UMAP", colour_by="manual_labels_coarse", text_by=
                             #nrow=1,
                             byrow=TRUE, 
                             override.aes = list(size=4, shape = 15, alpha = 1)))
+  # xlim(c(-4.8, -3)) +
+  # ylim(c(-1, 1.4))
 fig9a1
 
 fig9a2 <- plotReducedDim(sce, "UMAP", colour_by="Protocol", point_size=0.25) +
@@ -429,7 +455,7 @@ ggsave(paste0(folder_path, "FVC_supplemental.png"),
 # Save SCE object
 
 ```{r save sce object, class.source="fold-show"}
-file_path <- "../data/EOS_files/FvC_EOS3.rds"
+file_path <- "../data/EOS_files/FvC_EOS3_sce.rds"
 saveRDS(sce, file=file_path)
 upload_file_to_iSEE(file_path)
 ```

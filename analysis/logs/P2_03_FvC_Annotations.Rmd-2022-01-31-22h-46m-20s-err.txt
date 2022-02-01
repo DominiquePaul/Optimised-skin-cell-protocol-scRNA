@@ -1,0 +1,2 @@
+Error in as.vector(sce_fresh$manual_labels_coarse) : 
+  object 'sce_fresh' not found

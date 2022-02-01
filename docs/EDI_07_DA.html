@@ -367,7 +367,7 @@ div.tocify {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -376,7 +376,7 @@ div.tocify {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -385,10 +385,10 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-29
+<strong>Last updated:</strong> 2022-01-31
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -404,12 +404,12 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
@@ -476,16 +476,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree1923ae36314462857191f55817eed51512a6c060targetblank1923ae3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/1923ae36314462857191f55817eed51512a6c060" target="_blank">1923ae3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -499,83 +499,66 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.RData
     Ignored:    analysis/.Rhistory
-    Ignored:    analysis/Protocol paper/.DS_Store
-    Ignored:    analysis/Protocol paper/data/
+    Ignored:    analysis/Supple_table_1.png
     Ignored:    analysis/Unused/.DS_Store
-    Ignored:    analysis/figure/
     Ignored:    code/.DS_Store
     Ignored:    code/seeds/.DS_Store
     Ignored:    data/
     Ignored:    output/.DS_Store
+    Ignored:    output/plots/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/EDI_02_Normalisation_HVG_DimRed.Rmd
-    Untracked:  analysis/EDI_03_Batch_correction.Rmd
-    Untracked:  analysis/EDI_04_Cell_Cycle.Rmd
-    Untracked:  analysis/EDI_05_Annotation.Rmd
-    Untracked:  analysis/EDI_06_marker_genes.Rmd
-    Untracked:  analysis/EDI_07_DA.Rmd
-    Untracked:  analysis/EDI_08_Subclustering.Rmd
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-17h-59m-25s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-20h-11m-16s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-28-22h-42m-55s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-29m-36s-out.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-err.txt
-    Untracked:  analysis/logs/EDI_01_Loading_and_Preprocessing.Rmd-2022-01-29-08h-43m-28s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-16m-12s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-36m-32s-out.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-err.txt
-    Untracked:  analysis/logs/EDI_02_Normalisation_HVG_DimRed.Rmd-2022-01-29-11h-42m-03s-out.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-err.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-45m-25s-out.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-err.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-12h-56m-47s-out.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-err.txt
-    Untracked:  analysis/logs/EDI_03_Batch_correction.Rmd-2022-01-29-15h-44m-12s-out.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-err.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-09m-03s-out.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-err.txt
-    Untracked:  analysis/logs/EDI_03_Cell_Cycle.Rmd-2022-01-29-12h-39m-55s-out.txt
-    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-err.txt
-    Untracked:  analysis/logs/EDI_04_Cell_Cycle.Rmd-2022-01-29-15h-17m-36s-out.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-err.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-21m-59s-out.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-err.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-44m-29s-out.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-err.txt
-    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-29-15h-45m-42s-out.txt
-    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-err.txt
-    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-29-15h-50m-44s-out.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-err.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-15h-53m-12s-out.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-err.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-16h-48m-47s-out.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-err.txt
-    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-29-18h-15m-08s-out.txt
+    Untracked:  Metadata/~$cluster_annotation_map.xlsx
+    Untracked:  analysis/FVC_quick_marker.Rmd
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-out.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-err.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-31-20h-43m-32s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-31-20h-43m-32s-out.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-err.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-out.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-err.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-out.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-err.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-out.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-err.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-out.txt
+    Untracked:  output/plots/Suppl_Figure5.png
+    Untracked:  output/plots/Suppl_table_1.csv
+    Untracked:  output/plots/Suppl_table_1.png
+    Untracked:  output/plots/Suppl_table_2.csv
+    Untracked:  output/plots/Suppl_table_2.png
+    Untracked:  output/plots/old/
+    Untracked:  output/plots/overview_figure_fvc.png
+    Untracked:  output/plots_31Jan/
 
 Unstaged changes:
-    Modified:   .gitignore
+    Modified:   Metadata/cluster_annotation_map.xlsx
     Modified:   analysis/EDI_01_Loading_and_Preprocessing.Rmd
-    Deleted:    analysis/Unused/EDI_02_Normalisation_HVG_DimRed.Rmd
-    Deleted:    analysis/Unused/EDI_03_Batch_correction.Rmd
-    Deleted:    analysis/Unused/EDI_04_Cell_Cycle.Rmd
-    Deleted:    analysis/Unused/EDI_05_Annotation.Rmd
-    Deleted:    analysis/Unused/EDI_06_marker_genes.Rmd
-    Deleted:    analysis/Unused/EDI_07_DA.Rmd
-    Deleted:    analysis/Unused/EDI_08_Subclustering.Rmd
+    Modified:   analysis/EDI_03_Batch_correction.Rmd
+    Modified:   analysis/EDI_05_Annotation.Rmd
+    Modified:   analysis/P2_01_data_comparison.Rmd
+    Modified:   analysis/P2_03_Fresh_only_subclustering.Rmd
+    Modified:   analysis/P2_03_FvC_Annotations.Rmd
     Modified:   analysis/admin.rmd
-    Deleted:    code/CF_readin_with_UMIs.Rmd
-    Deleted:    code/code_snippets.Rmd
+    Modified:   analysis/plots.Rmd
     Modified:   code/general_purpose_code.R
-    Deleted:    code/rename_protocols.r
-    Deleted:    code/test_muscat.Rmd
-    Deleted:    code/utils_muscat.r
+    Deleted:    output/plots/figure3.png
+    Deleted:    output/plots/figure3_supplemental.png
+    Deleted:    output/plots/figure4.png
+    Deleted:    output/plots/figure5.png
+    Deleted:    output/plots/figure6.png
 
 </code></pre>
 <p>
@@ -588,9 +571,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/EDI_07_DA.Rmd</code>) and HTML (<code>docs/EDI_07_DA.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/analysis/EDI_07_DA.Rmd" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Added new clustering after meeting 29-Jan-2022
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/DominiquePaul/Skin-cell-protocol-scRNA/239a294b77f8417881912b9058abc84dad2da0ac/docs/EDI_07_DA.html" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Added new clustering after meeting 29-Jan-2022
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -622,8 +665,8 @@ y.ab &lt;- DGEList(abundances, samples=extra.info, group=factor(extra.info[[test
 keep &lt;- filterByExpr(y.ab, group=factor(y.ab$samples[[test_col]]))
 y.ab &lt;- y.ab[keep,]
 summary(keep)</code></pre>
-<pre><code>   Mode    TRUE 
-logical       7 </code></pre>
+<pre><code>   Mode   FALSE    TRUE 
+logical       1       9 </code></pre>
 <pre class="r"><code>design_matrix &lt;- rlang::eval_tidy(rlang::expr(
   model.matrix(!!as.formula(
     paste(&quot;~&quot;,paste(c(&quot;0&quot;,paste0(&quot;factor(&quot;,test_col,&quot;)&quot;)),
@@ -694,6 +737,43 @@ Levels             Sole_Boldo_et_al-Fresh He_et_al-Fresh
 y.ab &lt;- estimateDisp(y.ab, design_matrix, trend=&quot;none&quot;)
 plotBCV(y.ab, cex=1)</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/design%20matrix%20and%20basic%20plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-design-matrix-and-basic-plots-1">
+Past versions of “design matrix and basic plots-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-design-matrix-and-basic-plots-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/design matrix and basic plots-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># fit
 # Fit a quasi-likelihood negative binomial generalized log-linear model to count data. 
 # Conduct cell type specific statistical tests for a given coefficient or contrast.
@@ -701,6 +781,43 @@ fit.ab &lt;- glmQLFit(y.ab, design_matrix, robust=TRUE, abundance.trend=FALSE)
 # Plot the per cell type quasi-likelihood dispersion against the cell type abundance (in log2 counts per million).
 plotQLDisp(fit.ab, cex=1)</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/design%20matrix%20and%20basic%20plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-design-matrix-and-basic-plots-2">
+Past versions of “design matrix and basic plots-2.png”
+</button>
+</p>
+<div id="fig-no-spaces-design-matrix-and-basic-plots-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/design matrix and basic plots-2.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="individual-tests" class="section level1 tabset">
 <h1 class="tabset">Individual tests</h1>
@@ -723,11 +840,11 @@ knitr::kable(summary(decideTests(res_fresh_lafa)))</code></pre>
 </tr>
 <tr class="even">
 <td align="left">NotSig</td>
-<td align="right">7</td>
+<td align="right">8</td>
 </tr>
 <tr class="odd">
 <td align="left">Up</td>
-<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
@@ -746,58 +863,74 @@ knitr::kable(summary(decideTests(res_fresh_lafa)))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Lymphatic endothelial</td>
-<td align="right">1.08</td>
-<td align="right">14.95</td>
-<td align="right">3.21</td>
-<td align="right">0.08</td>
-<td align="right">0.38</td>
+<td align="left">Melanocytes/Schwann cells/Neuronal cells</td>
+<td align="right">2.50</td>
+<td align="right">13.97</td>
+<td align="right">9.59</td>
+<td align="right">0.00</td>
+<td align="right">0.04</td>
 </tr>
 <tr class="even">
-<td align="left">Fibroblasts</td>
-<td align="right">-1.21</td>
-<td align="right">16.12</td>
-<td align="right">2.69</td>
-<td align="right">0.11</td>
-<td align="right">0.38</td>
-</tr>
-<tr class="odd">
-<td align="left">Pericytes/VSMC</td>
-<td align="right">-0.58</td>
-<td align="right">17.54</td>
-<td align="right">1.27</td>
-<td align="right">0.27</td>
-<td align="right">0.63</td>
-</tr>
-<tr class="even">
-<td align="left">Keratinocytes</td>
-<td align="right">0.52</td>
-<td align="right">17.75</td>
-<td align="right">0.50</td>
-<td align="right">0.49</td>
-<td align="right">0.83</td>
-</tr>
-<tr class="odd">
 <td align="left">T cells</td>
-<td align="right">0.30</td>
-<td align="right">17.05</td>
-<td align="right">0.27</td>
-<td align="right">0.61</td>
-<td align="right">0.83</td>
+<td align="right">-1.22</td>
+<td align="right">16.12</td>
+<td align="right">2.39</td>
+<td align="right">0.13</td>
+<td align="right">0.58</td>
+</tr>
+<tr class="odd">
+<td align="left">Sweat gland cells</td>
+<td align="right">1.76</td>
+<td align="right">13.83</td>
+<td align="right">1.77</td>
+<td align="right">0.19</td>
+<td align="right">0.58</td>
 </tr>
 <tr class="even">
 <td align="left">Vascular endothelial</td>
-<td align="right">0.17</td>
-<td align="right">16.01</td>
-<td align="right">0.10</td>
-<td align="right">0.76</td>
-<td align="right">0.83</td>
+<td align="right">-0.57</td>
+<td align="right">17.54</td>
+<td align="right">1.17</td>
+<td align="right">0.29</td>
+<td align="right">0.65</td>
 </tr>
 <tr class="odd">
+<td align="left">Keratinocytes</td>
+<td align="right">0.56</td>
+<td align="right">17.75</td>
+<td align="right">0.51</td>
+<td align="right">0.48</td>
+<td align="right">0.73</td>
+</tr>
+<tr class="even">
+<td align="left">Lymphatic endothelial</td>
+<td align="right">-0.46</td>
+<td align="right">14.03</td>
+<td align="right">0.50</td>
+<td align="right">0.48</td>
+<td align="right">0.73</td>
+</tr>
+<tr class="odd">
+<td align="left">Pericytes/VSMC</td>
+<td align="right">0.29</td>
+<td align="right">17.05</td>
+<td align="right">0.23</td>
+<td align="right">0.63</td>
+<td align="right">0.74</td>
+</tr>
+<tr class="even">
 <td align="left">Macrophages/DC</td>
-<td align="right">-0.12</td>
+<td align="right">-0.27</td>
+<td align="right">15.63</td>
+<td align="right">0.20</td>
+<td align="right">0.66</td>
+<td align="right">0.74</td>
+</tr>
+<tr class="odd">
+<td align="left">Fibroblasts</td>
+<td align="right">-0.13</td>
 <td align="right">18.14</td>
-<td align="right">0.05</td>
+<td align="right">0.04</td>
 <td align="right">0.83</td>
 <td align="right">0.83</td>
 </tr>
@@ -822,7 +955,7 @@ knitr::kable(summary(decideTests(res_fresh_he_et_al)))</code></pre>
 </tr>
 <tr class="even">
 <td align="left">NotSig</td>
-<td align="right">7</td>
+<td align="right">9</td>
 </tr>
 <tr class="odd">
 <td align="left">Up</td>
@@ -845,60 +978,76 @@ knitr::kable(summary(decideTests(res_fresh_he_et_al)))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Lymphatic endothelial</td>
-<td align="right">1.70</td>
-<td align="right">14.95</td>
-<td align="right">6.92</td>
+<td align="left">Melanocytes/Schwann cells/Neuronal cells</td>
+<td align="right">2.08</td>
+<td align="right">13.97</td>
+<td align="right">6.73</td>
 <td align="right">0.01</td>
-<td align="right">0.09</td>
+<td align="right">0.13</td>
 </tr>
 <tr class="even">
-<td align="left">Pericytes/VSMC</td>
-<td align="right">1.07</td>
-<td align="right">17.54</td>
-<td align="right">3.19</td>
-<td align="right">0.08</td>
-<td align="right">0.29</td>
+<td align="left">Lymphatic endothelial</td>
+<td align="right">1.51</td>
+<td align="right">14.03</td>
+<td align="right">3.98</td>
+<td align="right">0.06</td>
+<td align="right">0.21</td>
 </tr>
 <tr class="odd">
 <td align="left">Macrophages/DC</td>
-<td align="right">-0.79</td>
-<td align="right">18.14</td>
-<td align="right">1.82</td>
-<td align="right">0.19</td>
-<td align="right">0.43</td>
+<td align="right">-1.09</td>
+<td align="right">15.63</td>
+<td align="right">3.24</td>
+<td align="right">0.08</td>
+<td align="right">0.21</td>
 </tr>
 <tr class="even">
-<td align="left">T cells</td>
-<td align="right">-0.24</td>
-<td align="right">17.05</td>
-<td align="right">0.18</td>
-<td align="right">0.68</td>
-<td align="right">0.81</td>
+<td align="left">Vascular endothelial</td>
+<td align="right">1.07</td>
+<td align="right">17.54</td>
+<td align="right">3.04</td>
+<td align="right">0.09</td>
+<td align="right">0.21</td>
 </tr>
 <tr class="odd">
-<td align="left">Keratinocytes</td>
-<td align="right">-0.29</td>
-<td align="right">17.75</td>
-<td align="right">0.16</td>
-<td align="right">0.69</td>
-<td align="right">0.81</td>
+<td align="left">Sweat gland cells</td>
+<td align="right">2.09</td>
+<td align="right">13.83</td>
+<td align="right">2.28</td>
+<td align="right">0.14</td>
+<td align="right">0.26</td>
 </tr>
 <tr class="even">
 <td align="left">Fibroblasts</td>
-<td align="right">-0.32</td>
-<td align="right">16.12</td>
-<td align="right">0.16</td>
-<td align="right">0.70</td>
-<td align="right">0.81</td>
+<td align="right">-0.78</td>
+<td align="right">18.14</td>
+<td align="right">1.67</td>
+<td align="right">0.21</td>
+<td align="right">0.31</td>
 </tr>
 <tr class="odd">
-<td align="left">Vascular endothelial</td>
-<td align="right">-0.13</td>
-<td align="right">16.01</td>
-<td align="right">0.06</td>
-<td align="right">0.81</td>
-<td align="right">0.81</td>
+<td align="left">Pericytes/VSMC</td>
+<td align="right">-0.27</td>
+<td align="right">17.05</td>
+<td align="right">0.20</td>
+<td align="right">0.65</td>
+<td align="right">0.74</td>
+</tr>
+<tr class="even">
+<td align="left">T cells</td>
+<td align="right">-0.32</td>
+<td align="right">16.12</td>
+<td align="right">0.13</td>
+<td align="right">0.72</td>
+<td align="right">0.74</td>
+</tr>
+<tr class="odd">
+<td align="left">Keratinocytes</td>
+<td align="right">-0.25</td>
+<td align="right">17.75</td>
+<td align="right">0.11</td>
+<td align="right">0.74</td>
+<td align="right">0.74</td>
 </tr>
 </tbody>
 </table>
@@ -921,7 +1070,7 @@ knitr::kable(summary(decideTests(res_fresh_sole_boldo)))</code></pre>
 </tr>
 <tr class="even">
 <td align="left">NotSig</td>
-<td align="right">7</td>
+<td align="right">9</td>
 </tr>
 <tr class="odd">
 <td align="left">Up</td>
@@ -944,60 +1093,76 @@ knitr::kable(summary(decideTests(res_fresh_sole_boldo)))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Vascular endothelial</td>
-<td align="right">1.42</td>
-<td align="right">16.01</td>
-<td align="right">5.12</td>
-<td align="right">0.03</td>
-<td align="right">0.21</td>
+<td align="left">Macrophages/DC</td>
+<td align="right">1.55</td>
+<td align="right">15.63</td>
+<td align="right">4.59</td>
+<td align="right">0.04</td>
+<td align="right">0.37</td>
 </tr>
 <tr class="even">
-<td align="left">Pericytes/VSMC</td>
+<td align="left">Vascular endothelial</td>
 <td align="right">-0.85</td>
 <td align="right">17.54</td>
-<td align="right">2.31</td>
-<td align="right">0.14</td>
-<td align="right">0.35</td>
+<td align="right">2.19</td>
+<td align="right">0.15</td>
+<td align="right">0.59</td>
 </tr>
 <tr class="odd">
+<td align="left">Melanocytes/Schwann cells/Neuronal cells</td>
+<td align="right">1.02</td>
+<td align="right">13.97</td>
+<td align="right">1.74</td>
+<td align="right">0.20</td>
+<td align="right">0.59</td>
+</tr>
+<tr class="even">
 <td align="left">Lymphatic endothelial</td>
-<td align="right">0.93</td>
-<td align="right">14.95</td>
-<td align="right">2.18</td>
-<td align="right">0.15</td>
-<td align="right">0.35</td>
+<td align="right">0.84</td>
+<td align="right">14.03</td>
+<td align="right">1.29</td>
+<td align="right">0.27</td>
+<td align="right">0.60</td>
+</tr>
+<tr class="odd">
+<td align="left">Sweat gland cells</td>
+<td align="right">-0.78</td>
+<td align="right">13.83</td>
+<td align="right">0.39</td>
+<td align="right">0.54</td>
+<td align="right">0.85</td>
 </tr>
 <tr class="even">
 <td align="left">Keratinocytes</td>
-<td align="right">-0.34</td>
+<td align="right">-0.31</td>
 <td align="right">17.75</td>
-<td align="right">0.20</td>
-<td align="right">0.66</td>
-<td align="right">0.84</td>
+<td align="right">0.15</td>
+<td align="right">0.70</td>
+<td align="right">0.85</td>
 </tr>
 <tr class="odd">
-<td align="left">T cells</td>
-<td align="right">-0.19</td>
+<td align="left">Pericytes/VSMC</td>
+<td align="right">-0.20</td>
 <td align="right">17.05</td>
 <td align="right">0.10</td>
 <td align="right">0.75</td>
-<td align="right">0.84</td>
+<td align="right">0.85</td>
 </tr>
 <tr class="even">
-<td align="left">Fibroblasts</td>
-<td align="right">0.20</td>
+<td align="left">T cells</td>
+<td align="right">0.19</td>
 <td align="right">16.12</td>
-<td align="right">0.05</td>
-<td align="right">0.82</td>
+<td align="right">0.04</td>
 <td align="right">0.84</td>
+<td align="right">0.85</td>
 </tr>
 <tr class="odd">
-<td align="left">Macrophages/DC</td>
+<td align="left">Fibroblasts</td>
 <td align="right">0.13</td>
 <td align="right">18.14</td>
 <td align="right">0.04</td>
-<td align="right">0.84</td>
-<td align="right">0.84</td>
+<td align="right">0.85</td>
+<td align="right">0.85</td>
 </tr>
 </tbody>
 </table>
@@ -1023,7 +1188,7 @@ knitr::kable(summary(decideTests(res)))</code></pre>
 </tr>
 <tr class="even">
 <td align="left">Sig</td>
-<td align="right">2</td>
+<td align="right">4</td>
 </tr>
 </tbody>
 </table>
@@ -1034,16 +1199,16 @@ knitr::kable(summary(decideTests(res)))</code></pre>
 <td>
 <table>
 <colgroup>
-<col width="10%" />
-<col width="16%" />
-<col width="12%" />
-<col width="11%" />
+<col width="17%" />
 <col width="14%" />
+<col width="11%" />
+<col width="10%" />
 <col width="13%" />
-<col width="9%" />
-<col width="3%" />
+<col width="12%" />
+<col width="8%" />
 <col width="2%" />
-<col width="3%" />
+<col width="2%" />
+<col width="2%" />
 <col width="2%" />
 </colgroup>
 <thead>
@@ -1063,95 +1228,121 @@ knitr::kable(summary(decideTests(res)))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Pericytes/VSMC</td>
-<td align="right">0.27</td>
-<td align="right">-1.64</td>
-<td align="right">-0.58</td>
-<td align="right">-1.91</td>
-<td align="right">-0.85</td>
-<td align="right">1.07</td>
-<td align="right">17.54</td>
-<td align="right">10.94</td>
+<td align="left">Macrophages/DC</td>
+<td align="right">-1.81</td>
+<td align="right">0.82</td>
+<td align="right">-0.27</td>
+<td align="right">2.64</td>
+<td align="right">1.55</td>
+<td align="right">-1.09</td>
+<td align="right">15.63</td>
+<td align="right">12.25</td>
 <td align="right">0.00</td>
 <td align="right">0.00</td>
 </tr>
 <tr class="even">
 <td align="left">Vascular endothelial</td>
-<td align="right">-1.25</td>
-<td align="right">0.30</td>
-<td align="right">0.17</td>
-<td align="right">1.56</td>
-<td align="right">1.42</td>
-<td align="right">-0.13</td>
-<td align="right">16.01</td>
-<td align="right">6.25</td>
+<td align="right">0.28</td>
+<td align="right">-1.64</td>
+<td align="right">-0.57</td>
+<td align="right">-1.91</td>
+<td align="right">-0.85</td>
+<td align="right">1.07</td>
+<td align="right">17.54</td>
+<td align="right">10.39</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Lymphatic endothelial</td>
+<td align="right">-1.31</td>
+<td align="right">-1.97</td>
+<td align="right">-0.46</td>
+<td align="right">-0.67</td>
+<td align="right">0.84</td>
+<td align="right">1.51</td>
+<td align="right">14.03</td>
+<td align="right">7.30</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">Melanocytes/Schwann cells/Neuronal cells</td>
+<td align="right">1.48</td>
+<td align="right">0.42</td>
+<td align="right">2.50</td>
+<td align="right">-1.06</td>
+<td align="right">1.02</td>
+<td align="right">2.08</td>
+<td align="right">13.97</td>
+<td align="right">5.41</td>
 <td align="right">0.00</td>
 <td align="right">0.01</td>
 </tr>
 <tr class="odd">
-<td align="left">Lymphatic endothelial</td>
-<td align="right">0.15</td>
-<td align="right">-0.62</td>
-<td align="right">1.08</td>
-<td align="right">-0.77</td>
-<td align="right">0.93</td>
-<td align="right">1.70</td>
-<td align="right">14.95</td>
-<td align="right">2.96</td>
-<td align="right">0.05</td>
-<td align="right">0.11</td>
+<td align="left">Sweat gland cells</td>
+<td align="right">2.54</td>
+<td align="right">-0.34</td>
+<td align="right">1.76</td>
+<td align="right">-2.88</td>
+<td align="right">-0.78</td>
+<td align="right">2.09</td>
+<td align="right">13.83</td>
+<td align="right">3.33</td>
+<td align="right">0.03</td>
+<td align="right">0.06</td>
 </tr>
 <tr class="even">
-<td align="left">Fibroblasts</td>
+<td align="left">T cells</td>
 <td align="right">-1.41</td>
-<td align="right">-0.89</td>
-<td align="right">-1.21</td>
-<td align="right">0.52</td>
-<td align="right">0.20</td>
+<td align="right">-0.90</td>
+<td align="right">-1.22</td>
+<td align="right">0.51</td>
+<td align="right">0.19</td>
 <td align="right">-0.32</td>
 <td align="right">16.12</td>
-<td align="right">2.42</td>
-<td align="right">0.08</td>
-<td align="right">0.15</td>
+<td align="right">2.14</td>
+<td align="right">0.12</td>
+<td align="right">0.17</td>
 </tr>
 <tr class="odd">
-<td align="left">Macrophages/DC</td>
-<td align="right">-0.25</td>
+<td align="left">Fibroblasts</td>
+<td align="right">-0.26</td>
 <td align="right">0.66</td>
-<td align="right">-0.12</td>
+<td align="right">-0.13</td>
 <td align="right">0.91</td>
 <td align="right">0.13</td>
-<td align="right">-0.79</td>
+<td align="right">-0.78</td>
 <td align="right">18.14</td>
-<td align="right">1.62</td>
-<td align="right">0.20</td>
-<td align="right">0.27</td>
+<td align="right">1.49</td>
+<td align="right">0.24</td>
+<td align="right">0.30</td>
 </tr>
 <tr class="even">
 <td align="left">Keratinocytes</td>
 <td align="right">0.86</td>
 <td align="right">0.81</td>
-<td align="right">0.52</td>
+<td align="right">0.56</td>
 <td align="right">-0.05</td>
-<td align="right">-0.34</td>
-<td align="right">-0.29</td>
+<td align="right">-0.31</td>
+<td align="right">-0.25</td>
 <td align="right">17.75</td>
-<td align="right">1.51</td>
-<td align="right">0.23</td>
+<td align="right">1.38</td>
 <td align="right">0.27</td>
+<td align="right">0.30</td>
 </tr>
 <tr class="odd">
-<td align="left">T cells</td>
+<td align="left">Pericytes/VSMC</td>
 <td align="right">0.49</td>
-<td align="right">0.55</td>
-<td align="right">0.30</td>
-<td align="right">0.05</td>
-<td align="right">-0.19</td>
-<td align="right">-0.24</td>
+<td align="right">0.56</td>
+<td align="right">0.29</td>
+<td align="right">0.07</td>
+<td align="right">-0.20</td>
+<td align="right">-0.27</td>
 <td align="right">17.05</td>
-<td align="right">0.93</td>
-<td align="right">0.44</td>
-<td align="right">0.44</td>
+<td align="right">0.90</td>
+<td align="right">0.45</td>
+<td align="right">0.45</td>
 </tr>
 </tbody>
 </table>
@@ -1219,6 +1410,43 @@ purrr::map(rownames(topTags(res, n=12)), ~ {
   facet_wrap(~Cluster, scales = &quot;free_y&quot;,ncol = 4, nrow = 3) +
   get_protocol_colours(levels(sce$Protocol))</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/plot%20abundances-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-plot-abundances-1">
+Past versions of “plot abundances-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-plot-abundances-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/plot abundances-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>count_table &lt;- table(sce$manual_labels_coarse, sce$Sample)
 lib_sizes &lt;- colSums(count_table)
 
@@ -1247,6 +1475,43 @@ sample_protocol_mapping &lt;- as.data.frame(colData(sce)) %&gt;%
   get_protocol_colours(levels(sce$Protocol))
 fig11d</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/plot%20abundances%20v2-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-plot-abundances-v2-1">
+Past versions of “plot abundances v2-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-plot-abundances-v2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/plot abundances v2-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="umap-proportions" class="section level1">
 <h1>UMAP proportions</h1>
@@ -1270,6 +1535,43 @@ fig11b1 &lt;- ret_vals$plt_rel +
        x=&quot;&quot;)
 fig11b1</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/unnamed-chunk-1-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/unnamed-chunk-1-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>fig11b2 &lt;- ret_vals$plt_abs +
   get_cell_colours(sce$manual_labels_coarse) +
   scale_y_continuous(n.breaks=3) +
@@ -1285,6 +1587,43 @@ fig11b1</code></pre>
                              l = 20)) # Left margin 
 fig11b2</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/unnamed-chunk-1-2.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-2">
+Past versions of unnamed-chunk-1-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/unnamed-chunk-1-2.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>column &lt;- &quot;manual_labels_coarse&quot;
 aggr_by &lt;- &quot;Protocol&quot;
 facet_by &lt;- NA
@@ -1324,6 +1663,43 @@ fig11c &lt;- propdf %&gt;%
                             override.aes = list(size=4, shape = 15, alpha = 1)))
 fig11c</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/unnamed-chunk-2-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/unnamed-chunk-2-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cat(&quot;\n\n## Cell types \n\n&quot;)</code></pre>
 <div id="cell-types" class="section level2">
 <h2>Cell types</h2>
@@ -1341,6 +1717,43 @@ fig11c</code></pre>
 which will replace the existing scale.</code></pre>
 <pre class="r"><code>fig11a1</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/visualise%20UMAPs-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-visualise-UMAPs-1">
+Past versions of “visualise UMAPs-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-visualise-UMAPs-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/visualise UMAPs-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cat(&quot;\n\n## Protocol \n\n&quot;)</code></pre>
 </div>
 <div id="protocol" class="section level2">
@@ -1359,6 +1772,43 @@ which will replace the existing scale.</code></pre>
 which will replace the existing scale.</code></pre>
 <pre class="r"><code>fig11a2</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/visualise%20UMAPs-2.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-visualise-UMAPs-2">
+Past versions of “visualise UMAPs-2.png”
+</button>
+</p>
+<div id="fig-no-spaces-visualise-UMAPs-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/visualise UMAPs-2.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="figure-11.1" class="section level1">
@@ -1497,6 +1947,126 @@ Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
 Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
 &#39;Roboto Condensed&#39; not found in PostScript font database</code></pre>
 <pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
 family &#39;Roboto Condensed&#39; not found in PostScript font database
 
 Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
@@ -1914,6 +2484,43 @@ Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
 family &#39;Roboto Condensed&#39; not found in PostScript font database</code></pre>
 <pre class="r"><code>suppressWarnings(figure11_1)</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/figure%2011.1-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-figure-11.1-1">
+Past versions of “figure 11.1-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-figure-11.1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/figure 11.1-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(paste0(folder_path, &quot;figure11_1.png&quot;),
        plot=figure11_1,
        width=20*0.9,
@@ -2737,6 +3344,273 @@ Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
 family &#39;Roboto Condensed&#39; not found in PostScript font database
 
 Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
 family &#39;Roboto Condensed&#39; not found in PostScript font database</code></pre>
 <pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
 &#39;Roboto Condensed&#39; not found in PostScript font database
@@ -3155,9 +4029,307 @@ Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
 family &#39;Roboto Condensed&#39; not found in PostScript font database
 
 Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family &#39;Roboto Condensed&#39; not found in PostScript font database
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
 family &#39;Roboto Condensed&#39; not found in PostScript font database</code></pre>
 <pre class="r"><code>suppressWarnings(figure11_2)</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/supplementary%20figure%2011.2-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-supplementary-figure-11.2-1">
+Past versions of “supplementary figure 11.2-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-supplementary-figure-11.2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/supplementary figure 11.2-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(paste0(folder_path, &quot;figure11_2.png&quot;),
        plot=figure11_2,
        width=20*0.9,
@@ -3177,6 +4349,43 @@ family &#39;Roboto Condensed&#39; not found in PostScript font database</code></
 
 EDI_supplemental</code></pre>
 <p><img src="figure/EDI_07_DA.Rmd/EDI%20supplemental-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-EDI-supplemental-1">
+Past versions of “EDI supplemental-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-EDI-supplemental-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/docs/figure/EDI_07_DA.Rmd/EDI supplemental-1.png" target="_blank">239a294</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(paste0(folder_path, &quot;EDI_supplemental.png&quot;),
        plot=EDI_supplemental,
        width=16*0.9,
@@ -3259,18 +4468,18 @@ loaded via a namespace (and not attached):
  [73] magrittr_2.0.1            R6_2.5.1                 
  [75] generics_0.1.1            DelayedArray_0.20.0      
  [77] DBI_1.1.2                 pillar_1.6.4             
- [79] withr_2.4.3               abind_1.4-5              
- [81] RCurl_1.98-1.5            tibble_3.1.6             
- [83] car_3.0-12                crayon_1.4.2             
- [85] utf8_1.2.2                plotly_4.10.0            
- [87] rmarkdown_2.11            viridis_0.6.2            
- [89] locfit_1.5-9.4            grid_4.1.0               
- [91] data.table_1.14.2         git2r_0.29.0             
- [93] digest_0.6.29             tidyr_1.1.4              
- [95] httpuv_1.6.4              textshaping_0.3.6        
- [97] munsell_0.5.0             beeswarm_0.4.0           
- [99] viridisLite_0.4.0         vipor_0.4.5              
-[101] bslib_0.3.1              </code></pre>
+ [79] whisker_0.4               withr_2.4.3              
+ [81] abind_1.4-5               RCurl_1.98-1.5           
+ [83] tibble_3.1.6              car_3.0-12               
+ [85] crayon_1.4.2              utf8_1.2.2               
+ [87] plotly_4.10.0             rmarkdown_2.11           
+ [89] viridis_0.6.2             locfit_1.5-9.4           
+ [91] grid_4.1.0                data.table_1.14.2        
+ [93] git2r_0.29.0              digest_0.6.29            
+ [95] tidyr_1.1.4               httpuv_1.6.4             
+ [97] textshaping_0.3.6         munsell_0.5.0            
+ [99] beeswarm_0.4.0            viridisLite_0.4.0        
+[101] vipor_0.4.5               bslib_0.3.1              </code></pre>
 </div>
 </div>
 

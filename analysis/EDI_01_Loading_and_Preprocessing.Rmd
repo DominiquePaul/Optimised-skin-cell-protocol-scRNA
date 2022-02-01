@@ -443,7 +443,7 @@ Cells are marked to be dropped if:
 * Number of genes of a given cell is lower than 2 median absolute deviations from the average number of genes in the given sample
 * The percentage of mitochondrial gene expression values is higher than 2 median absolute deviations from the sample mean
 * More than 25% percent of a genes expression values are from mitochondrial genes
-* The sum of all expression values is less than 1500
+* The sum of all expression values is less than 750
 * If they express less than 500 genes
 
 A table of how many cell fulfil this criteria is given below.
@@ -977,24 +977,24 @@ sfig1d2 <- sce_filtered %>%
 sfig1d2
 ```
 
-# Supplementary Figure 10
+# Overview figure
 
 ```{r supplementary figure, fig.width=20, fig.height=26}
 folder_path <- "../output/plots/"
 
 
-figure10 <- ggpubr::ggarrange(
+overview_figure <- ggpubr::ggarrange(
   ggpubr::ggarrange(sfig1a1,sfig1a2, ncol = 2),
   sfig1b1,
   ggpubr::ggarrange(sfig1c1, sfig1c2, ncol=2),
   ggpubr::ggarrange(sfig1d1, sfig1d2, ncol=2),
-  ncol = 1, nrow = 4,labels = "AUTO"
+  ncol = 1, nrow = 4,labels = "AUTO", font.label = list(size = 30)
 )
 
-suppressWarnings(figure10)
+suppressWarnings(overview_figure)
 
-ggsave(paste0(folder_path, "figure10.png"),
-       plot=figure10,
+ggsave(paste0(folder_path, "overview_EDI.png"),
+       plot=overview_figure,
        width=20*0.9,
        height=26*0.9,
        units="in",

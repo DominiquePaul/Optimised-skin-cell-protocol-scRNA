@@ -1,0 +1,5 @@
+Error in file(file, ifelse(append, "a", "w")) : 
+  cannot open the connection
+In addition: Warning message:
+In file(file, ifelse(append, "a", "w")) :
+  cannot open file 'EDI_05_Annotation.knit.md': No space left on device

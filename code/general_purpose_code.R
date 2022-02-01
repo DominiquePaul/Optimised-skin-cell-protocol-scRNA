@@ -3,6 +3,7 @@ library(dplyr)
 library(openxlsx)
 library(stringr)
 
+hrbrthemes::import_roboto_condensed()
 
 ### Upload a file to iSEE
 
@@ -123,10 +124,10 @@ get_cell_colours <- function(cell_names, type="colour"){
   # colours_cells <-  c("#000000", "#F18175", "#D89B00", "#ACAF00", "#54BE00", "#54BE00", "#3DC786", 
   #                  "#3FC6CC", "#3DB9FA", "#3DB9FA", "#4BC9F0", "#A09AFF", "#E476F8", "#F76DC5") 
   
-  names(colours_cells) <- unique(unique_cell_types)
+  names(colours_cells) <- unique_cell_types
   colours_cells_ <- colours_cells[cell_names]
   
-  label_names <- stringr::str_wrap(names(colours_cells), width=30)
+  label_names <- stringr::str_wrap(names(colours_cells_), width=30)
   
   # return different object depending on whether we are working with colour values or fill values
   if (type == "raw"){

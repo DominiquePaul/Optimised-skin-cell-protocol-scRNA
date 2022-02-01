@@ -1,0 +1,160 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   3%
+   inline R code fragments
+
+  |                                                                              |....                                                                  |   5%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |......                                                                |   8%
+  ordinary text without R code
+
+  |                                                                              |........                                                              |  11%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |.........                                                             |  14%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  16%
+label: load data
+  |                                                                              |.............                                                         |  19%
+  ordinary text without R code
+
+  |                                                                              |...............                                                       |  22%
+label: visualise UMAPs (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |.................                                                     |  24%
+  ordinary text without R code
+
+  |                                                                              |...................                                                   |  27%
+label: subclustering (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |.....................                                                 |  30%
+  ordinary text without R code
+
+  |                                                                              |.......................                                               |  32%
+label: absolute cell abundance (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 12
+ $ fig.height: num 8
+
+  |                                                                              |.........................                                             |  35%
+  ordinary text without R code
+
+  |                                                                              |..........................                                            |  38%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |............................                                          |  41%
+  ordinary text without R code
+
+  |                                                                              |..............................                                        |  43%
+label: subcluster sizes (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |................................                                      |  46%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  49%
+label: prepare excel (with options) 
+List of 3
+ $ fig.width : num 10
+ $ fig.height: num 7
+ $ results   : chr "asis"
+
+  |                                                                              |....................................                                  |  51%
+  ordinary text without R code
+
+  |                                                                              |......................................                                |  54%
+label: t-test any (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |........................................                              |  57%
+  ordinary text without R code
+
+  |                                                                              |..........................................                            |  59%
+label: feature plots (with options) 
+List of 4
+ $ fig.width : num 10
+ $ fig.height: num 7
+ $ results   : chr "asis"
+ $ warnings  : logi FALSE
+
+  |                                                                              |............................................                          |  62%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  65%
+label: t-test all (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |...............................................                       |  68%
+  ordinary text without R code
+
+  |                                                                              |.................................................                     |  70%
+label: wilcox any (with options) 
+List of 1
+ $ resuts: chr "asis"
+
+  |                                                                              |...................................................                   |  73%
+  ordinary text without R code
+
+  |                                                                              |.....................................................                 |  76%
+label: fstat-entropy-method (with options) 
+List of 4
+ $ results   : chr "asis"
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ eval      : logi FALSE
+
+  |                                                                              |.......................................................               |  78%
+  ordinary text without R code
+
+  |                                                                              |.........................................................             |  81%
+label: violin plots for genes in f-stat method (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ eval      : logi FALSE
+
+  |                                                                              |...........................................................           |  84%
+  ordinary text without R code
+
+  |                                                                              |.............................................................         |  86%
+label: save excel (with options) 
+List of 1
+ $ class.source: chr "fold-show"
+
+  |                                                                              |..............................................................        |  89%
+  ordinary text without R code
+
+  |                                                                              |................................................................      |  92%
+label: save sce object (with options) 
+List of 1
+ $ class.source: chr "fold-show"
+
+  |                                                                              |..................................................................    |  95%
+  ordinary text without R code
+
+  |                                                                              |....................................................................  |  97%
+label: session-info-chunk-inserted-by-workflowr
+  |                                                                              |......................................................................| 100%
+  ordinary text without R code
+
+
+/Applications/RStudio.app/Contents/MacOS/pandoc/pandoc +RTS -K512m -RTS EDI_08_Subclustering.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output EDI_08_Subclustering.html --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --variable bs3=TRUE --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --include-before-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmpv03ZO5/rmarkdown-strbaee612ee149.html --variable navbar=1 --variable theme=cosmo --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmpv03ZO5/rmarkdown-strbaee4cc8b177.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=hide --variable code_menu=1 --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmpv03ZO5/headerbaeebfb2303.html --include-after-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmpv03ZO5/footerbaee14b7a01a.html 

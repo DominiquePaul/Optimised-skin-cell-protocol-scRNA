@@ -1,0 +1,95 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
+  ordinary text without R code
+
+  |                                                                              |.....                                                                 |   7%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |........                                                              |  11%
+  ordinary text without R code
+
+  |                                                                              |..........                                                            |  15%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |.............                                                         |  19%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  22%
+label: load-data
+  |                                                                              |..................                                                    |  26%
+  ordinary text without R code
+
+  |                                                                              |.....................                                                 |  30%
+label: load csv with cluster annotations
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |..........................                                            |  37%
+label: split cluster
+  |                                                                              |.............................                                         |  41%
+  ordinary text without R code
+
+  |                                                                              |...............................                                       |  44%
+label: visualise UMAPs (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |..................................                                    |  48%
+  ordinary text without R code
+
+  |                                                                              |....................................                                  |  52%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  59%
+label: plot abundances v2 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 10
+
+  |                                                                              |............................................                          |  63%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: figure 9.1 (with options) 
+List of 2
+ $ fig.width : num 10
+ $ fig.height: num 12
+
+  |                                                                              |.................................................                     |  70%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  74%
+label: figure 9.2 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 24
+
+  |                                                                              |......................................................                |  78%
+  ordinary text without R code
+
+  |                                                                              |.........................................................             |  81%
+label: Fresh_v_culture supplemental (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |............................................................          |  85%
+  ordinary text without R code
+
+  |                                                                              |..............................................................        |  89%
+label: save sce object (with options) 
+List of 1
+ $ class.source: chr "fold-show"
+
+

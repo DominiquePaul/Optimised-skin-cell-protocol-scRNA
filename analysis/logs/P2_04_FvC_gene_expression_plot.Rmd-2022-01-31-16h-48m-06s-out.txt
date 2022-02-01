@@ -1,0 +1,54 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |.....                                                                 |   7%
+  ordinary text without R code
+
+  |                                                                              |.........                                                             |  13%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |..............                                                        |  20%
+  ordinary text without R code
+
+  |                                                                              |...................                                                   |  27%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |............................                                          |  40%
+label: load-data
+  |                                                                              |.................................                                     |  47%
+  ordinary text without R code
+
+  |                                                                              |.....................................                                 |  53%
+label: read excel with markers
+  |                                                                              |..........................................                            |  60%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: create plot (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 7
+
+  |                                                                              |...................................................                   |  73%
+  ordinary text without R code
+
+  |                                                                              |........................................................              |  80%
+label: plot and save (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 7
+
+  |                                                                              |.............................................................         |  87%
+  ordinary text without R code
+
+  |                                                                              |.................................................................     |  93%
+label: session-info-chunk-inserted-by-workflowr
+  |                                                                              |......................................................................| 100%
+  ordinary text without R code
+
+
+/Applications/RStudio.app/Contents/MacOS/pandoc/pandoc +RTS -K512m -RTS P2_04_FvC_gene_expression_plot.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output P2_04_FvC_gene_expression_plot.html --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --variable bs3=TRUE --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --include-before-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmps5DdJ8/rmarkdown-strad9356744d82.html --variable navbar=1 --variable theme=cosmo --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmps5DdJ8/rmarkdown-strad936d8cbe25.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=hide --variable code_menu=1 --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmps5DdJ8/headerad933317a753.html --include-after-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmps5DdJ8/footerad9355ea5459.html 

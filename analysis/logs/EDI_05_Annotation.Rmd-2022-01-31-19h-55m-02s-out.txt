@@ -1,0 +1,114 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   3%
+   inline R code fragments
+
+  |                                                                              |.....                                                                 |   6%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |.......                                                               |  10%
+  ordinary text without R code
+
+  |                                                                              |.........                                                             |  13%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |...........                                                           |  16%
+  ordinary text without R code
+
+  |                                                                              |..............                                                        |  19%
+label: load-data
+  |                                                                              |................                                                      |  23%
+  ordinary text without R code
+
+  |                                                                              |..................                                                    |  26%
+label: plot UMAP (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ warning   : logi FALSE
+
+  |                                                                              |....................                                                  |  29%
+  ordinary text without R code
+
+  |                                                                              |.......................                                               |  32%
+label: load csv with cluster annotations
+  |                                                                              |.........................                                             |  35%
+  ordinary text without R code
+
+  |                                                                              |...........................                                           |  39%
+label: manual mast cell labeling (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |.............................                                         |  42%
+  ordinary text without R code
+
+  |                                                                              |................................                                      |  45%
+label: visualise UMAPs with manual labels (with options) 
+List of 3
+ $ fig.width : num 12
+ $ fig.height: num 8
+ $ results   : chr "asis"
+
+  |                                                                              |..................................                                    |  48%
+  ordinary text without R code
+
+  |                                                                              |....................................                                  |  52%
+label: UMAP density function (with options) 
+List of 1
+ $ warnings: logi FALSE
+
+  |                                                                              |......................................                                |  55%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  58%
+label: Plot umap densities (with options) 
+List of 4
+ $ fig.width : num 14
+ $ fig.height: num 10
+ $ warnings  : logi FALSE
+ $ eval      : logi FALSE
+
+  |                                                                              |...........................................                           |  61%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  65%
+label: UMAP proportions functions
+  |                                                                              |...............................................                       |  68%
+  ordinary text without R code
+
+  |                                                                              |..................................................                    |  71%
+label: plot UMAP prior to proportions (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |....................................................                  |  74%
+  ordinary text without R code
+
+  |                                                                              |......................................................                |  77%
+label: plot UMAP proportions (with options) 
+List of 3
+ $ fig.width : num 14
+ $ fig.height: num 22
+ $ results   : chr "asis"
+
+  |                                                                              |........................................................              |  81%
+  ordinary text without R code
+
+  |                                                                              |...........................................................           |  84%
+label: boxplots (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |.............................................................         |  87%
+  ordinary text without R code
+
+  |                                                                              |...............................................................       |  90%
+label: save data
+

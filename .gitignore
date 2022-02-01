@@ -11,7 +11,10 @@ analysis/*html
 analysis/*_cache
 analysis/site_libs
 
+docs/output/EDI_subclustering_markers_genes.xlsx
+
 data
 
 Paper
+
 

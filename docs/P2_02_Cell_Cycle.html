@@ -11,7 +11,7 @@
 
 <meta name="author" content="Dominique Paul" />
 
-<meta name="date" content="2022-01-30" />
+<meta name="date" content="2022-02-01" />
 
 <title>Cell Cycle Analysis</title>
 
@@ -364,14 +364,14 @@ div.tocify {
 
 <h1 class="title toc-ignore">Cell Cycle Analysis</h1>
 <h4 class="author">Dominique Paul</h4>
-<h4 class="date">2022-01-30</h4>
+<h4 class="date">2022-02-01</h4>
 
 </div>
 
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -380,7 +380,7 @@ div.tocify {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -389,10 +389,10 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-30
+<strong>Last updated:</strong> 2022-02-01
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -408,12 +408,12 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -480,16 +480,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree97b097bcd93105d275ebb47c066a8129eb61b5b2targetblank97b097ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/97b097bcd93105d275ebb47c066a8129eb61b5b2" target="_blank">97b097b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree97b097bcd93105d275ebb47c066a8129eb61b5b2targetblank97b097ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree5f4cea35c55dabe976c91d654f1dd6c72b777689targetblank5f4cea3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/97b097bcd93105d275ebb47c066a8129eb61b5b2" target="_blank">97b097b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/5f4cea35c55dabe976c91d654f1dd6c72b777689" target="_blank">5f4cea3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -503,15 +503,85 @@ Ignored files:
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.RData
     Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Supple_table_1.png
     Ignored:    analysis/Unused/.DS_Store
     Ignored:    code/.DS_Store
     Ignored:    code/seeds/.DS_Store
     Ignored:    data/
     Ignored:    output/.DS_Store
+    Ignored:    output/plots/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-30-19h-37m-35s-err.txt
-    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-30-19h-37m-35s-out.txt
+    Untracked:  Metadata/~$cluster_annotation_map.xlsx
+    Untracked:  analysis/FVC_quick_marker.Rmd
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-33m-54s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-54m-46s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-19h-55m-02s-out.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-err.txt
+    Untracked:  analysis/logs/EDI_05_Annotation.Rmd-2022-01-31-20h-33m-08s-out.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-err.txt
+    Untracked:  analysis/logs/EDI_06_marker_genes.Rmd-2022-01-31-20h-40m-14s-out.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-31-20h-43m-32s-err.txt
+    Untracked:  analysis/logs/EDI_07_DA.Rmd-2022-01-31-20h-43m-32s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-20h-45m-24s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-20h-45m-24s-out.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-22h-50m-16s-err.txt
+    Untracked:  analysis/logs/EDI_08_Subclustering.Rmd-2022-01-31-22h-50m-16s-out.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-err.txt
+    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-01-31-15h-32m-54s-out.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-err.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-01-31-16h-25m-56s-out.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-02-01-09h-13m-33s-err.txt
+    Untracked:  analysis/logs/P2_02_Cell_Cycle.Rmd-2022-02-01-09h-13m-33s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-16h-32m-06s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-22h-36m-39s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-01-31-22h-36m-39s-out.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-err.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-16h-43m-33s-out.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-22h-46m-20s-err.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-22h-46m-20s-out.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-23h-58m-09s-err.txt
+    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-01-31-23h-58m-09s-out.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-err.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-01-31-16h-48m-06s-out.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-02-01-00h-00m-34s-err.txt
+    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-02-01-00h-00m-34s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-01-31-16h-53m-18s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-01-00h-03m-27s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-01-00h-03m-27s-out.txt
+    Untracked:  output/plots/Suppl_Figure5.png
+    Untracked:  output/plots/Suppl_table_1.csv
+    Untracked:  output/plots/Suppl_table_1.png
+    Untracked:  output/plots/Suppl_table_2.csv
+    Untracked:  output/plots/Suppl_table_2.png
+    Untracked:  output/plots/old/
+    Untracked:  output/plots/overview_figure_fvc.png
+    Untracked:  output/plots_31Jan/
+
+Unstaged changes:
+    Modified:   Metadata/cluster_annotation_map.xlsx
+    Modified:   Metadata/marker_genes_heatmaps.xlsx
+    Modified:   analysis/EDI_01_Loading_and_Preprocessing.Rmd
+    Modified:   analysis/EDI_03_Batch_correction.Rmd
+    Modified:   analysis/EDI_05_Annotation.Rmd
+    Modified:   analysis/P2_01_data_comparison.Rmd
+    Modified:   analysis/P2_02_Cell_Cycle.Rmd
+    Modified:   analysis/P2_03_Fresh_only_subclustering.Rmd
+    Modified:   analysis/P2_03_FvC_Annotations.Rmd
+    Modified:   analysis/P2_04_FvC_gene_expression_plot.Rmd
+    Modified:   analysis/admin.rmd
+    Modified:   analysis/plots.Rmd
+    Modified:   code/general_purpose_code.R
+    Modified:   output/plots/figure3.png
+    Modified:   output/plots/figure3_supplemental.png
+    Modified:   output/plots/figure4.png
+    Modified:   output/plots/figure5.png
+    Modified:   output/plots/figure6.png
 
 </code></pre>
 <p>
@@ -550,6 +620,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/DominiquePaul/Skin-cell-protocol-scRNA/5f4cea35c55dabe976c91d654f1dd6c72b777689/docs/P2_02_Cell_Cycle.html" target="_blank">5f4cea3</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-31
+</td>
+<td>
+re-ran fresh and FvC
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -611,11 +698,11 @@ first commit
 <div id="load-data" class="section level1">
 <h1>Load data</h1>
 <p>We load the data for the two ‘Fresh’ samples as well as the joint dataset of fresh AND cultured samples that we have processed in the previous script. Both the two and the six samples were batch-corrected respectively.</p>
-<pre class="r"><code>file_path_fresh &lt;- &quot;../data/EOS_files/Fresh_only_EOS1.rds&quot;
+<pre class="r"><code>file_path_fresh &lt;- &quot;../data/EOS_files/Fresh_EOS1_sce.rds&quot;
 sce_fresh &lt;- readRDS(file_path_fresh)
 rownames(sce_fresh) &lt;- rowData(sce_fresh)$ID # might need this for the analysis
 
-file_path_all &lt;- &quot;../data/EOS_files/FvC_EOS1.rds&quot;
+file_path_all &lt;- &quot;../data/EOS_files/FvC_EOS1_sce.rds&quot;
 sce_all &lt;- readRDS(file_path_all)
 rownames(sce_all) &lt;- rowData(sce_all)$ID # might need this for the analysis</code></pre>
 </div>
@@ -1300,21 +1387,21 @@ dominique-paul-uzh
 <div id="save-data" class="section level1">
 <h1>Save data</h1>
 <pre class="r"><code># Fresh samples only
-file_path_fresh &lt;- &quot;../data/EOS_files/Fresh_only_EOS2.rds&quot;
+file_path_fresh &lt;- &quot;../data/EOS_files/Fresh_EOS2_sce.rds&quot;
 rownames(sce_fresh) &lt;- rowData(sce_fresh)$Symbol
 saveRDS(sce_fresh, file=file_path_fresh)
 upload_file_to_iSEE(file_path_fresh)</code></pre>
 <pre><code>Command executed: 
 
-scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/Fresh_only_EOS2.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/Fresh_only_EOS2___2022-01-30.rds</code></pre>
+scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/Fresh_EOS2_sce.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/Fresh_EOS2_sce___2022-02-01.rds</code></pre>
 <pre class="r"><code># Frsh and cultured samples
-file_path_all &lt;- &quot;../data/EOS_files/FvC_EOS2.rds&quot;
+file_path_all &lt;- &quot;../data/EOS_files/FvC_EOS2_sce.rds&quot;
 rownames(sce_all) &lt;- rowData(sce_all)$Symbol
 saveRDS(sce_all, file=file_path_all)
 upload_file_to_iSEE(file_path_all)</code></pre>
 <pre><code>Command executed: 
 
-scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/FvC_EOS2.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/FvC_EOS2___2022-01-30.rds</code></pre>
+scp -i ~/.ssh/id_imls_servers /Users/dominiquepaul/xRobinson\ Group/02_Protocol/data/EOS_Files/FvC_EOS2_sce.rds dominique@imlspenticton.uzh.ch:/home/Shared/retger/synovial/data/protocol_paper_BBDP/sce/FvC_EOS2_sce___2022-02-01.rds</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

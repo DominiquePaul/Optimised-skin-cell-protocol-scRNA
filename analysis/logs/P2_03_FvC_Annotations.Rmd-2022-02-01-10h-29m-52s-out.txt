@@ -1,0 +1,104 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
+  ordinary text without R code
+
+  |                                                                              |.....                                                                 |   7%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |........                                                              |  11%
+  ordinary text without R code
+
+  |                                                                              |..........                                                            |  15%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |.............                                                         |  19%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  22%
+label: load-data
+  |                                                                              |..................                                                    |  26%
+  ordinary text without R code
+
+  |                                                                              |.....................                                                 |  30%
+label: load csv with cluster annotations
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |..........................                                            |  37%
+label: split cluster
+  |                                                                              |.............................                                         |  41%
+  ordinary text without R code
+
+  |                                                                              |...............................                                       |  44%
+label: visualise UMAPs (with options) 
+List of 3
+ $ fig.width : num 16
+ $ fig.height: num 10
+ $ results   : chr "asis"
+
+  |                                                                              |..................................                                    |  48%
+  ordinary text without R code
+
+  |                                                                              |....................................                                  |  52%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  59%
+label: plot abundances v2 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 10
+
+  |                                                                              |............................................                          |  63%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: figure 9.1 (with options) 
+List of 2
+ $ fig.width : num 10
+ $ fig.height: num 12
+
+  |                                                                              |.................................................                     |  70%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  74%
+label: figure 9.2 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 24
+
+  |                                                                              |......................................................                |  78%
+  ordinary text without R code
+
+  |                                                                              |.........................................................             |  81%
+label: Fresh_v_culture supplemental (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |............................................................          |  85%
+  ordinary text without R code
+
+  |                                                                              |..............................................................        |  89%
+label: save sce object (with options) 
+List of 1
+ $ class.source: chr "fold-show"
+
+  |                                                                              |.................................................................     |  93%
+  ordinary text without R code
+
+  |                                                                              |...................................................................   |  96%
+label: session-info-chunk-inserted-by-workflowr
+  |                                                                              |......................................................................| 100%
+  ordinary text without R code
+
+
+/Applications/RStudio.app/Contents/MacOS/pandoc/pandoc +RTS -K512m -RTS P2_03_FvC_Annotations.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output P2_03_FvC_Annotations.html --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --variable bs3=TRUE --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --include-before-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFDKfjI/rmarkdown-strcdc3749b436e.html --variable navbar=1 --variable theme=cosmo --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFDKfjI/rmarkdown-strcdc37d682690.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=hide --variable code_menu=1 --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFDKfjI/headercdc340bbf842.html --include-after-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//RtmpFDKfjI/footercdc374a7d641.html 
