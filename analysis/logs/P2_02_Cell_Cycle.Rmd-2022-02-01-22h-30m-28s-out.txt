@@ -1,0 +1,69 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   5%
+   inline R code fragments
+
+  |                                                                              |.......                                                               |  10%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |..........                                                            |  14%
+  ordinary text without R code
+
+  |                                                                              |.............                                                         |  19%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |.................                                                     |  24%
+  ordinary text without R code
+
+  |                                                                              |....................                                                  |  29%
+label: load data
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |...........................                                           |  38%
+label: get cell cycle genes
+  |                                                                              |..............................                                        |  43%
+  ordinary text without R code
+
+  |                                                                              |.................................                                     |  48%
+label: add cell cycle phase (with options) 
+List of 1
+ $ warning: logi FALSE
+
+  |                                                                              |.....................................                                 |  52%
+  ordinary text without R code
+
+  |                                                                              |........................................                              |  57%
+label: unnamed-chunk-1 (with options) 
+List of 3
+ $ fig.width : num 12
+ $ fig.height: num 8
+ $ results   : chr "asis"
+
+  |                                                                              |...........................................                           |  62%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: visualise-phases-umap (with options) 
+List of 3
+ $ fig.width : num 13
+ $ fig.height: num 8
+ $ results   : chr "asis"
+
+  |                                                                              |..................................................                    |  71%
+  ordinary text without R code
+
+  |                                                                              |.....................................................                 |  76%
+label: average doublet score (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 14
+ $ fig.height: num 10
+
+  |                                                                              |.........................................................             |  81%
+  ordinary text without R code
+
+  |                                                                              |............................................................          |  86%
+label: save data

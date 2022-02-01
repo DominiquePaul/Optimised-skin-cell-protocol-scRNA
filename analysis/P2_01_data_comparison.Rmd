@@ -1126,9 +1126,6 @@ run_batch_correction <- function(sce, sce_name){
     guides(colour=guide_legend(override.aes=list(size=4))) +
     theme_ipsum_rc())
 
-  # correct batch effects with Harmony
-  # set.seed(200)
-
   meta_data <- colData(sce) %>%
     as.data.frame() %>%
     dplyr::select(c(Protocol, Sample))
@@ -1141,7 +1138,7 @@ run_batch_correction <- function(sce, sce_name){
 
 
   set.seed(100)
-  sce <- runUMAP(sce, dimred="harmony", n_neighbors=50, min_dist = 0.1) #, subset_row=rowData(sce)$is_hvg
+  sce <- runUMAP(sce, dimred="harmony", n_neighbors=50, min_dist = 0.1, subset_row=rowData(sce)$is_hvg)
 
   cat("\n\n### UMAP corrected \n\n")
   print(plotReducedDim(sce, "UMAP", colour_by="Sample", point_size=0.5) +
