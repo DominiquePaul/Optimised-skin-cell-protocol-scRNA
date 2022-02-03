@@ -24,7 +24,6 @@ suppressPackageStartupMessages({
   library(RhpcBLASctl)
   library(kableExtra)
   library(parallel)
-  library(pheatmap)
 })
 
 
@@ -58,11 +57,15 @@ heatmap_marker_genes <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", shee
 subclustering_labels <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - subclusters")
 ```
 
-# Manual labelling of Melanocytes and Schwann cells
+# Manual labelling of Melanocytes/Schwann cells
 
 ```{r}
 umap_values <- reducedDim(sce_fresh, "UMAP")
-mask_location <- as.vector((4 < umap_values[,1]) & (umap_values[,1] < 6) & (6 < umap_values[,2]) & (umap_values[,2] < 8))
+mask_location <- as.vector((-4 < umap_values[,1]) & (umap_values[,1] < -3) & (-5 < umap_values[,2]) & (umap_values[,2] < -4))
+
+# new_values <- as.vector(sce_fresh$manual_labels_coarse)
+# new_values[mask_location] <- "Melanocytes/Schwann cells"
+# sce_fresh$manual_labels_coarse <- factor(new_values)
 
 mask_melanocytes <- as.vector(mask_location & logcounts(sce_fresh)["PMEL",] > 3)
 mask_schwann_cells <- as.vector(mask_location & logcounts(sce_fresh)["PMEL",] < 3)
@@ -107,6 +110,116 @@ fig3a2 <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", te
                             override.aes = list(size=4, shape = 15, alpha = 1)))
 fig3a2
 ```
+
+
+# Absolute cell abundance {.tabset}
+
+```{r absolute cell abundance, results="asis", fig.width=12, fig.height=8}
+# Samples combined
+cat(paste0("\n\n##", " Samples combined \n\n"))
+as.data.frame(colData(sce_fresh)) %>%
+  dplyr::group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour="black", stat="identity") +
+   theme_ipsum_rc() +
+   labs(title="Annotated cell type counts",
+        subtitle="For both samples combined",
+        x="", y="Number of cells") +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  guides(fill=guide_legend(title="Cell type"))
+ 
+# Sample 1
+cat(paste0("\n\n##", " Sample 1 \n\n"))
+as.data.frame(colData(sce_fresh)) %>%
+  filter(Sample=="Fresh_S1") %>%
+  dplyr::group_by(manual_labels_coarse, Sample) %>%
+  dplyr::summarise(counts=n()) %>%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour="black", stat="identity") +
+   theme_ipsum_rc() +
+   labs(title="Annotated cell type counts",
+        subtitle="For Sample 1",
+        x="", y="Number of cells") +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  guides(fill=guide_legend(title="Cell type"))
+
+# Sample 2
+cat(paste0("\n\n##", " Sample 2 \n\n"))
+as.data.frame(colData(sce_fresh)) %>%
+  filter(Sample=="Fresh_S2") %>%
+  dplyr::group_by(manual_labels_coarse, Sample) %>%
+  dplyr::summarise(counts=n()) %>%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour="black", stat="identity") +
+   theme_ipsum_rc() +
+   labs(title="Annotated cell type counts",
+        subtitle="For Sample 2",
+        x="", y="Number of cells") +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  guides(fill=guide_legend(title="Cell type"))
+```
+
+
+# One cell count plot
+
+```{r combined plot, fig.width=12, fig.height=8}
+comb <- as.data.frame(colData(sce_fresh)) %>%
+  dplyr::group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>%
+  mutate(Sample="Combined") %>%
+  select(manual_labels_coarse, Sample, counts)
+
+d1 <- as.data.frame(colData(sce_fresh)) %>%
+  filter(Sample=="Fresh_S1") %>%
+  dplyr::group_by(manual_labels_coarse, Sample) %>%
+  dplyr::summarise(counts=n())
+
+d2 <- as.data.frame(colData(sce_fresh)) %>%
+  filter(Sample=="Fresh_S2") %>%
+  dplyr::group_by(manual_labels_coarse, Sample) %>%
+  dplyr::summarise(counts=n())
+
+fig5a <- rbind(comb, d1, d2) %>%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour="black", stat="identity") +
+   theme_ipsum_rc() +
+   labs(title="Annotated cell type counts",
+        x="", y="Number of cells") +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  facet_wrap(~Sample) +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse), type="fill")
+
+fig5a
+```
+
+
+# Relative cell abundance
+
+```{r fig.width=10, fig.height=10}
+data_combined <- as.data.frame(colData(sce_fresh)) %>%
+  dplyr::group_by(manual_labels_coarse) %>%
+  dplyr::summarise(counts=n()) %>%
+  mutate(Sample="Samples combined") %>%
+  select(manual_labels_coarse, Sample, counts)
+
+data_by_sample <- as.data.frame(colData(sce_fresh)) %>%
+  dplyr::group_by(manual_labels_coarse, Sample) %>%
+  dplyr::summarise(counts=n())
+
+fig5b <- rbind(data_combined, data_by_sample) %>%
+  ggplot(aes(x=Sample, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour="black", stat="identity", position="fill") +
+   scale_y_continuous(labels = scales::percent) +
+   theme_ipsum_rc() +
+   labs(title="Relative frequency of cell types",
+        x="", y="Number of cells") +
+   theme(axis.text.x=element_text(angle=50, hjust=1),) +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse), type="fill")
+
+fig5b
+```
+
 
 
 # Subclustering
@@ -173,7 +286,7 @@ run_subclustering <- function(sce_object, cell_type, k=50){
   }
   
   set.seed(100)
-  snn.graph <- buildSNNGraph(sce_subset, k=k, use.dimred="harmony", subset_row=cell_hvgs[cell_type])
+  snn.graph <- buildSNNGraph(sce_subset, k=k, use.dimred="harmony", subset.row=cell_hvgs[[cell_type]])
   clusters <- igraph::cluster_walktrap(snn.graph)$membership
   colData(sce_fresh_copy)[sce_fresh_copy$manual_labels_coarse2 == cell_type, "subcluster_id_k50"] <- clusters
 
@@ -186,7 +299,7 @@ run_subclustering <- function(sce_object, cell_type, k=50){
   column_name <- paste0("UMAP_", cell_type)
 
   # copy from another dimension reduction. This is a workaround to set a
-  # dimension reduction for only some of the cells
+  # dimension reduction for only som  e of the cells
   reducedDim(sce_fresh_copy, column_name) <- reducedDim(sce_fresh_copy, "UMAP")
   # set all values to 0 first
   reducedDim(sce_fresh_copy, column_name)[,c(1,2)] <- NA

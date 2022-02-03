@@ -1,0 +1,2 @@
+Error in convert_annotations(annotation_col, annotation_colors) : 
+  Factor levels on variable Cell_type do not match with annotation_colors

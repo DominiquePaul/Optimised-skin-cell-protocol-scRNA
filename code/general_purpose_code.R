@@ -111,7 +111,9 @@ get_cell_colours <- function(cell_names, type="colour"){
   
   unique_cell_types <- c("Dendritic cells", "Fibroblasts", "Keratinocytes", "Lymphatic endothelial", "Macrophages", 
                          "Macrophages/DC", "Mast cells", "Melanocytes", "Melanocytes/Schwann cells/Neuronal cells", 
-                         "Pericytes/VSMC", "Schwann cells", "Sweat gland cells", "T cells", "Vascular endothelial")
+                         "Melanocytes/Schwann cells",
+                         "Pericytes/VSMC", "Schwann cells", "Sweat gland cells", "T cells", "Vascular endothelial"
+                         ) 
   # colours_cells <-  c("#000000", "#1A65AF", "#F5220F", "#2E8836", "#FDB462", "#FDB462", "#FA8172", 
   #                    "#7BAEDE", "#7BAEDE", "#B17BA5", "#882E72", "#E62B8A", "#FF7F00", "#3BB050") 
   
@@ -119,7 +121,7 @@ get_cell_colours <- function(cell_names, type="colour"){
   #                 "#2E8836", "#2E8836", "#882E72", "#B17BA5", "#FF7F00", "#FDB462", "#E62B8A") 
   
   colours_cells <-  c("#000000", "#1A65AF", "#7BAEDE", "#008886", "#42C24D", "#42C24D", "#882E72", 
-                      "#B17BA5", "#B17BA5", "#FF7F00", "#FDF133", "#E62B8A", "#FF9B8E", "#DB1E0D") 
+                      "#B17BA5", "#B17BA5", "#B17BA5", "#FF7F00", "#FDF133", "#E62B8A", "#FF9B8E", "#DB1E0D") 
   
   # colours_cells <-  c("#000000", "#F18175", "#D89B00", "#ACAF00", "#54BE00", "#54BE00", "#3DC786", 
   #                  "#3FC6CC", "#3DB9FA", "#3DB9FA", "#4BC9F0", "#A09AFF", "#E476F8", "#F76DC5") 
