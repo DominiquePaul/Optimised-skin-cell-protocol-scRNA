@@ -1,0 +1,3436 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dominique Paul" />
+
+<meta name="date" content="2022-02-09" />
+
+<title>Plots</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Protocol Paper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Plots</h1>
+<h4 class="author">Dominique Paul</h4>
+<h4 class="date">2022-02-09</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-02-09
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211228code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211228)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211228code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211228)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtreef9fe4849b4248969dc7847f44706308dc8911357targetblankf9fe484a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/f9fe4849b4248969dc7847f44706308dc8911357" target="_blank">f9fe484</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtreef9fe4849b4248969dc7847f44706308dc8911357targetblankf9fe484a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/f9fe4849b4248969dc7847f44706308dc8911357" target="_blank">f9fe484</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    Metadata/.DS_Store
+    Ignored:    Metadata/cell_annotation_markers/.DS_Store
+    Ignored:    Paper/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.RData
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/Supple_table_1.png
+    Ignored:    analysis/Unused/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    data/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-11h-27m-06s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-11h-27m-06s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-17h-02m-31s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-17h-02m-31s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-18h-20m-01s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-18h-20m-01s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-17h-15m-56s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-17h-15m-56s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-18h-32m-03s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-18h-32m-03s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-09-17h-57m-04s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-09-17h-57m-04s-out.txt
+    Untracked:  analysis/logs/plots.Rmd-2022-02-09-17h-57m-08s-err.txt
+    Untracked:  analysis/logs/plots.Rmd-2022-02-09-17h-57m-08s-out.txt
+    Untracked:  analysis/logs/plots.Rmd-2022-02-09-17h-58m-06s-err.txt
+    Untracked:  analysis/logs/plots.Rmd-2022-02-09-17h-58m-06s-out.txt
+    Untracked:  output/plots_paper_png/
+
+Unstaged changes:
+    Deleted:    Metadata/cluster_annotation_map 2_2_22.xlsx
+    Modified:   Metadata/marker_genes_heatmaps.xlsx
+    Deleted:    Metadata/~$cluster_annotation_map 2_2_22.xlsx
+    Modified:   README.md
+    Deleted:    analysis/FVC_quick_marker.Rmd
+    Modified:   analysis/P2_03_Fresh_only_subclustering.Rmd
+    Deleted:    analysis/P2_03_Fresh_only_subclustering_v2.Rmd
+    Modified:   analysis/admin.rmd
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/plots.Rmd
+    Modified:   code/general_purpose_code.R
+    Deleted:    code/seeds/seed1.rds
+    Deleted:    code/seeds/seed2.rds
+    Deleted:    code/seeds/seed3.rds
+    Deleted:    code/seeds/seed4.rds
+    Deleted:    code/seeds/seed5.rds
+    Deleted:    code/seeds/seed6.rds
+    Deleted:    code/seeds/seed7.rds
+    Deleted:    code/seeds/seed8_fresh.rds
+    Deleted:    code/seeds/seed9_all.rds
+    Deleted:    code/upload_iSEE.sh
+    Deleted:    output/plots/Suppl_Figure5.png
+    Deleted:    output/plots/Suppl_table_1.csv
+    Deleted:    output/plots/Suppl_table_1.png
+    Deleted:    output/plots/Suppl_table_2.csv
+    Deleted:    output/plots/Suppl_table_2.png
+    Deleted:    output/plots/figure10.png
+    Deleted:    output/plots/figure3.png
+    Deleted:    output/plots/figure3_supplemental.png
+    Deleted:    output/plots/figure4.png
+    Deleted:    output/plots/figure5.png
+    Deleted:    output/plots/figure6.png
+    Deleted:    output/plots/old/figure3.png
+    Deleted:    output/plots/old/figure3_supplemental.png
+    Deleted:    output/plots/old/figure4.png
+    Deleted:    output/plots/old/figure5.png
+    Deleted:    output/plots/old/figure6.png
+    Deleted:    output/plots/overview_figure_fvc.png
+    Deleted:    output/plots_31Jan/Suppl_Figure3.png
+    Deleted:    output/plots_31Jan/Suppl_Figure3_v2.png
+    Deleted:    output/plots_31Jan/Suppl_Figure5.png
+    Deleted:    output/plots_31Jan/Suppl_figure4.png
+    Deleted:    output/plots_31Jan/Suppl_figure6.png
+    Deleted:    output/plots_31Jan/Suppl_table_1.csv
+    Deleted:    output/plots_31Jan/Suppl_table_1.png
+    Deleted:    output/plots_31Jan/Suppl_table_2.csv
+    Deleted:    output/plots_31Jan/Suppl_table_2.png
+    Deleted:    output/plots_31Jan/figure2.png
+    Deleted:    output/plots_31Jan/figure3.png
+    Deleted:    output/plots_31Jan/figure5.png
+    Deleted:    output/plots_31Jan/figure6.png
+    Deleted:    output/plots_31Jan/figure7.png
+    Deleted:    output/plots_31Jan/overview_figure_fvc.png
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/plots.Rmd</code>) and HTML (<code>docs/plots.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/c4b210d95296965afb4378ce3e6c9dbef53901f5/analysis/plots.Rmd" target="_blank">c4b210d</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-02-01
+</td>
+<td>
+Annotated clusters, next step is subclustering
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/97b097bcd93105d275ebb47c066a8129eb61b5b2/analysis/plots.Rmd" target="_blank">97b097b</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Added new clustering after meeting 29-Jan-2022
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE)
+
+suppressMessages({
+  library(ggplotify)
+  library(plyr)
+  library(dplyr)
+  library(scater)
+  library(viridis)
+  library(ggpubr)
+  library(magrittr)
+  library(pheatmap)
+  library(hrbrthemes)
+  library(kableExtra)
+  library(tidyr)
+  library(tidySingleCellExperiment)
+  })</code></pre>
+<pre><code>Warning: package &#39;scater&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;SingleCellExperiment&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;SummarizedExperiment&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;MatrixGenerics&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;GenomicRanges&#39; was built under R version 4.1.2</code></pre>
+<pre><code>Warning: package &#39;BiocGenerics&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;S4Vectors&#39; was built under R version 4.1.2</code></pre>
+<pre><code>Warning: package &#39;IRanges&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;GenomeInfoDb&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;Biobase&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;scuttle&#39; was built under R version 4.1.1</code></pre>
+<pre><code>Warning: package &#39;tidySingleCellExperiment&#39; was built under R version 4.1.1</code></pre>
+<pre class="r"><code># load utils functions
+source(&quot;../code/general_purpose_code.R&quot;)
+
+# Where to save plots
+folder_path &lt;- &quot;../output/plots_paper_jpg/&quot;
+
+# Fixes an issue where a warning message is shown repeatedly
+suppressWarnings(suppressMessages(hrbrthemes::import_roboto_condensed()))</code></pre>
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<pre class="r"><code>sce_integrated &lt;- readRDS(file=&quot;../data/EOS_Files/EDI_EOS8_sce.rds&quot;)
+sce_fresh &lt;- readRDS(file=&quot;../data/EOS_Files/Fresh_EOS3_sce.rds&quot;)
+sce_fvc &lt;- readRDS(file=&quot;../data/EOS_Files/FvC_EOS3_sce.rds&quot;)
+
+# Load unfiltered data
+sce_edi_unfiltered &lt;- readRDS(&quot;../data/EOS_Files/EDI_EOS1_sce_unfiltered.rds&quot;)
+sce_fvc_unfiltered &lt;- readRDS(&quot;../data/EOS_Files/FvC_EOS1_sce_unfiltered.rds&quot;)
+
+# Change factors for order in plots
+sce_fvc$Protocol &lt;- factor(sce_fvc$Protocol, levels=c(&quot;Fresh&quot;, &quot;Culture&quot;))
+sce_fvc$Sample &lt;- factor(sce_fvc$Sample, levels=c(&quot;Fresh_S1&quot;, &quot;Fresh_S2&quot;, &quot;Culture_S1&quot;, &quot;Culture_S2&quot;, &quot;Culture_S4&quot;, &quot;Culture_S5&quot;))
+sce_fvc_unfiltered$Protocol &lt;- factor(sce_fvc_unfiltered$Protocol, levels=c(&quot;Fresh&quot;, &quot;Culture&quot;))
+sce_fvc_unfiltered$Sample &lt;- factor(sce_fvc_unfiltered$Sample, levels=c(&quot;Fresh_S1&quot;, &quot;Fresh_S2&quot;, &quot;Culture_S1&quot;, &quot;Culture_S2&quot;, &quot;Culture_S4&quot;, &quot;Culture_S5&quot;))</code></pre>
+</div>
+<div id="annotate-subclusters-for-fresh-samples" class="section level1">
+<h1>Annotate subclusters for fresh samples</h1>
+<p>We load the labels from a mapping stored as excel and add a column with names of the subclusters.</p>
+<pre class="r"><code>subclustering_labels &lt;- read.xlsx(&quot;../metadata/marker_genes_heatmaps.xlsx&quot;, sheet=&quot;Fresh only - subclusters&quot;)
+# Create a column that corresponds to the current &quot;subcluster_id_long&quot; column 
+# in sce_fresh to make mapping easier
+subclustering_labels$mapping_key &lt;- paste0(subclustering_labels$Cell.type, &quot;_&quot;, subclustering_labels$Cluster)
+subclustering_labels$Label &lt;- paste0(subclustering_labels$Order, &quot;-&quot;, subclustering_labels$Label)
+
+# Some labels are replicated as we also have marker genes in the table.power
+# We want a single one to one mapping so we filter for the cell types and 
+# deduplicate the table
+subclustering_labels &lt;- subclustering_labels %&gt;%
+  mutate(mapping_key = paste0(subclustering_labels$Cell.type, &quot;_&quot;, subclustering_labels$Cluster)) %&gt;%
+  select(c(mapping_key, Label)) %&gt;%
+  ungroup() %&gt;%
+  unique()
+
+# We will assign NA values to unmapped subclusters
+all_keys_in_sce &lt;- levels(sce_fresh$subcluster_id_long)
+unmapped_subclusters &lt;- all_keys_in_sce[all_keys_in_sce %in% subclustering_labels$mapping_key == FALSE]
+subclustering_labels &lt;- rbind(subclustering_labels,
+                              data.frame(mapping_key = unmapped_subclusters, Label=NA))
+
+# Replace values in the SCE
+sce_fresh$subcluster_names &lt;- mapvalues(sce_fresh$subcluster_id_long, subclustering_labels$mapping_key, subclustering_labels$Label)
+# Factor values 
+sce_fresh$subcluster_names &lt;- factor(sce_fresh$subcluster_names, levels=sort(unique(subclustering_labels$Label)))</code></pre>
+</div>
+<div id="helper-functions" class="section level1">
+<h1>Helper functions</h1>
+<pre class="r"><code>normalise_by_row &lt;- function(sce_){
+  t(apply(sce_, 1, function(x)((x-min(x))/(max(x)-min(x)))))
+}
+
+plot_aggregated_expr &lt;- function(sce, genes, group_var, title, short = FALSE, normalise=TRUE){
+  if( short ){
+    rownames(sce) &lt;- gsub(&quot;^.*\\.&quot;,&quot;&quot;,rownames(sce))
+  }
+  logNormExpres &lt;- as.data.frame(as.matrix(t(logcounts(sce)[genes,]))) %&gt;% 
+    dplyr::mutate(cluster= colData(sce)[,group_var]) %&gt;%
+    group_by(cluster) %&gt;% 
+    summarise_all(mean)
+  logNormExpresMa &lt;- logNormExpres %&gt;% 
+    set_rownames(logNormExpres$cluster) %&gt;% 
+    dplyr::select(-cluster) %&gt;% 
+    as.matrix() %&gt;% 
+    t()
+  if (normalise) logNormExpresMa &lt;- normalise_by_row(logNormExpresMa)
+  rownames(logNormExpresMa) &lt;- gsub(&quot;^.*\\.&quot;,&quot;&quot;,rownames(logNormExpresMa))
+  # If no column names are set
+  if (is.null(colnames(logNormExpresMa))) colnames(logNormExpresMa) &lt;- 1:dim(logNormExpresMa)[2]
+  return(pheatmap(logNormExpresMa, scale=&quot;row&quot; ,treeheight_row = 0, 
+           cluster_cols = F, cluster_rows = F, 
+           color = colorRampPalette(c(&quot;#2166AC&quot;, &quot;#F7F7F7&quot;, &quot;#B2182B&quot;))(50), 
+           main=title, cellwidth=25, cellheight=20,
+           display_numbers = round(logNormExpresMa,2), silent=TRUE
+           ))
+}</code></pre>
+<p>Save some code by defining these</p>
+<pre class="r"><code>no_background_theme &lt;- theme(panel.background=element_blank(),
+                              panel.border=element_blank(),
+                              panel.grid.major=element_blank(),
+                              panel.grid.minor=element_blank(),
+                              plot.background=element_blank())
+
+no_ticks_theme &lt;- theme(axis.line=element_blank(),
+                      axis.text.x=element_blank(),
+                      axis.text.y=element_blank(),
+                      axis.ticks=element_blank(),
+                      axis.title.x=element_blank(),
+                      axis.title.y=element_blank())</code></pre>
+<p>Update the theme we will use</p>
+<pre class="r"><code>theme_ipsum_updated &lt;- theme_ipsum_rc(base_size = 15, plot_margin = margin(30, 30, 30, 50),  axis_title_size = 12)</code></pre>
+</div>
+<div id="figure-2-fresh-only" class="section level1">
+<h1>Figure 2 (Fresh only)</h1>
+<ul>
+<li>A: UMAP (Fresh only)</li>
+<li>B: Heatmap (Fresh only)</li>
+<li>C: Barplots cell type (Fresh only)</li>
+<li>D: Subclustering Macrophages</li>
+</ul>
+<pre class="r"><code>#########
+### A ###
+#########
+
+Fig2a &lt;- plotReducedDim(sce_fresh, &quot;UMAP&quot;, colour_by=&quot;manual_labels_coarse&quot;, text_by=&quot;manual_labels_coarse&quot;, point_size=0.25, text_size=7) +
+  theme_ipsum_updated +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse)) +
+  theme(legend.position=&quot;bottom&quot;,
+        panel.spacing = unit(10, &quot;mm&quot;)) +
+  guides(color=guide_legend(title=&quot;&quot;,
+                            nrow=2,
+                            byrow=TRUE, 
+                            override.aes = list(size=5, shape = 15, alpha = 1)))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>Fig2a</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#########
+### B ###
+#########
+
+genes &lt;- c(&quot;DCN&quot;, &quot;COL1A1&quot;, &quot;COL6A1&quot;, &quot;TAGLN&quot;, &quot;ACTA2&quot;, &quot;RGS5&quot;, &quot;PECAM1&quot;, 
+           &quot;VWF&quot;, &quot;CLDN5&quot;, &quot;FABP4&quot;, &quot;LYVE1&quot;, &quot;CCL21&quot;, &quot;KRT5&quot;, &quot;KRT10&quot;, &quot;KRT15&quot;, 
+           &quot;IL7R&quot;, &quot;CD3D&quot;, &quot;CXCR4&quot;, &quot;LYZ&quot;, &quot;HLA-DRA&quot;, &quot;CXCL8&quot;, &quot;TPSB2&quot;, &quot;TPSAB1&quot;, 
+           &quot;CTSG&quot;, &quot;PMEL&quot;, &quot;DCT&quot;, &quot;MLANA&quot;, &quot;CDH19&quot;, &quot;CRYAB&quot;, &quot;ITGB8&quot;)
+
+cell_type_order &lt;- c(&quot;Fibroblasts&quot;, &quot;Pericytes/VSMC&quot;,   &quot;Vascular endothelial&quot;, &quot;Lymphatic endothelial&quot;, &quot;Keratinocytes&quot;,   &quot;T cells&quot;,  &quot;Macrophages/DC&quot;,   &quot;Mast cells&quot;, &quot;Melanocytes&quot;, &quot;Schwann cells&quot;)
+
+# the cells which we want to display, ordered by cell type
+column_annotations &lt;- data.frame(cell_name=rownames(colData(sce_fresh)), 
+                                Cell_type=factor(colData(sce_fresh)[,&quot;manual_labels_coarse&quot;], levels=cell_type_order)) %&gt;%
+    filter(Cell_type!=&quot;NA&quot;) %&gt;%
+    arrange(Cell_type) %&gt;%
+    tibble::column_to_rownames(var=&quot;cell_name&quot;)
+
+# the logcounts which we need for the pheatmap function
+sce_plot &lt;- logcounts(sce_fresh[genes, rownames(column_annotations)])
+sce_plot &lt;- normalise_by_row(sce_plot)
+
+# Use own colours for the column annotations
+colours &lt;- get_cell_colours(cell_type_order, type=&quot;raw&quot;, sort=F)
+annotation_colours &lt;- list(&quot;Cell_type&quot;=colours)
+
+
+# create the plot. We convert to ggplot to take advantage of some of the display functions
+Fig2b &lt;- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
+         color=viridis(50))) +
+  theme_ipsum_updated +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), 
+        legend.position=&quot;none&quot;,
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        plot.background=element_blank())
+Fig2b</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#########
+### C ###
+#########
+
+sce_fresh$manual_labels_coarse &lt;- factor(sce_fresh$manual_labels_coarse, levels=cell_type_order)
+
+Fig2c &lt;- as.data.frame(colData(sce_fresh)) %&gt;%
+  dplyr::group_by(manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
+   geom_bar(colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+   theme_ipsum_updated +
+   labs(x=&quot;&quot;, y=&quot;Number of cells&quot;) +
+   theme(axis.text.x=element_text(angle=50, hjust=1)) +
+  guides(fill=&quot;none&quot;) +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse), type=&quot;fill&quot;)
+Fig2c</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#########
+### D ###
+#########
+get_annotated_subcluster &lt;- function(cell_type){
+  sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+  plt &lt;- plotReducedDim(sce_subset, paste0(&quot;UMAP_&quot;, cell_type),
+                 colour_by = &quot;subcluster_names&quot;, text_by=&quot;subcluster_names&quot;, text_size=7) +
+    theme_ipsum_updated +
+    labs(x=&quot;UMAP 1&quot;, y=&quot;UMAP 2&quot;) +
+    get_unnamed_colours(unique(sce_subset$subcluster_names), &quot;Subcluster&quot;, type=&quot;colour&quot;) +
+    theme(legend.position=&quot;none&quot;) +
+    labs(title=cell_type)
+  plt
+}
+
+Fig2d &lt;- get_annotated_subcluster(&quot;Macrophages/DC&quot;)</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>Fig2d</code></pre>
+<pre><code>Warning: Removed 11 rows containing missing values (geom_text_repel).</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="output" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>figure2 &lt;- ggarrange(
+  Fig2a,
+  ggarrange(Fig2b, 
+            ggarrange(Fig2c, Fig2d, ncol = 1, 
+                      labels = c(&quot;C&quot;, &quot;D&quot;), font.label = list(size = 30)),
+            ncol = 2, widths=c(1.4,1)),
+  ncol = 1, nrow = 2,labels = c(&quot;A&quot;, &quot;B&quot;), font.label = list(size = 30)
+)</code></pre>
+<pre><code>Warning: Removed 11 rows containing missing values (geom_text_repel).</code></pre>
+<pre class="r"><code>suppressWarnings(figure2)</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-5-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>scale &lt;- 0.8
+ggsave(paste0(folder_path, &quot;figure2..jpg&quot;),
+       plot=figure2,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="figure-3-fresh-only" class="section level1">
+<h1>Figure 3: Fresh only</h1>
+<ul>
+<li>A: Subclustering Fibroblasts</li>
+<li>B: Violin plot fibroblasts</li>
+<li>C: Subclustering Keratinocytes</li>
+<li>D: Subclustering Pericytes</li>
+</ul>
+<pre class="r"><code># A: Fibroblasts
+Fig3a &lt;- get_annotated_subcluster(&quot;Fibroblasts&quot;) </code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>#########
+### B ###
+#########
+papillary_genes &lt;- c(&quot;COL18A1&quot;, &quot;APCDD1&quot;, &quot;HSPB3&quot;, &quot;NPTX2&quot;, &quot;ROBO2&quot;, &quot;COL23A1&quot;, &quot;PTGDS&quot;, &quot;PDPN&quot;, &quot;COL7A1&quot;, &quot;COLEC12&quot;, &quot;AXIN2&quot;)
+reticular_genes &lt;- c(&quot;MFAP5&quot;, &quot;MGP&quot;, &quot;FGF7&quot;, &quot;A2M&quot;, &quot;ANGPTL1&quot;, &quot;IGF1&quot;, &quot;EFEMP1&quot;, &quot;PCSK5&quot;, &quot;MAP1B&quot;, &quot;COMP&quot;)
+
+# subset to a sce object with only the fibroblasts as annotated manually
+fibro_sce &lt;- sce_fresh[,colData(sce_fresh)$manual_labels_coarse == &quot;Fibroblasts&quot;]
+
+genes &lt;- c(papillary_genes, reticular_genes)
+gene_counts &lt;- logcounts(fibro_sce)[genes,]
+gene_counts &lt;- normalise_by_row(gene_counts)
+
+res &lt;- lapply(unique(fibro_sce$subcluster_id), function(fibro_type){
+  mask &lt;- fibro_sce$subcluster_id == fibro_type
+  data.frame(&quot;genes&quot;=genes, &quot;rowmeans&quot;=rowMeans(gene_counts[, mask]), &quot;subcluster&quot;=fibro_type)
+}) %&gt;% purrr::reduce(rbind)
+
+sfig6a &lt;- ggplot(res[res$genes %in% papillary_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
+  geom_bar(stat=&quot;identity&quot;, position=&quot;dodge&quot;) +
+  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
+  labs(title=&quot;Marker genes for papillary fibroblasts&quot;,
+       x=&quot;&quot;, y=&quot;&quot;) +
+  theme_ipsum_updated
+
+sfig6b &lt;- ggplot(res[res$genes %in% reticular_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
+  geom_bar(stat=&quot;identity&quot;, position=&quot;dodge&quot;) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), axis.ticks.x=element_blank()) +
+  labs(title=&quot;Marker genes for reticular fibroblasts&quot;,
+       x=&quot;&quot;, y=&quot;&quot;) +
+  theme_ipsum_updated
+
+
+# average of logcounts for papillary fibroblast genes
+fibro_sce$papillary_gene_avg &lt;- colMeans(logcounts(fibro_sce)[papillary_genes,])
+# average of logcounts for reticular fibroblast genes
+fibro_sce$reticular_gene_avg &lt;- colMeans(logcounts(fibro_sce)[reticular_genes,])
+
+violin_plot1 &lt;- plotColData(fibro_sce, x=&quot;subcluster_id&quot;, y=&quot;papillary_gene_avg&quot;, colour_by=&quot;subcluster_id&quot;) +
+  labs(title=&quot;Papillary Fibroblasts&quot;,
+       # subtitle=&quot;Average gene expression for a selection of genes&quot;,
+       x=&quot;&quot;, y=&quot;&quot;) +
+  ylim(0,2.5) +
+  theme_ipsum_updated +
+  get_unnamed_colours(unique(fibro_sce$subcluster_id), &quot;&quot;, type=&quot;colour&quot;) +
+  theme(legend.position=&quot;none&quot;,
+        plot.margin=margin(t=5,l=30,r=30, b=5))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>violin_plot2 &lt;- plotColData(fibro_sce, x=&quot;subcluster_id&quot;, y=&quot;reticular_gene_avg&quot;, colour_by=&quot;subcluster_id&quot;) +
+  labs(title=&quot;Reticular Fibroblasts&quot;,
+       # subtitle=&quot;Average gene expression for a selection of genes&quot;, 
+       y=&quot;&quot;, x=&quot;&quot;) +
+  ylim(0,2.5) +
+  theme_ipsum_updated +
+  get_unnamed_colours(unique(fibro_sce$subcluster_id), &quot;&quot;, type=&quot;colour&quot;) +
+  theme(legend.position=&quot;none&quot;,
+        plot.margin=margin(t=5,l=30,r=30, b=5))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>Fig3b &lt;- ggarrange(violin_plot1, violin_plot2, nrow=2)</code></pre>
+<pre><code>Warning: Removed 1 rows containing non-finite values (stat_ydensity).</code></pre>
+<pre><code>Warning: Removed 1 rows containing missing values (position_quasirandom).</code></pre>
+<pre class="r"><code># C: Keratinocytes
+Fig3c &lt;- get_annotated_subcluster(&quot;Keratinocytes&quot;)</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code># D: Keratinocytes
+Fig3d &lt;- get_annotated_subcluster(&quot;Pericytes/VSMC&quot;)</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<div id="output-1" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>figure3 &lt;- ggarrange(
+  Fig3a,
+  Fig3b,
+  Fig3c,
+  Fig3d,
+  ncol = 2, nrow = 2,labels = &quot;AUTO&quot;, font.label = list(size = 30)
+)</code></pre>
+<pre><code>Warning: Removed 8 rows containing missing values (geom_text_repel).</code></pre>
+<pre><code>Warning: Removed 9 rows containing missing values (geom_text_repel).</code></pre>
+<pre><code>Warning: Removed 11 rows containing missing values (geom_text_repel).</code></pre>
+<pre class="r"><code># suppressWarnings(figure3)
+
+scale &lt;- 0.8
+ggsave(paste0(folder_path, &quot;figure3..jpg&quot;),
+       plot=figure3,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="suppl.-figure-5" class="section level1">
+<h1>Suppl. Figure 5</h1>
+<div id="panel-c" class="section level2">
+<h2>Panel C</h2>
+<pre class="r"><code>sce_fresh_fibroblasts &lt;- sce_fresh[,sce_fresh$manual_labels_coarse == &quot;Fibroblasts&quot;]
+
+genes &lt;- c(papillary_genes, reticular_genes)
+
+fibro_subcluster_order &lt;- c(&quot;3-FOS/JUNhigh papillary&quot;, 
+                            &quot;4-Anti-oxidative papillary HMOX1+&quot;,
+                            &quot;5-Papillary PLCG2+&quot;,
+                            &quot;1-Secretory reticular MFAP5+&quot;,
+                            &quot;2-Proinflammatory reticular CCL19+&quot;)
+
+# the cells which we want to display, ordered by cell type
+column_annotations &lt;- data.frame(cell_name=rownames(colData(sce_fresh_fibroblasts)), 
+                                Cell_type=factor(sce_fresh_fibroblasts$subcluster_names, levels=fibro_subcluster_order)) %&gt;%
+    filter(Cell_type!=&quot;NA&quot;) %&gt;%
+    arrange(Cell_type) %&gt;%
+    tibble::column_to_rownames(var=&quot;cell_name&quot;) %&gt;%
+  mutate(Type=ifelse(Cell_type %in% c(&quot;1-Secretory reticular MFAP5+&quot;, &quot;2-Proinflammatory reticular CCL19+&quot;), &quot;Reticular&quot;, &quot;Papillary&quot;))
+
+# the logcounts which we need for the pheatmap function
+sce_plot &lt;- logcounts(sce_fresh_fibroblasts[genes, rownames(column_annotations)])
+sce_plot &lt;- normalise_by_row(sce_plot)
+
+# Use own colours for the column annotations
+colours &lt;- get_unnamed_colours(fibro_subcluster_order, type=&quot;raw&quot;)
+annotation_colours &lt;- list(&quot;Cell_type&quot;=colours)
+
+
+# create the plot. We convert to ggplot to take advantage of some of the display functions
+sfig6c &lt;- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
+         color=viridis(50))) +
+  theme_ipsum_updated +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), 
+        legend.position=&quot;none&quot;,
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        plot.background=element_blank())
+  # labs(title=&quot;Selected marker genes for cell types&quot;)
+sfig6c</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sfig5 &lt;- ggarrange(sfig6a, sfig6b, sfig6c, ncol=1, heights=c(1,1,2), labels=&quot;AUTO&quot;, font.label = list(size = 30))
+
+suppressWarnings(sfig5)</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-8-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>scale &lt;- 0.7
+ggsave(paste0(folder_path, &quot;Suppl_figure5..jpg&quot;),
+       plot=sfig5,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="figure-4-fvc" class="section level1">
+<h1>Figure 4 (FvC)</h1>
+<ul>
+<li>A: UMAP by cell type (FvC)</li>
+<li>B: UMAP by protocol (FvC)</li>
+<li>C: Heatmap of currently “special” dot plot (FvC)</li>
+<li>D: Heatmap of Fibroblasts only with the genes: COL1A1, COL1A2, DCN, COL6A1, COL6A2,MMP1, MMP3, IGFBP3, CXCL3, IL6, TNFAIP6, CXCL2 (FvC)</li>
+</ul>
+<div id="a-and-b" class="section level2">
+<h2>A and B</h2>
+<pre class="r"><code># A
+Fig4a &lt;- plotReducedDim(sce_fvc, &quot;UMAP&quot;, colour_by=&quot;manual_labels_coarse&quot;, text_by=&quot;manual_labels_coarse&quot;, point_size=0.25) +
+  # labs(title=&quot;UMAP coloured by cell type&quot;,
+  #      subtitle = &quot;Fresh and cultured samples&quot;) +
+  theme_ipsum_updated +
+  get_cell_colours(levels(sce_fvc$manual_labels_coarse)) +
+  theme(legend.position=&quot;right&quot;,
+        panel.spacing = unit(5, &quot;mm&quot;),
+        plot.margin=margin(t=5, l=50, r=100, b=5)) +
+  guides(color=guide_legend(title=&quot;&quot;,
+                            # nrow=3,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>Fig4a</code></pre>
+<p><img src="figure/plots.Rmd/Figure%204-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># B
+Fig4b &lt;- plotReducedDim(sce_fvc, &quot;UMAP&quot;, colour_by=&quot;Protocol&quot;, point_size=0.25) +
+  # labs(title=&quot;UMAP coloured by protocol&quot;,
+  #      subtitle = &quot;Fresh and cultured samples&quot;) +
+  theme_ipsum_updated +
+  get_protocol_colours(levels(sce_fvc$Protocol)) +
+  theme(legend.position=&quot;right&quot;,
+        panel.spacing = unit(5, &quot;mm&quot;),
+        plot.margin=margin(t=5, l=50, r=100, b=5)) +
+  guides(color=guide_legend(title=&quot;&quot;,
+                            # nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>Fig4b</code></pre>
+<p><img src="figure/plots.Rmd/Figure%204-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-4c" class="section level2">
+<h2>Figure 4c</h2>
+<pre class="r"><code># Read in a list with marker genes
+marker_overview &lt;- read.xlsx(xlsxFile=&quot;../Metadata/Special_plot_markers.xlsx&quot;)
+
+genes_df &lt;- marker_overview %&gt;%
+  dplyr::rename(cell_type=Cell.type, gene=Marker)
+
+# Check if any genes were not found in data
+genes_not_found &lt;- genes_df$gene[!genes_df$gene %in% rownames(sce_fvc)]
+if (length(genes_not_found) != 0L) cat(paste0(&quot;Genes not found in data: &quot;, genes_not_found))
+genes_df &lt;- genes_df[genes_df$gene %in% rownames(sce_fvc),]
+
+# order of cell types
+cell_type_order &lt;- c(&quot;Fibroblasts&quot;, &quot;Pericytes/VSMC&quot;,   &quot;Vascular endothelial&quot;, 
+                     &quot;Lymphatic endothelial&quot;, &quot;Keratinocytes&quot;,  &quot;T cells&quot;,  
+                     &quot;Macrophages&quot;, &quot;Dendritic cells&quot;, &quot;Mast cells&quot;, &quot;Melanocytes&quot;, 
+                     &quot;Schwann cells&quot;, &quot;Sweat gland cells&quot;)
+genes_df$cell_type &lt;- factor(genes_df$cell_type, levels=cell_type_order)
+
+# normalisation function
+normalit &lt;- function(m) (m - min(m))/(max(m)-min(m))
+
+# for cell.types in cell.types get mean expression of genes by sample
+# considering only the cells in the specific cell types
+heatmap_values &lt;- lapply(unique(genes_df$cell_type), function(cell_type){
+  sce_subset &lt;- sce_fvc[,sce_fvc$manual_labels_coarse == cell_type]
+  genes &lt;- genes_df[genes_df$cell_type == cell_type, &quot;gene&quot;]
+  # log_counts &lt;- normalise_by_row(logcounts(sce_fvc)[genes,])
+  log_counts &lt;- logcounts(sce_subset)[genes,]
+  
+  logNormExpres &lt;- as.data.frame(as.matrix(t(log_counts))) %&gt;% 
+    dplyr::mutate(Protocol=colData(sce_subset)[,&quot;Protocol&quot;], Sample=colData(sce_subset)[,&quot;Sample&quot;]) %&gt;%
+    group_by(Protocol, Sample) %&gt;% 
+    summarise_all(mean) %&gt;%
+    ungroup() %&gt;%
+    # normalise by gene
+    mutate_each_(normalit, vars=3:dim(.)[2]) %&gt;%
+    # Transform into log
+    tidyr::gather(key=&quot;Gene&quot;, &quot;Value&quot;, -c(Protocol, Sample)) %&gt;%
+    mutate(&quot;Cell.type&quot;=cell_type)
+  
+  logNormExpres
+}) %&gt;% purrr::reduce(rbind)</code></pre>
+<pre><code>Warning: `mutate_each_()` was deprecated in dplyr 0.7.0.
+Please use `across()` instead.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
+<pre class="r"><code># Shorten some names
+replacements &lt;- list(c(&quot;Vascular endothelial&quot;, &quot;Vasc. Endo.&quot;),
+                  c(&quot;Lymphatic endothelial&quot;, &quot;Lym. Endo.&quot;),
+                  c(&quot;Sweat gland cells&quot;, &quot;Sweat gl.&quot;),
+                  c(&quot;Dendritic cells&quot;, &quot;Dendritic&quot;),
+                  c(&quot;Schwann cells&quot;, &quot;Schwann&quot;),
+                  c(&quot;Macrophages&quot;, &quot;Macroph.&quot;),
+                  c(&quot;Melanocytes&quot;, &quot;Melano.&quot;))
+for (idx in 1:length(replacements)){
+  old &lt;- replacements[[idx]][1]
+  new &lt;- replacements[[idx]][2]
+  heatmap_values$Cell.type &lt;- sub(old, new, heatmap_values$Cell.type)
+  cell_type_order &lt;- sub(old, new, cell_type_order)
+}
+
+heatmap_values$Cell.type &lt;- factor(heatmap_values$Cell.type, levels=cell_type_order)
+
+# plot
+Fig4c &lt;- ggplot(heatmap_values, aes(x=Gene, y=Sample, fill=Value), otherInfo( Protocol)) +
+  geom_tile() +
+  facet_grid(Protocol~Cell.type, scales=&quot;free&quot;, space=&quot;free&quot;) +
+  theme_ipsum_updated +
+  theme(axis.text.x = element_text(angle = 90, hjust=1), 
+        axis.ticks.x=element_blank(),
+        panel.spacing = unit(3, &quot;mm&quot;),
+        strip.text.y = element_blank(),
+        strip.text.x = element_text(size=11),
+        plot.margin = margin(t=5, b=5, r=30, l=50)
+        ) +
+  labs(#title=&quot;Comparison of selected genes for each cell type&quot;,
+       #subtitle=&quot;Normalised by column&quot;,
+       y=&quot;&quot;, x=&quot;&quot;) +
+  scale_fill_viridis() +
+  guides(fill=&quot;none&quot;) +
+  no_background_theme
+  #no_ticks_theme
+Fig4c</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-9-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<div id="figure-4c-alternative-v1" class="section level3">
+<h3>Figure 4c alternative v1</h3>
+<pre class="r"><code># for cell type in cell_types
+# get logcounts
+# add sample and protocol as columns
+# convert to long
+# 
+# all_samples &lt;- levels(sce_subset$Sample)
+# 
+# averaged_values &lt;- lapply(cell_type_order, function(cell_type){
+#   print(cell_type)
+#     
+#   genes &lt;- genes_df[genes_df$cell_type == cell_type, &quot;gene&quot;]
+#   
+#   sce_subset &lt;- sce_fvc[,sce_fvc$manual_labels_coarse == cell_type]
+#   
+#   # Make sure we have at least 100 cells from each sample
+#   n_cells &lt;- min(100, table(sce_subset$Sample))
+#   
+#   # Get a random sample of the given cell type from each sample
+#   #set.seed(100)
+#   cell_names &lt;- lapply(all_samples, function(sample){
+#     all_cell_names &lt;- colnames(sce_subset[,sce_subset$Sample == sample])
+#     sample(all_cell_names, n_cells)
+#   }) %&gt;% purrr::reduce(c)
+#   
+#   # subset for these cells
+#   sce_subset &lt;- sce_subset[,cell_names]
+#   
+#   # get average values for the given genes
+#   log_counts &lt;- t(normalise_by_row(logcounts(sce_subset)[genes,])) %&gt;%
+#     as.data.frame() %&gt;%
+#     mutate(Sample=sce_subset$Sample, 
+#            Protocol=sce_subset$Protocol, 
+#            &quot;cell_type&quot;=cell_type,
+#            index=rep(1:n_cells, times=length(all_samples))) %&gt;%
+#     pivot_longer(cols=1:5)
+# }) %&gt;% purrr::reduce(rbind)
+# 
+#   
+# ggplot(log_counts, aes(x=index, y=Sample, fill=value), otherInfo(Protocol, name)) +
+#   geom_tile() +
+#   facet_grid(Protocol~name, scales=&quot;free&quot;, space=&quot;free&quot;) +
+#   theme_ipsum_updated +
+#   theme(axis.text.x = element_text(angle = 90, hjust=1), 
+#         axis.ticks.x=element_blank(),
+#         panel.spacing = unit(3, &quot;mm&quot;),
+#         #strip.text.y = element_blank(),
+#         #strip.text.x = element_blank(), #element_text(size=11),
+#         plot.margin = margin(t=5, b=5, r=30, l=30)
+#         ) +
+#   labs(title=&quot;Comparison of selected genes for each cell type&quot;,
+#        subtitle=&quot;Normalised by column&quot;,
+#        y=&quot;&quot;, x=&quot;&quot;) +
+#   scale_fill_viridis() +
+#   guides(fill=&quot;none&quot;) +
+#   no_background_theme +
+#   no_ticks_theme</code></pre>
+</div>
+<div id="figure-4c-alternative-v2" class="section level3">
+<h3>Figure 4c alternative v2</h3>
+<pre class="r"><code>heatmap_values &lt;- lapply(unique(genes_df$cell_type), function(cell_type){
+  sce_subset &lt;- sce_fvc[,sce_fvc$manual_labels_coarse == cell_type]
+  genes &lt;- genes_df[genes_df$cell_type == cell_type, &quot;gene&quot;]
+  # log_counts &lt;- normalise_by_row(logcounts(sce_fvc)[genes,])
+  log_counts &lt;- logcounts(sce_subset)[genes,]
+  
+  logNormExpres &lt;- as.data.frame(as.matrix(t(log_counts))) %&gt;% 
+    dplyr::mutate(Protocol=colData(sce_subset)[,&quot;Protocol&quot;]) %&gt;%
+    group_by(Protocol) %&gt;% 
+    summarise_all(mean) %&gt;%
+    ungroup() %&gt;%
+    # normalise by gene
+    # mutate_each_(normalit, vars=2:dim(.)[2]) %&gt;%
+    # Transform into log
+    tidyr::gather(key=&quot;Gene&quot;, &quot;Value&quot;, -c(Protocol)) %&gt;%
+    mutate(&quot;Cell.type&quot;=cell_type)
+  
+  logNormExpres
+}) %&gt;% purrr::reduce(rbind)
+
+# Shorten some names
+replacements &lt;- list(c(&quot;Vascular endothelial&quot;, &quot;Vasc. Endo.&quot;),
+                  c(&quot;Lymphatic endothelial&quot;, &quot;Lym. Endo.&quot;),
+                  c(&quot;Sweat gland cells&quot;, &quot;Sweat gl.&quot;),
+                  c(&quot;Dendritic cells&quot;, &quot;Dendritic&quot;),
+                  c(&quot;Schwann cells&quot;, &quot;Schwann&quot;),
+                  c(&quot;Macrophages&quot;, &quot;Macroph.&quot;),
+                  c(&quot;Melanocytes&quot;, &quot;Melano.&quot;))
+for (idx in 1:length(replacements)){
+  old &lt;- replacements[[idx]][1]
+  new &lt;- replacements[[idx]][2]
+  heatmap_values$Cell.type &lt;- sub(old, new, heatmap_values$Cell.type) 
+}
+
+# factorise
+heatmap_values$Cell.type &lt;- factor(heatmap_values$Cell.type, levels=unique(heatmap_values$Cell.type))
+
+# plot
+Fig4c_v2 &lt;- ggplot(heatmap_values, aes(x=Gene, y=Protocol, fill=Value, colour=Value), otherInfo( Protocol)) +
+  geom_point(size=5) +
+  facet_grid(Protocol~Cell.type, scales=&quot;free&quot;, space=&quot;free&quot;) +
+  theme_ipsum_updated +
+  theme(axis.text.x = element_text(angle = 90, hjust=1), 
+        axis.ticks.x=element_blank(),
+        panel.spacing = unit(3, &quot;mm&quot;),
+        strip.text.y = element_blank(),
+        strip.text.x = element_text(size=11),
+        plot.margin = margin(t=5, b=5, r=30, l=50)
+        ) +
+  labs(#title=&quot;Comparison of selected genes&quot;,
+       #subtitle=&quot;Normalised by column&quot;,
+       y=&quot;&quot;, x=&quot;&quot;) +
+  scale_fill_viridis() +
+  scale_colour_viridis() +
+  guides(fill=&quot;none&quot;) + 
+  guides(colour=&quot;none&quot;) +
+  no_background_theme
+Fig4c_v2</code></pre>
+<p><img src="figure/plots.Rmd/figure%204c%20alternative%20v2-1.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="figure-4d" class="section level2">
+<h2>Figure 4d</h2>
+<pre class="r"><code>genes &lt;- c(&quot;COL1A1&quot;, &quot;COL1A2&quot;, &quot;DCN&quot;, &quot;COL6A1&quot;, &quot;COL6A2&quot;, &quot;MMP1&quot;, &quot;MMP3&quot;, &quot;IGFBP3&quot;, &quot;CXCL3&quot;, &quot;IL6&quot;, &quot;TNFAIP6&quot;, &quot;CXCL2&quot;)
+
+sce_fvc_fibroblasts &lt;- sce_fvc[,sce_fvc$manual_labels_coarse == &quot;Fibroblasts&quot;]
+# sample to make plot fit
+# set.seed(100)
+# sce_fvc_fibroblasts[,sample(colnames(sce_fvc_fibroblasts), 1000)]
+
+# the cells which we want to display, ordered by cell type
+column_annotations &lt;- data.frame(&quot;cell_name&quot;=rownames(colData(sce_fvc_fibroblasts)),
+                                 &quot;Sample&quot;=factor(colData(sce_fvc_fibroblasts)[,&quot;Sample&quot;]),
+                                 &quot;Protocol&quot;=factor(sce_fvc_fibroblasts$Protocol)) %&gt;%
+    tibble::column_to_rownames(var=&quot;cell_name&quot;)
+
+# the logcounts which we need for the pheatmap function
+sce_plot &lt;- logcounts(sce_fvc_fibroblasts[genes, rownames(column_annotations)])
+sce_plot &lt;- normalise_by_row(sce_plot)
+
+# Use own colours for the column annotations
+colours_protocol &lt;- get_protocol_colours(unique(sce_fvc_fibroblasts$Protocol), type=&quot;raw&quot;)
+colours_sample &lt;- get_sample_colours(unique(sce_fvc_fibroblasts$Sample), type=&quot;raw&quot;)
+annotation_colours &lt;- list(&quot;Sample&quot;=colours_sample, &quot;Protocol&quot;=colours_protocol)
+
+
+# create the plot. We convert to ggplot to take advantage of some of the display functions
+Fig4d &lt;- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
+         color=viridis(50))) +
+  theme_ipsum_updated +
+  no_background_theme +
+  no_ticks_theme
+  # labs(title=&quot;Selected genes for Fibroblasts&quot;)
+Fig4d</code></pre>
+<p><img src="figure/plots.Rmd/fvc%20special%20heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="output-2" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>figure4 &lt;- ggarrange(
+  Fig4a,
+  Fig4b,
+  Fig4c,
+  Fig4d,
+  ncol = 1,labels = c(&quot;AUTO&quot;), font.label = list(size = 30),
+  heights = c(1,1,0.8,0.8)
+)</code></pre>
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d</code></pre>
+<pre class="r"><code># suppressWarnings(figure4)
+
+scale &lt;- 0.7
+ggsave(paste0(folder_path, &quot;figure4..jpg&quot;),
+       plot=figure4,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)
+
+figure4_v2 &lt;- ggarrange(
+  Fig4a,
+  Fig4b,
+  Fig4c_v2,
+  Fig4d,
+  ncol = 1,labels = c(&quot;AUTO&quot;), font.label = list(size = 30),
+  heights = c(1,1,0.6,0.8)
+)</code></pre>
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d
+
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+width unknown for character 0x2d</code></pre>
+<pre class="r"><code># suppressWarnings(figure4)
+
+scale &lt;- 0.7
+ggsave(paste0(folder_path, &quot;figure4_v2..jpg&quot;),
+       plot=figure4_v2,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="figure-5" class="section level1">
+<h1>Figure 5:</h1>
+<div id="panel-a" class="section level2">
+<h2>Panel A</h2>
+<pre class="r"><code># A1
+fig5a1 &lt;- colData(sce_edi_unfiltered) %&gt;% 
+  as.data.frame() %&gt;%
+  ggplot(aes(x=log_total, y=subsets_genes_detected, color=to_be_dropped)) +
+  geom_point(size=0.25) +
+  labs(y=&quot;&quot;,
+       x=&quot;Library size (log10)&quot;,
+       #title=&quot;Library size vs. number of non-mitochondrial genes&quot;,
+       #subtitle=&quot;Cells dropped coloured in red&quot;
+       ) +
+  scale_y_log10() +
+  geom_density_2d() +
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_updated +
+  theme(panel.spacing = unit(2, &quot;mm&quot;),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +
+  guides(color=guide_legend(title=&quot;Dropped&quot;)) +
+  scale_colour_manual(values=c(&quot;#DB1E0D&quot;, &quot;#2065AE&quot;))
+
+# A2
+fig5a2 &lt;- ggplot(colData(sce_edi_unfiltered) %&gt;% as.data.frame,
+       aes(x=log_total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(#title=&quot;Library size vs. number of non-mitochondrial genes&quot;,
+       #subtitle=&quot;Colour indicates mito. percentage of library size&quot;,
+       x=&quot;Library size (log10)&quot;,
+       y=&quot;&quot;) +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_updated +
+  theme(panel.spacing = unit(2, &quot;mm&quot;),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +# Left margin) +
+  guides(color=guide_colourbar(title=&quot;% mito.&quot;)) </code></pre>
+</div>
+<div id="panel-b" class="section level2">
+<h2>Panel B</h2>
+<pre class="r"><code>sample_to_protocol &lt;- colData(sce_integrated) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Protocol, Sample) %&gt;%
+  dplyr::summarise()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Protocol&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>cc_sample &lt;- sce_integrated %&gt;% 
+  nest(data=-Sample) %&gt;% 
+  mutate(n_cells = purrr::map_dbl(data, ~ dim(.x)[2]),
+         sum_of_genes = purrr::map_dbl(data, ~ sum(colData(.x)$detected)),
+         average_n_genes = purrr::map_dbl(data, ~ mean(colData(.x)$detected)),
+         mean_n_nonzero_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) &gt; 0) &gt; 0)),
+         mean_n_10cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) &gt; 0) &gt; 10)),
+         mean_n_1perc_cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) &gt; 0) &gt; ceiling(dim(.x)[2]/100)))) %&gt;%
+  left_join(sample_to_protocol, by=&quot;Sample&quot;)</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre class="r"><code>fig5b &lt;- ggpubr::ggarrange(
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = average_n_genes)) +  # Plot with values on top
+    geom_bar(stat = &quot;identity&quot;) +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
+    labs(title = &quot;&quot;, x=&quot;&quot;, fill=&quot;Mean genes\nper cell&quot;, y=&quot;Cells&quot;) +
+    theme_ipsum_updated +
+    theme(axis.text.x = element_text(angle = 45, hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, &quot;mm&quot;),
+          plot.margin = margin(2,2,2,2)),
+  
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = mean_n_1perc_cells_genes)) +  # Plot with values on top
+    geom_bar(stat = &quot;identity&quot;) +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
+    labs(#title = &quot;&quot;, 
+      x=&quot;&quot;, fill=&quot;Num. genes\nin at least \n1% of cells&quot;,  y=&quot;Cells&quot;) +
+    theme_ipsum_updated +
+    theme(axis.text.x = element_text(angle = 45,hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x=element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, &quot;mm&quot;),
+          plot.margin = margin(2,2,2,2)),
+  nrow = 2)</code></pre>
+</div>
+<div id="panel-c-1" class="section level2">
+<h2>Panel C</h2>
+<pre class="r"><code>fig5c1 &lt;- sce_integrated %&gt;% 
+  ggplot() +
+  theme_ipsum_updated +
+  labs(#title=&quot;Distribution of cell library sizes&quot;,
+       x=&quot;Log total expression&quot;, y=&quot;Density&quot;) +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol), type=&quot;fill&quot;) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol)) +
+  theme(plot.margin = margin(30,20,30,50))</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre class="r"><code>fig5c2 &lt;- sce_integrated %&gt;% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_updated +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, &quot;mm&quot;),
+        plot.margin = margin(30,20,30,30)) +
+  guides(fill=guide_legend(ncol=1, )) +
+  labs(#title=&quot;Distribution of cell library sizes&quot;,
+       x=&quot;Log total expression&quot;, y=&quot;Density&quot;) +
+  theme(panel.spacing = unit(2, &quot;mm&quot;)) +
+  get_sample_colours(levels(colData(sce_integrated)$Sample), type=&quot;fill&quot;) +
+  get_sample_colours(levels(colData(sce_integrated)$Sample))</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...
+New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+</div>
+<div id="panel-d" class="section level2">
+<h2>Panel D</h2>
+<pre class="r"><code>fig5d1 &lt;- sce_integrated %&gt;% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Protocol, color=Protocol), alpha=0.3) +
+  theme_ipsum_updated +
+  labs(#title=&quot;Distribution of gene counts&quot;,
+       x=&quot;Number of genes (log10)&quot;, y=&quot;Density&quot;) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol)) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol), type=&quot;fill&quot;) +
+  theme(plot.margin = margin(30,20,30,50))</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+<pre class="r"><code>fig5d2 &lt;- sce_integrated %&gt;% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_updated +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, &quot;mm&quot;),
+        plot.margin = margin(30,20,30,30)) +
+  guides(fill=guide_legend(ncol=1)) +
+  labs(#title=&quot;Distribution of gene counts&quot;,
+       x=&quot;Number of genes (log10)&quot;, y=&quot;Density&quot;) +
+  get_sample_colours(levels(colData(sce_integrated)$Sample), type=&quot;fill&quot;) +
+  get_sample_colours(levels(colData(sce_integrated)$Sample))</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...
+New names:
+* PC1...1 -&gt; PC1...54
+* PC2...2 -&gt; PC2...55
+* PC3...3 -&gt; PC3...56
+* PC4...4 -&gt; PC4...57
+* PC5...5 -&gt; PC5...58
+* ...</code></pre>
+</div>
+<div id="output-3" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>Fig5 &lt;- ggpubr::ggarrange(
+  ggpubr::ggarrange(fig5a1,fig5a2, ncol = 2),
+  fig5b,
+  ggpubr::ggarrange(fig5c1, fig5c2, ncol=2),
+  ggpubr::ggarrange(fig5d1, fig5d2, ncol=2),
+  ncol = 1, nrow = 4,labels = &quot;AUTO&quot;, font.label = list(size = 30)
+)</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre><code>Warning: stat_contour(): Zero contours were generated</code></pre>
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<pre class="r"><code># suppressWarnings(Fig5)
+
+ggsave(paste0(folder_path, &quot;figure5..jpg&quot;),
+       plot=Fig5,
+       width=20*0.9,
+       height=26*0.9,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="figure-6" class="section level1">
+<h1>Figure 6</h1>
+<ul>
+<li>UMAP by cell type (Integrated data)</li>
+<li>UMAP by protocol (Integrated data)</li>
+<li>Boxplot of all cell types with one scale</li>
+<li>Differential abundance (Integrated data)</li>
+</ul>
+<pre class="r"><code># A
+Fig6a &lt;- plotReducedDim(sce_integrated, &quot;UMAP&quot;, colour_by=&quot;manual_labels_coarse&quot;, text_by=&quot;manual_labels_coarse&quot;, point_size=0.25) +
+  # labs(title=&quot;UMAP coloured by cell type&quot;,
+  #      subtitle = &quot;Integrated datasets&quot;) +
+  theme_ipsum_updated +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse)) +
+  theme(legend.position=&quot;right&quot;,
+        panel.spacing = unit(5, &quot;mm&quot;),
+        plot.margin = margin(30,100,30,150)) +
+  guides(color=guide_legend(title=&quot;&quot;,
+                            # nrow=3,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code># B
+Fig6b &lt;- plotReducedDim(sce_integrated, &quot;UMAP&quot;, colour_by=&quot;Protocol&quot;, point_size=0.25) +
+  # labs(title=&quot;UMAP coloured by protocol&quot;,
+  #      subtitle = &quot;Integrated datasets&quot;) +
+  theme_ipsum_updated +
+  get_protocol_colours(levels(sce_integrated$Protocol)) +
+  theme(legend.position=&quot;right&quot;,
+        panel.spacing = unit(5, &quot;mm&quot;),
+        plot.margin = margin(30,100,30,150)) +
+  guides(color=guide_legend(title=&quot;&quot;,
+                            # nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))</code></pre>
+<pre><code>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code># C
+Fig6c &lt;- as.data.frame(colData(sce_integrated)) %&gt;%
+  dplyr::group_by(manual_labels_coarse) %&gt;%
+  dplyr::summarise(counts=n()) %&gt;%
+  mutate(perc=round(counts/sum(counts), 2)) %&gt;%
+  mutate(manual_labels_coarse=sub(&quot;Melanocytes/Schwann cells/Neuronal cells&quot;, &quot;Melanocytes/Schwann/Neuronal&quot;, manual_labels_coarse)) %&gt;%
+  ggplot(aes(x=1, y=perc, fill=forcats::fct_rev(manual_labels_coarse))) +
+  geom_bar(aes(width=0.1), colour=&quot;black&quot;, stat=&quot;identity&quot;) +
+  theme_ipsum_updated +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse), type=&quot;fill&quot;) +
+  labs(# title=&quot;Relative frequencies of cell types&quot;,
+        # subtitle=&quot;Integrated data&quot;,
+        x=&quot;&quot;, y=&quot;Percentage of cells&quot;) +
+  theme(axis.text.y=element_blank(),
+        legend.position=&quot;right&quot;,
+        plot.margin=margin(50, 100, 30, 100)
+        ) +
+  guides(fill=guide_legend(title=&quot;Cell type&quot;,
+                           title.position=&quot;top&quot;,
+                           ncol=2,
+                           title.hjust=0)) +
+  no_background_theme +
+  coord_flip()</code></pre>
+<pre><code>Warning: Ignoring unknown aesthetics: width</code></pre>
+<pre class="r"><code># D
+count_table &lt;- table(sce_integrated$manual_labels_coarse, sce_integrated$Sample)
+lib_sizes &lt;- colSums(count_table)
+
+sample_protocol_mapping &lt;- as.data.frame(colData(sce_integrated)) %&gt;%
+  select(Protocol, Sample) %&gt;%
+  unique() %&gt;%
+  tibble::remove_rownames() %&gt;%
+  tibble::column_to_rownames(&#39;Sample&#39;)
+
+Fig6d &lt;- purrr::map(unique(sce_integrated$manual_labels_coarse), ~ {
+  tibble::tibble(counts = count_table[.x,],
+                 abundances = counts/lib_sizes,
+                 Protocol= sample_protocol_mapping[levels(sce_integrated$Sample), &quot;Protocol&quot;],
+                 Cluster = .x)}) %&gt;% 
+  purrr::reduce(rbind) %&gt;% 
+  dplyr::arrange(&quot;Cluster&quot;) %&gt;%
+  ggplot() + 
+  # geom_boxplot(aes(y=abundances,x=Protocol, color=Protocol)) +
+  geom_jitter(aes(y=abundances,x=Protocol, color=Protocol), size = 2, width=0.2) +
+  theme_ipsum_updated +
+  theme(axis.text.x = element_text(angle=45, hjust = 1), strip.text.x = element_text(family = &quot;Helvetica&quot;,face = &quot;bold&quot;),
+        legend.position=&quot;none&quot;) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(#title=&quot;Relative cell type abundance by sample&quot;, 
+    x=&quot;&quot;, y=&quot;&quot;) +
+  facet_wrap(~Cluster, scales = &quot;free_y&quot;,ncol = 5, nrow = 2) +
+  get_protocol_colours(levels(sce_integrated$Protocol))
+
+Fig6a</code></pre>
+<p><img src="figure/plots.Rmd/figure%206-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Fig6b</code></pre>
+<p><img src="figure/plots.Rmd/figure%206-2.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Fig6c</code></pre>
+<p><img src="figure/plots.Rmd/figure%206-3.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Fig6d</code></pre>
+<p><img src="figure/plots.Rmd/figure%206-4.png" width="960" style="display: block; margin: auto;" /></p>
+<div id="output-4" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>figure6 &lt;- ggarrange(
+  Fig6a,
+  Fig6b,
+  Fig6c,
+  Fig6d,
+  ncol = 1,labels = c(&quot;AUTO&quot;), font.label = list(size = 30), heights=c(1.5,1.5,0.5,1.5)
+)
+
+# suppressWarnings(figure6)
+
+scale &lt;- 0.9
+ggsave(paste0(folder_path, &quot;figure6..jpg&quot;),
+       plot=figure6,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)
+
+
+# figure6 &lt;- ggarrange(
+#   ggarrange(ggarrange(Fig6a, Fig6b, labels = c(&quot;A&quot;, &quot;B&quot;), font.label = list(size = 30), nrow=2), 
+#             Fig6c, labels = c(&quot;&quot;, &quot;C&quot;), font.label = list(size = 30), ncol=2, widths=c(3, 1)),
+#   Fig6d,
+#   ncol = 1,labels = c(&quot;&quot;, &quot;D&quot;), font.label = list(size = 30), heights=c(2,1.2) 
+# )
+# 
+# suppressWarnings(figure6)
+# 
+# scale &lt;- 0.9
+# ggsave(paste0(folder_path, &quot;figure6..jpg&quot;),
+#        plot=figure6,
+#        width=20*scale,
+#        height=26*scale,
+#        units=&quot;in&quot;,
+#        bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="suppl.-figure-2-version-1" class="section level1">
+<h1>Suppl. Figure 2 (version 1)</h1>
+<pre class="r"><code>subclustering_labels &lt;- read.xlsx(&quot;../metadata/marker_genes_heatmaps.xlsx&quot;, sheet=&quot;Fresh only - subclusters&quot;)
+
+# sort subclustering_labels alphabetically by the names
+heatmap_marker_genes_subclusters &lt;- subclustering_labels %&gt;% 
+  mutate(Gene=factor(Gene, levels=unique(Gene))) # %&gt;%
+  # arrange(Label)
+
+plot_heatmap &lt;- function(cell_type, normalise=TRUE){
+  
+  sce_subset &lt;- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+  # the genes which we want to display
+  genes &lt;- heatmap_marker_genes_subclusters %&gt;%
+    filter(Cell.type==cell_type) %&gt;%
+    pull(Gene)
+  
+  # check whether genes are in rownames
+  genes_not_found &lt;- genes[genes %in% rownames(sce_subset) == FALSE]
+  if (length(genes_not_found) &gt; 0) cat(paste0(&quot;\nGenes not found for cell type &quot;, cell_type, &quot;: &quot;, genes_not_found))
+  
+  genes &lt;- genes[genes %in% rownames(sce_subset)] 
+  
+  # the cells which we want to display, ordered by subcluster
+  column_annotations &lt;- data.frame(row.names=colnames(sce_subset), &quot;Subcluster&quot;=sce_subset$subcluster_names) %&gt;%
+    arrange(Subcluster)
+  
+  # the logcounts which we need for the pheatmap function
+  sce_plot &lt;- logcounts(sce_subset[as.vector(genes), rownames(column_annotations)])
+  # normalise by row
+  sce_plot &lt;- normalise_by_row(sce_plot)
+  
+  # Use own colours for the column annotations
+  colours &lt;- get_unnamed_colours(unique(column_annotations$Subcluster), type=&quot;raw&quot;)
+  annotation_colours &lt;- list(&quot;Subcluster&quot;=colours)
+
+  #plt &lt;- grid.grabExpr(draw(hmap, annotation_legend_side=&quot;bottom&quot;, heatmap_legend_side=&quot;right&quot;)) +
+  plt &lt;- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
+                  show_rownames=TRUE, show_colnames=FALSE, color=viridis(50), 
+                  annotation_col=column_annotations, annotation_colors=annotation_colours)) +
+    theme_ipsum_updated + 
+    theme(axis.line=element_blank(),axis.text.x=element_blank(),
+            axis.text.y=element_blank(),axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),legend.position=&quot;none&quot;,
+            panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),plot.background=element_blank()) +
+    labs(title=cell_type)
+  
+  plt
+}
+
+
+sfig2a &lt;- plot_heatmap(&quot;Fibroblasts&quot;)</code></pre>
+<p><img src="figure/plots.Rmd/suppl.%20figure%202-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sfig2b &lt;- plot_heatmap(&quot;Keratinocytes&quot;)</code></pre>
+<p><img src="figure/plots.Rmd/suppl.%20figure%202-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sfig2c &lt;- plot_heatmap(&quot;Pericytes/VSMC&quot;)</code></pre>
+<pre><code>
+Genes not found for cell type Pericytes/VSMC: TPM22</code></pre>
+<p><img src="figure/plots.Rmd/suppl.%20figure%202-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="output-5" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>SFig2 &lt;- suppressMessages(suppressWarnings(ggpubr::ggarrange(
+  sfig2a, 
+  sfig2b,
+  sfig2c,
+  ncol = 1,labels = c(&quot;AUTO&quot;), font.label = list(size = 30)
+)))
+
+suppressMessages(suppressWarnings(SFig2))</code></pre>
+<p><img src="figure/plots.Rmd/suppl.%20figure2%20one%20figure-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>scale &lt;- 0.8
+ggsave(paste0(folder_path, &quot;Suppl_Figure2..jpg&quot;),
+       plot=SFig2,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="suppl.-figure-2-version-2" class="section level1">
+<h1>Suppl. Figure 2 (version 2)</h1>
+<pre class="r"><code>subclustering_labels &lt;- read.xlsx(&quot;../metadata/marker_genes_heatmaps.xlsx&quot;, sheet=&quot;Fresh only - subclusters&quot;)
+
+relevant_cell_types &lt;- c(&quot;Fibroblasts&quot;, &quot;Keratinocytes&quot;, &quot;Pericytes/VSMC&quot;) 
+
+sce_fresh_heatmap &lt;- sce_fresh
+
+# Get the list into the right order
+heatmap_marker_genes_subclusters &lt;- lapply(relevant_cell_types, function(cell_type){
+  subclustering_labels %&gt;% 
+    filter(Cell.type == cell_type) %&gt;%
+    arrange(Label)
+}) %&gt;% purrr::reduce(rbind)
+
+# the genes which we want to display
+genes &lt;- heatmap_marker_genes_subclusters %&gt;%
+  pull(Gene)
+# check whether genes are in rownames
+genes_not_found &lt;- genes[genes %in% rownames(sce_fresh_heatmap) == FALSE]
+if (length(genes_not_found) &gt; 0) cat(paste0(&quot;\nGenes not found: &quot;, genes_not_found))</code></pre>
+<pre><code>
+Genes not found: TPM22</code></pre>
+<pre class="r"><code>genes &lt;- genes[genes %in% rownames(sce_fresh_heatmap)] 
+
+idx &lt;- seq(1, dim(sce_fresh_heatmap)[2], 10)
+sce_fresh_heatmap &lt;- sce_fresh_heatmap[, idx] 
+
+# the cells which we want to display, ordered by subcluster
+column_annotations &lt;- data.frame(row.names=colnames(sce_fresh_heatmap), 
+                                 &quot;Subcluster&quot;=sce_fresh_heatmap$subcluster_names,
+                                 &quot;Cell&quot;=sce_fresh_heatmap$manual_labels_coarse) %&gt;%
+  mutate(Cell = case_when(Cell %in% relevant_cell_types == FALSE ~ &quot;Other&quot;, 
+                          TRUE ~ as.character(Cell))) %&gt;%
+  mutate(Subcluster = case_when(Cell== &quot;Other&quot; ~ &quot;Other&quot;, 
+                          TRUE ~ as.character(Subcluster))) %&gt;%
+  arrange(factor(Cell, levels = c(relevant_cell_types,&quot;Other&quot;)), Subcluster) %&gt;%
+  mutate(Cell=factor(Cell, levels = c(relevant_cell_types,&quot;Other&quot;)),
+         Subcluster=factor(Subcluster, levels=unique(Subcluster)))
+
+# the logcounts which we need for the pheatmap function
+sce_plot &lt;- logcounts(sce_fresh_heatmap[genes, rownames(column_annotations)])
+# normalise by row
+sce_plot &lt;- normalise_by_row(sce_plot)
+
+# Use own colours for the column annotations
+# colours &lt;- get_unnamed_colours(unique(column_annotations$Subcluster), type=&quot;raw&quot;)
+# annotation_colours &lt;- list(&quot;Subcluster&quot;=colours)
+
+#plt &lt;- grid.grabExpr(draw(hmap, annotation_legend_side=&quot;bottom&quot;, heatmap_legend_side=&quot;right&quot;)) +
+SFig3_v2 &lt;- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
+                show_rownames=TRUE, show_colnames=FALSE, color=viridis(50), 
+                annotation_col=column_annotations #, annotation_colors=annotation_colours
+                )) +
+  theme_ipsum_updated + 
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),legend.position=&quot;none&quot;,
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank())</code></pre>
+<p><img src="figure/plots.Rmd/suppl.%20figure%203-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>suppressMessages(suppressWarnings(SFig3_v2))</code></pre>
+<p><img src="figure/plots.Rmd/suppl.%20figure%203-2.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(paste0(folder_path, &quot;Suppl_Figure3_v2..jpg&quot;),
+       plot=SFig3_v2,
+       width=18*scale,
+       height=18*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+<div id="suppl.-figure-3" class="section level1">
+<h1>Suppl. Figure 3</h1>
+<div id="panel-a-1" class="section level2">
+<h2>Panel A</h2>
+<pre class="r"><code># Expression values vs genes
+cat(&quot;\n\n### Expression values vs. number of genes \n\n&quot;)</code></pre>
+<pre><code>
+
+### Expression values vs. number of genes </code></pre>
+<pre class="r"><code>figA1 &lt;- colData(sce_fvc_unfiltered) %&gt;% 
+  as.data.frame() %&gt;%
+  ggplot(aes(x=log_total, y=subsets_genes_detected, color=to_be_dropped)) +
+  geom_point(size=0.25) +
+  labs(y=&quot;&quot;,
+       x=&quot;Library size (log10)&quot;,
+       #title=&quot;Library size vs. number of non-mitochondrial genes&quot;,
+       #subtitle=&quot;Cells dropped coloured in red&quot;
+       ) +
+  scale_y_log10() +
+  geom_density_2d() +
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_updated +
+  theme(panel.spacing = unit(2, &quot;mm&quot;),
+        # axis.text.x = element_text(size=8),
+        # axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2, r = 20, l = 50, b = 2)) +
+  guides(color=guide_legend(title=&quot;Dropped&quot;)) +
+  scale_colour_manual(values=c(&quot;#2065AE&quot;, &quot;#DB1E0D&quot;))
+
+figA2 &lt;- ggplot(colData(sce_fvc_unfiltered) %&gt;% as.data.frame,
+       aes(x=log_total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(#title=&quot;Library size vs. number of non-mitochondrial genes&quot;,
+       #subtitle=&quot;Colour indicates mito. percentage of library size&quot;,
+       x=&quot;Library size (log10)&quot;,
+       y=&quot;&quot;) +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_updated +
+  theme(panel.spacing = unit(2, &quot;mm&quot;),
+        #axis.text.x = element_text(size=8),
+        #axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2, r = 20, l = 20, b = 2)) +# Left margin) +
+  guides(color=guide_colourbar(title=&quot;% mito.&quot;)) 
+
+suppressWarnings(figA1)</code></pre>
+<p><img src="figure/plots.Rmd/figure%203-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>suppressWarnings(figA2)</code></pre>
+<p><img src="figure/plots.Rmd/figure%203-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="panel-b-1" class="section level2">
+<h2>Panel B</h2>
+<pre class="r"><code>sample_to_protocol &lt;- colData(sce_fvc) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Protocol, Sample) %&gt;%
+  dplyr::summarise()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Protocol&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>cc_sample &lt;- sce_fvc %&gt;% 
+  nest(data=-Sample) %&gt;% 
+  mutate(n_cells = purrr::map_dbl(data, ~ dim(.x)[2]),
+         sum_of_genes = purrr::map_dbl(data, ~ sum(colData(.x)$detected)),
+         average_n_genes = purrr::map_dbl(data, ~ mean(colData(.x)$detected)),
+         mean_n_nonzero_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) &gt; 0) &gt; 0)),
+         mean_n_10cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) &gt; 0) &gt; 10)),
+         mean_n_1perc_cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) &gt; 0) &gt; ceiling(dim(.x)[2]/100)))) %&gt;%
+  left_join(sample_to_protocol, by=&quot;Sample&quot;) %&gt;%
+  mutate(Protocol=factor(Protocol, levels=c(&quot;Fresh&quot;, &quot;Culture&quot;)))</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre class="r"><code>figB &lt;- ggpubr::ggarrange(
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = average_n_genes)) +  # Plot with values on top
+    geom_bar(stat = &quot;identity&quot;) +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
+    labs(title = &quot;&quot;, x=&quot;&quot;, fill=&quot;Mean genes\nper cell&quot;, y=&quot;Cells&quot;) +
+    theme_ipsum_updated +
+    theme(#axis.text.x = element_text(angle = 45, hjust=1, size=8), 
+          #axis.text.y = element_text(size=8),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, &quot;mm&quot;),
+          plot.margin = margin(5,2,2,50)) +
+    ylim(c(0,6000)),
+  
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = mean_n_1perc_cells_genes)) +  # Plot with values on top
+    geom_bar(stat = &quot;identity&quot;) +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
+    labs(title = &quot;&quot;, x=&quot;&quot;, 
+         fill=&quot;Num. genes\nin at least \n1% of cells&quot;,  y=&quot;Cells&quot;) +
+    theme_ipsum_updated +
+    theme(#axis.text.x = element_text(angle = 45,hjust=1, size=8), 
+          #axis.text.y = element_text(size=8),
+          axis.ticks.x=element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, &quot;mm&quot;),
+          plot.margin = margin(5,2,2,50)) +
+    ylim(c(0,6000)),
+  nrow = 2)
+print(figB)</code></pre>
+<p><img src="figure/plots.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="panel-c-2" class="section level2">
+<h2>Panel C</h2>
+<pre class="r"><code># Log-total count density by protocol
+figC1 &lt;- sce_fvc %&gt;% 
+  ggplot() +
+  theme_ipsum_updated +
+  labs(#title=&quot;Distribution of cell library sizes&quot;,
+       x=&quot;Log total expression&quot;, y=&quot;Density&quot;) +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol), type=&quot;fill&quot;, sort=F) +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol), sort=F) +
+  theme(plot.margin=margin(30,20,30,50))</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre class="r"><code>figC1</code></pre>
+<p><img src="figure/plots.Rmd/log10%20counts%20by%20protocol-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Log-total counts density by sample and grouped by protocol
+figC2 &lt;- sce_fvc %&gt;% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_updated +
+  theme(strip.text.y = element_text(size = 12),
+        legend.key.size= unit(5, &quot;mm&quot;)) +
+  guides(fill=guide_legend(ncol=1, )) +
+  labs(#title=&quot;Distribution of cell library sizes&quot;,
+       x=&quot;Log total expression&quot;, y=&quot;Density&quot;) +
+  theme(panel.spacing = unit(2, &quot;mm&quot;),
+        plot.margin = margin(30,20,30,30)) +
+  get_sample_colours(levels(colData(sce_fvc)$Sample), type=&quot;fill&quot;, sort=F) +
+  get_sample_colours(levels(colData(sce_fvc)$Sample), sort=F)</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...
+New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre class="r"><code>figC2</code></pre>
+<p><img src="figure/plots.Rmd/log10%20counts%20by%20protocol-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="panel-d-1" class="section level2">
+<h2>Panel D</h2>
+<pre class="r"><code># Log-number of genes density by protocol
+figD1 &lt;- sce_fvc %&gt;% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Protocol, color=Protocol), alpha=0.3) +
+  theme_ipsum_updated +
+  labs(#title=&quot;Distribution of gene counts&quot;,
+       x=&quot;Number of genes (log10)&quot;, y=&quot;Density&quot;) +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol), sort=F) +
+  get_protocol_colours(levels(colData(sce_fvc)$Protocol), type=&quot;fill&quot;, sort=F) +
+  theme(plot.margin=margin(30,20,30,50))</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...</code></pre>
+<pre><code>New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre class="r"><code># Log-number of genes density by sample and grouped by protocol
+figD2 &lt;- sce_fvc %&gt;% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_updated +
+  theme(strip.text.y = element_text(size = 12),
+        legend.key.size= unit(5, &quot;mm&quot;),
+        plot.margin = margin(30,20,30,30)) +
+  guides(fill=guide_legend(ncol=1)) +
+  labs(#title=&quot;Distribution of gene counts&quot;,
+       x=&quot;Number of genes (log10)&quot;, y=&quot;Density&quot;) +
+  get_sample_colours(levels(colData(sce_fvc)$Sample), type=&quot;fill&quot;, sort=F) +
+  get_sample_colours(levels(colData(sce_fvc)$Sample), sort=F)</code></pre>
+<pre><code>New names:
+* PC1 -&gt; PC1...1
+* PC2 -&gt; PC2...2
+* PC3 -&gt; PC3...3
+* PC4 -&gt; PC4...4
+* PC5 -&gt; PC5...5
+* ...
+New names:
+* PC1...1 -&gt; PC1...37
+* PC2...2 -&gt; PC2...38
+* PC3...3 -&gt; PC3...39
+* PC4...4 -&gt; PC4...40
+* PC5...5 -&gt; PC5...41
+* ...</code></pre>
+<pre class="r"><code>figD1</code></pre>
+<p><img src="figure/plots.Rmd/panel%20D-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>figD2</code></pre>
+<p><img src="figure/plots.Rmd/panel%20D-2.png" width="1344" style="display: block; margin: auto;" /></p>
+</div>
+<div id="output-6" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>Suppl_Figure3 &lt;- ggpubr::ggarrange(
+  ggpubr::ggarrange(figA1,figA2, ncol = 2),
+  figB,
+  ggpubr::ggarrange(figC1, figC2, ncol=2),
+  ggpubr::ggarrange(figD1, figD2, ncol=2),
+  ncol = 1, nrow = 4,labels = &quot;AUTO&quot;, font.label = list(size = 30)
+)
+
+suppressWarnings(Suppl_Figure3)</code></pre>
+<p><img src="figure/plots.Rmd/supplementary%20figure%203-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(paste0(folder_path, &quot;Suppl_Figure3..jpg&quot;),
+       plot=Suppl_Figure3,
+       width=20*0.9,
+       height=26*0.9,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="suppl.-figure-4" class="section level1">
+<h1>Suppl. Figure 4</h1>
+<ul>
+<li>Barchart of cells dropped in Fresh and culture</li>
+<li>Barchart of cells dropped and kept in integrated analysis</li>
+<li>Jitter plot of fresh v culture</li>
+</ul>
+<pre class="r"><code># A
+plt_dataA &lt;- colData(sce_edi_unfiltered) %&gt;%
+  as.data.frame() %&gt;%
+  group_by(Protocol, Sample, to_be_dropped) %&gt;%
+  summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Protocol&#39;, &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>sfig4a &lt;- ggplot(plt_dataA) +
+  geom_bar(aes(x=Sample, y=counts, fill=to_be_dropped), stat=&quot;identity&quot;) +
+  get_boolean_colour_scale(type=&quot;fill&quot;, reverse=T) +
+  theme_ipsum_updated +
+  facet_grid(.~Protocol, scales=&quot;free_x&quot;, space=&quot;free&quot;) +
+  guides(fill=guide_legend(title=&quot;Cells dropped&quot;)) +
+  labs(#title=&quot;Cells dropped by quality control&quot;,
+       #subtitle=&quot;Integrated data&quot;,
+       x=&quot;&quot;, y=&quot;Cells&quot;) +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+# B
+sce_fvc_unfiltered$to_be_dropped &lt;- factor(sce_fvc_unfiltered$to_be_dropped, levels=c(TRUE, FALSE))
+
+plt_dataB &lt;- colData(sce_fvc_unfiltered) %&gt;%
+  as.data.frame() %&gt;%
+  group_by(Protocol, Sample, to_be_dropped) %&gt;%
+  summarise(counts=n())</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;Protocol&#39;, &#39;Sample&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>sfig4b &lt;- ggplot(plt_dataB) +
+  geom_bar(aes(x=Sample, y=counts, fill=to_be_dropped), stat=&quot;identity&quot;) +
+  get_boolean_colour_scale(type=&quot;fill&quot;, reverse=T) +
+  theme_ipsum_updated +
+  facet_grid(.~Protocol, scales=&quot;free_x&quot;, space=&quot;free&quot;) +
+  guides(fill=guide_legend(title=&quot;Cells dropped&quot;)) +
+  labs(#title=&quot;Cells dropped by quality control&quot;,
+       #subtitle=&quot;Fresh and cultured samples&quot;,
+       x=&quot;&quot;, y=&quot;Cells&quot;)
+
+
+# C
+count_table &lt;- table(sce_fvc$manual_labels_coarse, sce_fvc$Sample)
+lib_sizes &lt;- colSums(count_table)
+
+sample_protocol_mapping &lt;- as.data.frame(colData(sce_fvc)) %&gt;%
+  select(Protocol, Sample) %&gt;%
+  unique() %&gt;%
+  tibble::remove_rownames() %&gt;%
+  tibble::column_to_rownames(&#39;Sample&#39;)
+
+sfig4c &lt;- purrr::map(unique(sce_fvc$manual_labels_coarse), ~ {
+  tibble::tibble(counts = count_table[.x,],
+                 abundances = counts/lib_sizes,
+                 Protocol= sample_protocol_mapping[levels(sce_fvc$Sample), &quot;Protocol&quot;],
+                 Cluster = .x)}) %&gt;% 
+  purrr::reduce(rbind) %&gt;% 
+  dplyr::arrange(&quot;Cluster&quot;) %&gt;%
+  ggplot() + 
+  # geom_boxplot(aes(y=abundances,x=Protocol, color=Protocol)) +
+  geom_jitter(aes(y=abundances,x=Protocol, color=Protocol), size = 2, width=0.2) +
+  theme_ipsum_updated +
+  theme(# axis.text.x = element_text(angle=45, hjust = 1),
+    strip.text.x = element_text(family = &quot;Helvetica&quot;,face = &quot;bold&quot;),
+    legend.position=&quot;none&quot;, panel.spacing=unit(10,&quot;mm&quot;)) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(#title=&quot;Relative cell type abundance&quot;, 
+       #subtitle=&quot;Fresh and cultured samples&quot;, 
+    x=&quot;&quot;, y=&quot;&quot;) +
+  facet_wrap(~Cluster, scales = &quot;free_y&quot;,ncol = 6, nrow = 2) +
+  get_protocol_colours(levels(sce_fvc$Protocol))</code></pre>
+<div id="output-7" class="section level2">
+<h2>Output</h2>
+<pre class="r"><code>SFig4 &lt;- suppressMessages(suppressWarnings(ggarrange(
+  sfig4b, sfig4c, sfig4a,
+  ncol = 1, labels = c(&quot;AUTO&quot;), font.label = list(size = 20), heights=c(1,1,1.5)
+)))
+
+suppressMessages(suppressWarnings(SFig4))</code></pre>
+<p><img src="figure/plots.Rmd/suppl.%20figure4%20one%20figure-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>scale &lt;- 0.8
+ggsave(paste0(folder_path, &quot;Suppl_Figure4..jpg&quot;),
+       plot=SFig4,
+       width=20*scale,
+       height=26*scale,
+       units=&quot;in&quot;,
+       bg=&quot;white&quot;)</code></pre>
+</div>
+</div>
+<div id="suppl.-table-1" class="section level1">
+<h1>Suppl. Table 1</h1>
+<pre class="r"><code># colnames(colData(sce_edi_unfiltered))
+integrated_data_mean &lt;- colData(sce_integrated) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Sample) %&gt;%
+  summarise_at(vars(sum, detected), mean) %&gt;%
+  rename(Library_Size_mean=sum, Num_Genes_mean=detected)
+
+data_integrated &lt;- colData(sce_integrated) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Sample) %&gt;%
+  summarise_at(vars(sum, detected), median) %&gt;%
+  rename(Library_Size_median=sum, Num_Genes_median=detected) %&gt;%
+  left_join(integrated_data_mean)</code></pre>
+<pre><code>Joining, by = &quot;Sample&quot;</code></pre>
+<pre class="r"><code># Save as image
+kable(data_integrated, digits=0) %&gt;%
+  kable_styling() %&gt;%
+  save_kable(file = paste0(folder_path, &quot;Suppl_table_1..jpg&quot;))
+
+# Write as csv
+write.csv(data_integrated, paste0(folder_path, &quot;Suppl_table_1.csv&quot;))
+
+
+# Table 2
+
+# colnames(colData(sce_edi_unfiltered))
+fvc_data_mean &lt;- colData(sce_fvc) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Sample) %&gt;%
+  summarise_at(vars(sum, detected), mean) %&gt;%
+  rename(Library_Size_mean=sum, Num_Genes_mean=detected)
+ 
+data_fvc &lt;- colData(sce_fvc) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Sample) %&gt;%
+  summarise_at(vars(sum, detected), median) %&gt;%
+  rename(Library_Size_median=sum, Num_Genes_median=detected) %&gt;%
+  left_join(fvc_data_mean)</code></pre>
+<pre><code>Joining, by = &quot;Sample&quot;</code></pre>
+<pre class="r"><code># Save as image
+kable(data_fvc, digits=0) %&gt;%
+  kable_styling() %&gt;%
+  save_kable(file = paste0(folder_path, &quot;Suppl_table_2..jpg&quot;))
+
+# Write as csv
+write.csv(data_fvc, paste0(folder_path, &quot;Suppl_table_2.csv&quot;))
+
+
+# By procol for integrated data. These numbers are just referenced in the text
+# colnames(colData(sce_edi_unfiltered))
+integrated_data_mean_protocol &lt;- colData(sce_integrated) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Protocol) %&gt;%
+  summarise_at(vars(sum, detected), mean) %&gt;%
+  rename(Library_Size_mean=sum, Num_Genes_mean=detected)
+
+data_integrated_protocol &lt;- colData(sce_integrated) %&gt;%
+  as.data.frame() %&gt;%
+  dplyr::group_by(Protocol) %&gt;%
+  summarise_at(vars(sum, detected), median) %&gt;%
+  rename(Library_Size_median=sum, Num_Genes_median=detected) %&gt;%
+  left_join(integrated_data_mean_protocol)</code></pre>
+<pre><code>Joining, by = &quot;Protocol&quot;</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] stringr_1.4.0                  openxlsx_4.2.5                
+ [3] RColorBrewer_1.1-2             tidySingleCellExperiment_1.4.0
+ [5] tidyr_1.1.4                    kableExtra_1.3.4              
+ [7] hrbrthemes_0.8.6               pheatmap_1.0.12               
+ [9] magrittr_2.0.1                 ggpubr_0.4.0                  
+[11] viridis_0.6.2                  viridisLite_0.4.0             
+[13] scater_1.22.0                  ggplot2_3.3.5                 
+[15] scuttle_1.4.0                  SingleCellExperiment_1.16.0   
+[17] SummarizedExperiment_1.24.0    Biobase_2.54.0                
+[19] GenomicRanges_1.46.1           GenomeInfoDb_1.30.0           
+[21] IRanges_2.28.0                 S4Vectors_0.32.3              
+[23] BiocGenerics_0.40.0            MatrixGenerics_1.6.0          
+[25] matrixStats_0.61.0             dplyr_1.0.7                   
+[27] plyr_1.8.6                     ggplotify_0.1.0               
+
+loaded via a namespace (and not attached):
+  [1] backports_1.4.1           workflowr_1.7.0          
+  [3] systemfonts_1.0.3         lazyeval_0.2.2           
+  [5] BiocParallel_1.28.3       digest_0.6.29            
+  [7] yulab.utils_0.0.4         htmltools_0.5.2          
+  [9] magick_2.7.3              fansi_1.0.2              
+ [11] ScaledMatrix_1.2.0        extrafont_0.17           
+ [13] extrafontdb_1.0           svglite_2.0.0            
+ [15] colorspace_2.0-2          rvest_1.0.2              
+ [17] ggrepel_0.9.1             textshaping_0.3.6        
+ [19] xfun_0.29                 callr_3.7.0              
+ [21] crayon_1.4.2              RCurl_1.98-1.5           
+ [23] jsonlite_1.7.3            glue_1.6.0               
+ [25] gtable_0.3.0              zlibbioc_1.40.0          
+ [27] XVector_0.34.0            webshot_0.5.2            
+ [29] DelayedArray_0.20.0       car_3.0-12               
+ [31] BiocSingular_1.10.0       Rttf2pt1_1.3.8           
+ [33] abind_1.4-5               scales_1.1.1             
+ [35] DBI_1.1.2                 rstatix_0.7.0            
+ [37] Rcpp_1.0.8                isoband_0.2.5            
+ [39] gridGraphics_0.5-1        rsvd_1.0.5               
+ [41] htmlwidgets_1.5.4         httr_1.4.2               
+ [43] ellipsis_0.3.2            pkgconfig_2.0.3          
+ [45] farver_2.1.0              sass_0.4.0               
+ [47] utf8_1.2.2                tidyselect_1.1.1         
+ [49] labeling_0.4.2            rlang_0.4.12             
+ [51] later_1.3.0               munsell_0.5.0            
+ [53] tools_4.1.0               cli_3.1.0                
+ [55] generics_0.1.1            broom_0.7.10             
+ [57] evaluate_0.14             fastmap_1.1.0            
+ [59] yaml_2.2.1                ragg_1.2.1               
+ [61] processx_3.5.2            knitr_1.37               
+ [63] fs_1.5.2                  zip_2.2.0                
+ [65] purrr_0.3.4               sparseMatrixStats_1.6.0  
+ [67] whisker_0.4               xml2_1.3.3               
+ [69] compiler_4.1.0            rstudioapi_0.13          
+ [71] beeswarm_0.4.0            plotly_4.10.0            
+ [73] ggsignif_0.6.3            tibble_3.1.6             
+ [75] bslib_0.3.1               stringi_1.7.6            
+ [77] highr_0.9                 ps_1.6.0                 
+ [79] forcats_0.5.1             gdtools_0.2.3            
+ [81] lattice_0.20-45           Matrix_1.4-0             
+ [83] vctrs_0.3.8               pillar_1.6.4             
+ [85] lifecycle_1.0.1           jquerylib_0.1.4          
+ [87] BiocNeighbors_1.12.0      data.table_1.14.2        
+ [89] cowplot_1.1.1             bitops_1.0-7             
+ [91] irlba_2.3.5               httpuv_1.6.4             
+ [93] R6_2.5.1                  promises_1.2.0.1         
+ [95] gridExtra_2.3             vipor_0.4.5              
+ [97] MASS_7.3-54               assertthat_0.2.1         
+ [99] rprojroot_2.0.2           withr_2.4.3              
+[101] GenomeInfoDbData_1.2.7    parallel_4.1.0           
+[103] grid_4.1.0                beachmat_2.10.0          
+[105] rmarkdown_2.11            DelayedMatrixStats_1.16.0
+[107] carData_3.0-4             git2r_0.29.0             
+[109] ggbeeswarm_0.6.0         </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -5,6 +5,10 @@
 .Rapp.history
 .DS_Store
 
+Protocol paper.Rproj
+.gitattributes
+.Rprofile
+
 analysis/figure
 analysis/*png
 analysis/*html
