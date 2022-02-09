@@ -51,12 +51,6 @@ kableExtra::kable(cluster_annotation_mapping)
 sce_fresh$manual_labels_coarse <- mapvalues(sce_fresh$label, cluster_annotation_mapping$Cluster.ID, cluster_annotation_mapping$Annotation)
 ```
 
-
-```{r heatmap and subcluster labels}
-heatmap_marker_genes <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - High level")
-subclustering_labels <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - subclusters")
-```
-
 # Manual labelling of Melanocytes/Schwann cells
 
 ```{r}
@@ -83,7 +77,7 @@ We take a look at the UMAPs to check that the mapping is indeed as we expect.
 
 ```{r visualise UMAPs, fig.width=16, fig.height=10, results="asis"}
 cat("\n\n## Clusters \n\n")
-fig3a1 <- plotReducedDim(sce_fresh, "UMAP", colour_by="label", text_by="label", point_size=0.25) +
+plotReducedDim(sce_fresh, "UMAP", colour_by="label", text_by="label", point_size=0.25) +
   labs(title="Unsupervised cluster labels",
        subtitle = "UMAP of fresh samples combined") +
   theme_ipsum_rc() +
@@ -94,10 +88,9 @@ fig3a1 <- plotReducedDim(sce_fresh, "UMAP", colour_by="label", text_by="label", 
                             #nrow=1,
                             byrow=TRUE, 
                             override.aes = list(size=4, shape = 15, alpha = 1)))
-fig3a1
 
 cat("\n\n## Cell type groups \n\n")
-fig3a2 <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
+plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
   labs(title="Manual labels for high-level clusters",
        subtitle = "UMAP of fresh samples combined") +
   theme_ipsum_rc() +
@@ -108,7 +101,6 @@ fig3a2 <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", te
                             # nrow=1,
                             byrow=TRUE, 
                             override.aes = list(size=4, shape = 15, alpha = 1)))
-fig3a2
 ```
 
 
@@ -119,7 +111,7 @@ fig3a2
 cat(paste0("\n\n##", " Samples combined \n\n"))
 as.data.frame(colData(sce_fresh)) %>%
   dplyr::group_by(manual_labels_coarse) %>%
-  dplyr::summarise(counts=n()) %>%
+  dplyr::summarise(counts=n(), .groups="drop") %>%
   ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
    geom_bar(colour="black", stat="identity") +
    theme_ipsum_rc() +
@@ -134,7 +126,7 @@ cat(paste0("\n\n##", " Sample 1 \n\n"))
 as.data.frame(colData(sce_fresh)) %>%
   filter(Sample=="Fresh_S1") %>%
   dplyr::group_by(manual_labels_coarse, Sample) %>%
-  dplyr::summarise(counts=n()) %>%
+  dplyr::summarise(counts=n(), .groups="drop") %>%
   ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
    geom_bar(colour="black", stat="identity") +
    theme_ipsum_rc() +
@@ -149,7 +141,7 @@ cat(paste0("\n\n##", " Sample 2 \n\n"))
 as.data.frame(colData(sce_fresh)) %>%
   filter(Sample=="Fresh_S2") %>%
   dplyr::group_by(manual_labels_coarse, Sample) %>%
-  dplyr::summarise(counts=n()) %>%
+  dplyr::summarise(counts=n(), .groups="drop") %>%
   ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
    geom_bar(colour="black", stat="identity") +
    theme_ipsum_rc() +
@@ -166,19 +158,19 @@ as.data.frame(colData(sce_fresh)) %>%
 ```{r combined plot, fig.width=12, fig.height=8}
 comb <- as.data.frame(colData(sce_fresh)) %>%
   dplyr::group_by(manual_labels_coarse) %>%
-  dplyr::summarise(counts=n()) %>%
+  dplyr::summarise(counts=n(), .groups="drop") %>%
   mutate(Sample="Combined") %>%
   select(manual_labels_coarse, Sample, counts)
 
 d1 <- as.data.frame(colData(sce_fresh)) %>%
   filter(Sample=="Fresh_S1") %>%
   dplyr::group_by(manual_labels_coarse, Sample) %>%
-  dplyr::summarise(counts=n())
+  dplyr::summarise(counts=n(), .groups="drop")
 
 d2 <- as.data.frame(colData(sce_fresh)) %>%
   filter(Sample=="Fresh_S2") %>%
   dplyr::group_by(manual_labels_coarse, Sample) %>%
-  dplyr::summarise(counts=n())
+  dplyr::summarise(counts=n(), .groups="drop")
 
 fig5a <- rbind(comb, d1, d2) %>%
   ggplot(aes(x=manual_labels_coarse, y=counts, fill=manual_labels_coarse)) +
@@ -199,15 +191,16 @@ fig5a
 ```{r fig.width=10, fig.height=10}
 data_combined <- as.data.frame(colData(sce_fresh)) %>%
   dplyr::group_by(manual_labels_coarse) %>%
-  dplyr::summarise(counts=n()) %>%
+  dplyr::summarise(counts=n(), .groups="drop") %>%
   mutate(Sample="Samples combined") %>%
   select(manual_labels_coarse, Sample, counts)
 
 data_by_sample <- as.data.frame(colData(sce_fresh)) %>%
   dplyr::group_by(manual_labels_coarse, Sample) %>%
-  dplyr::summarise(counts=n())
+  dplyr::summarise(counts=n(), .groups="drop")
 
-fig5b <- rbind(data_combined, data_by_sample) %>%
+# plot barplots of relative cell type abundance
+rbind(data_combined, data_by_sample) %>%
   ggplot(aes(x=Sample, y=counts, fill=manual_labels_coarse)) +
    geom_bar(colour="black", stat="identity", position="fill") +
    scale_y_continuous(labels = scales::percent) +
@@ -216,13 +209,13 @@ fig5b <- rbind(data_combined, data_by_sample) %>%
         x="", y="Number of cells") +
    theme(axis.text.x=element_text(angle=50, hjust=1),) +
   get_cell_colours(levels(sce_fresh$manual_labels_coarse), type="fill")
-
-fig5b
 ```
 
 
 
 # Subclustering
+
+We group some cell types together for plotting purposes later on
 
 ```{r second type of labels}
 sce_fresh$manual_labels_coarse2 <- sce_fresh$manual_labels_coarse
@@ -232,7 +225,7 @@ sce_fresh$manual_labels_coarse2 <- sub("Lymphatic endothelial", "Endothelial cel
 
 # HVGs by cell type
 
-````{r, fig.width=10, fig.height=7}
+````{r, fig.width=10, fig.height=7, warnings=FALSE}
 select_hvgs <- function(cell_type){
   sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
 
@@ -280,7 +273,7 @@ run_subclustering <- function(sce_object, cell_type, k=50){
   
   # recluster the cells
   if (dim(sce_subset)[2] < (k+1)){
-    cat(paste0(cell_type, " did not have a sufficient number of cells to be subclustered. Minimum required is ", k, " and only ", dim(sce_subset)[2], " cells are labelled as ", cell_type))
+    cat(paste0(cell_type, " did not have a sufficient number of cells to be subclustered. Minimum required is ", k, " and only ", dim(sce_subset)[2], " cells are labelled as ", cell_type, "\n\n"))
     
     return(sce_fresh_copy)
   }
@@ -288,7 +281,7 @@ run_subclustering <- function(sce_object, cell_type, k=50){
   set.seed(100)
   snn.graph <- buildSNNGraph(sce_subset, k=k, use.dimred="harmony", subset.row=cell_hvgs[[cell_type]])
   clusters <- igraph::cluster_walktrap(snn.graph)$membership
-  colData(sce_fresh_copy)[sce_fresh_copy$manual_labels_coarse2 == cell_type, "subcluster_id_k50"] <- clusters
+  colData(sce_fresh_copy)[sce_fresh_copy$manual_labels_coarse2 == cell_type, "subcluster_id"] <- clusters
 
 
 
@@ -318,12 +311,14 @@ for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
 }
 
 sce_fresh <- run_subclustering(sce_fresh, "Fibroblasts", k=52)
-sce_fresh <- run_subclustering(sce_fresh, "Macrophages/DC", k=70)
+sce_fresh <- run_subclustering(sce_fresh, "Macrophages/DC", k=90)
 sce_fresh <- run_subclustering(sce_fresh, "Endothelial cells", k=40)
 
 # transform column into factor values
-sce_fresh$subcluster_id_k50_long <- factor(paste0(sce_fresh$manual_labels_coarse2, "_", sce_fresh$subcluster_id_k50))
-sce_fresh$subcluster_id_k50 <- factor(sce_fresh$subcluster_id_k50)
+sce_fresh$subcluster_id_long <- factor(paste0(sce_fresh$manual_labels_coarse2, "_", sce_fresh$subcluster_id))
+sce_fresh$subcluster_id <- factor(sce_fresh$subcluster_id)
+
+
 ```
 
 
@@ -334,7 +329,7 @@ k <- 51
 
 # We also create a separate column for each of the cell types. We do this to easily analyse the results in iSee
 for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
-  colData(sce_fresh)[,cell_type] <- colData(sce_fresh)[,"subcluster_id_k50"]
+  colData(sce_fresh)[,cell_type] <- colData(sce_fresh)[,"subcluster_id"]
   colData(sce_fresh)[sce_fresh$manual_labels_coarse2 != cell_type, cell_type] <- NA
   colData(sce_fresh)[, cell_type] <- factor(as.numeric(colData(sce_fresh)[, cell_type]))
 }
@@ -353,10 +348,9 @@ for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
 
   # plot the UMAP of the subcluster
   print(plotReducedDim(sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type], "UMAP",
-                 colour_by = "subcluster_id_k50", text_by="subcluster_id_k50") +
+                 colour_by = "subcluster_id", text_by="subcluster_id") +
           theme_ipsum_rc() +
-    labs(title=cell_type,
-         subtitle="k=50"))
+    labs(title=cell_type))
 }
 
 cat("\n\n## Re-calculated UMAPs {.tabset} \n\n")
@@ -373,10 +367,9 @@ for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
 
   # plot the UMAP of the subcluster
   print(plotReducedDim(sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type], column_name,
-                 colour_by = "subcluster_id_k50", text_by="subcluster_id_k50") +
+                 colour_by = "subcluster_id", text_by="subcluster_id") +
           theme_ipsum_rc() +
-    labs(title=paste0("Recalculated UMAP for ", cell_type),
-         subtitle="k=50"))
+    labs(title=paste0("Recalculated UMAP for ", cell_type)))
 }
 ```
 
@@ -397,29 +390,29 @@ for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
   sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
 
   data_complete <- as.data.frame(colData(sce_subset)) %>%
-    dplyr::group_by(subcluster_id_k50) %>%
-    dplyr::summarise(n_cells=n()) %>%
+    dplyr::group_by(subcluster_id) %>%
+    dplyr::summarise(n_cells=n(), .groups="drop") %>%
     dplyr::mutate(share= round(n_cells/sum(n_cells),3)) %>%
     mutate(Sample="Samples combined") %>%
-    select(Sample, subcluster_id_k50, n_cells, share)
+    select(Sample, subcluster_id, n_cells, share)
 
 
   data_stratified <- as.data.frame(colData(sce_subset)) %>%
-    dplyr::group_by(Sample, subcluster_id_k50) %>%
-    dplyr::summarise(n_cells=n()) %>%
+    dplyr::group_by(Sample, subcluster_id) %>%
+    dplyr::summarise(n_cells=n(), .groups="drop") %>%
     dplyr::mutate(share= round(n_cells/sum(n_cells),3))
 
   print(ggplot(rbind(data_complete, data_stratified),
-               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+               aes(x=Sample, y=share, fill=subcluster_id)) +
     geom_bar(stat="identity") +
-    facet_grid(subcluster_id_k50 ~ .) +
+    facet_grid(subcluster_id ~ .) +
     labs(title=cell_type,
          subtitle="Bars show fraction of cells for given cell type and sample") +
       theme_ipsum_rc() +
     guides(fill=guide_legend(title="Subcluster")))
   
   print(ggplot(rbind(data_complete, data_stratified),
-               aes(x=Sample, y=share, fill=subcluster_id_k50)) +
+               aes(x=Sample, y=share, fill=subcluster_id)) +
     geom_bar(stat="identity", position="fill") +
     labs(title=cell_type,
          subtitle="Bars show fraction of cells for given cell type and sample") +
@@ -473,7 +466,7 @@ run_marker_gene_analysis <- function(test_name, type_comparison, worksheet_prefi
     cat(paste0("\n\n", tabset, " ", cell_type, " {.tabset} \n\n"))
     # create the subset
     sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-    sce_subset$subcluster_id_k50 <- factor(sce_subset$subcluster_id_k50)
+    sce_subset$subcluster_id <- factor(sce_subset$subcluster_id)
     
     if (dim(sce_subset[,sce_subset$manual_labels_coarse2 == cell_type])[2] < 50){
       cat(paste0(cell_type, " was skipped."))
@@ -483,7 +476,7 @@ run_marker_gene_analysis <- function(test_name, type_comparison, worksheet_prefi
     # get the marker genes for each cluster
     all.markers <- findMarkers(sce_subset, test.type=test_name,
                                pval.type=type_comparison,
-                               groups=sce_subset$subcluster_id_k50,
+                               groups=sce_subset$subcluster_id,
                                direction="up", block=sce_subset$Sample)
 
     marker_results_per_cell_type[[cell_type]] <- all.markers
@@ -502,17 +495,19 @@ run_marker_gene_analysis <- function(test_name, type_comparison, worksheet_prefi
       }
 
       cluster_markers_logFCs <- getMarkerEffects(cluster_markers, prefix = prefix)
+      rownames(cluster_markers_logFCs) <- rownames(cluster_markers)
       cluster_markers_logFCs[is.na(cluster_markers_logFCs)] <- 0
 
       # Create pheatmap plot per cluster
       if (dim(cluster_markers_logFCs)[2] == 1){
-        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T,
-                                 cluster_cols=FALSE)) +
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), 
+                                 silent=T, cluster_cols=FALSE), show_rownames = T) +
         labs(title=paste0("Cluster ",marker_num),
              subtitle="Pairwise comparisons - comparison with only remaining subcluster") +
         reduced_ipsum_rc_theme)
       } else {
-        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), silent=T, cluster_cols=FALSE)) +
+        print(as.ggplot(pheatmap(cluster_markers_logFCs, breaks=seq(heatmap_lower_limit, heatmap_upper_limit, length.out=101), 
+                                 silent=T, cluster_cols=FALSE, show_rownames = T)) +
                 labs(title=paste0("Cluster ", marker_num), subtitle="Pairwise comparisons") +
                 reduced_ipsum_rc_theme)
       }
@@ -614,9 +609,9 @@ fstats <- lapply(unique(sce_fresh$manual_labels_coarse2), function(cell_type){
 
   # create the subset
   sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-  sce_subset$subcluster_id_k50 <- factor(sce_subset$subcluster_id_k50)
+  sce_subset$subcluster_id <- factor(sce_subset$subcluster_id)
 
-  aggr_sce <- aggregateAcrossCells(sce_subset, sce_subset$subcluster_id_k50)
+  aggr_sce <- aggregateAcrossCells(sce_subset, sce_subset$subcluster_id)
 
   # We compute the datarframe containing:
   # (1) the gene name as symbol
@@ -628,7 +623,7 @@ fstats <- lapply(unique(sce_fresh$manual_labels_coarse2), function(cell_type){
       data.frame(
         gene=rowData(sce_subset)$Symbol[.x],
         entropy=shannon_entropy(counts(aggr_sce[.x,])),
-        fstat=summary(aov(logcounts(sce_subset)[.x,]~sce_subset$subcluster_id_k50))[[1]]$`F value`[1]
+        fstat=summary(aov(logcounts(sce_subset)[.x,]~sce_subset$subcluster_id))[[1]]$`F value`[1]
       )},
     BPPARAM=BiocParallel::MulticoreParam(workers=n_workers, RNGseed = 123)) %>%
       purrr::reduce(rbind)
@@ -706,488 +701,12 @@ for (cell_type in unique(sce_fresh$manual_labels_coarse2)){
     cat("\n\n##### ", genes_to_plot[i], "\n\n")
     print(plotExpression(sce_subset,  
                    entropy_fstat_sce$gene[entropy_fstat_sce$gene == genes_to_plot[i]],
-                   x = "subcluster_id_k50", point_size=0.5))
+                   x = "subcluster_id", point_size=0.5))
   }
 }
 ```
 
 
-
-# Heatmaps {.tabset}
-
-```{r coarse heatmap, fig.width=7, fig.height=8, results="asis"}
-genes <- heatmap_marker_genes %>%
-    pull(Gene)
-
-# the cells which we want to display, ordered by cell type
-column_annotations <- data.frame("cell_name"=rownames(colData(sce_fresh)), "Cell_type"=factor(colData(sce_fresh)[,"manual_labels_coarse"])) %>%
-    filter(Cell_type!="NA") %>%
-    arrange(Cell_type) %>%
-    tibble::column_to_rownames(var="cell_name")
-
-# the logcounts which we need for the pheatmap function
-sce_plot <- logcounts(sce_fresh[genes, rownames(column_annotations)])
-
-# Use own colours for the column annotations
-colours <- get_cell_colours(unique(heatmap_marker_genes$Group), type="raw")
-annotation_colours <- list("Cell_type"=colours)
-
-
-# create the plot. We convert to ggplot to take advantage of some of the display functions
-fig4 <- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
-         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
-         color=viridis(50))) +
-  theme_ipsum_rc() +
-  theme(axis.line=element_blank(),
-        axis.text.x=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks=element_blank(),
-        axis.title.x=element_blank(),
-        axis.title.y=element_blank(), 
-        legend.position="none",
-        panel.background=element_blank(),
-        panel.border=element_blank(),
-        panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),
-        plot.background=element_blank()) +
-  labs(title="Selected marker genes for cell types")
-fig4
-```
-
-
-# Feature plots
-
-```{r figure 3, fig.width=20, fig.height=13}
-# Convert the dataframe with marker genes to a list with the cell type as name
-unique_cell_types <- unique(heatmap_marker_genes$Group)
-genes_list <- lapply(unique_cell_types, function(group){
-  heatmap_marker_genes[heatmap_marker_genes$Group==group, "Gene"]
-})
-names(genes_list) <- unique_cell_types
-
-# write a function to get the average of the logcounts of each gene
-get_coloured_expression_plot <- function(gene_list, cell_type){
-  sce_tmp <- sce_fresh
-  if (length(gene_list) == 1){
-    average_values <- logcounts(sce_tmp[gene_list])
-  } else {
-    average_values <- colMeans(logcounts(sce_tmp[gene_list])) 
-  }
-  colData(sce_tmp)[,cell_type] <- as.numeric(average_values)
-  plt <- plotReducedDim(sce_tmp, "UMAP", colour_by=cell_type, point_size=0.25) +
-    labs(title=cell_type,
-         subtitle=paste(gene_list, collapse=", ")) +
-    theme_ipsum_rc() +
-    theme(legend.position="none") +
-    theme(plot.margin = margin(t = 0.5,  # Top margin
-                               r = 0.5,  # Right margin
-                               b = 0.5,  # Bottom margin
-                               l = 20)) # Left margin
-  plt
- }
-
-
-plt1 <- get_coloured_expression_plot(genes_list[[1]], names(genes_list)[1])
-plt2 <- get_coloured_expression_plot(genes_list[[2]], names(genes_list)[2])
-plt3 <- get_coloured_expression_plot(genes_list[[3]], names(genes_list)[3])
-plt4 <- get_coloured_expression_plot(genes_list[[4]], names(genes_list)[4])
-plt5 <- get_coloured_expression_plot(genes_list[[5]], names(genes_list)[5])
-plt6 <- get_coloured_expression_plot(genes_list[[6]], names(genes_list)[6])
-plt7 <- get_coloured_expression_plot(genes_list[[7]], names(genes_list)[7])
-plt8 <- get_coloured_expression_plot(genes_list[[8]], names(genes_list)[8])
-plt9 <- get_coloured_expression_plot(genes_list[[9]], names(genes_list)[9])
-plt10 <- get_coloured_expression_plot(genes_list[[10]], names(genes_list)[10])
-
-
-# store figure as variable and print
-fig3b <- gridExtra::grid.arrange(plt1, plt2, plt3, plt4, plt5, plt6, plt7, plt8, plt9, plt10, ncol=4)
-fig3b
-```
-
-
-# Papillary v. Reticular fibroblasts
-
-## Average values across all fibroblast cells
-
-```{r, fig.width=14, fig.height=8, warning=F}
-papillary_genes <- c("COL18A1", "APCDD1", "HSPB3", "NPTX2", "ROBO2", "COL23A1", "PTGDS", "PDPN", "COL7A1", "COLEC12", "AXIN2") #"CTSC","DCN","INHBB"
-reticular_genes <- c("MFAP5", "MGP", "FGF7", "A2M", "ANGPTL1", "IGF1", "EFEMP1", "PCSK5", "MAP1B", "COMP") # "COL14A1, "PPP1R14A", "TAGLN
-
-# subset to a sce object with only the fibroblasts as annotated manually
-fibro_sce <- sce_fresh[,colData(sce_fresh)$manual_labels_coarse == "Fibroblasts"]
-
-# are all the genes found in our data?
-# papillary_genes %in% rownames(fibro_sce)
-# reticular_genes %in% rownames(fibro_sce)
-genes <- c(papillary_genes, reticular_genes)
-
-gene_counts <- logcounts(fibro_sce)[genes,]
-
-res <- lapply(unique(fibro_sce$subcluster_id_k50), function(fibro_type){
-  mask <- fibro_sce$subcluster_id_k50 == fibro_type
-  data.frame("genes"=genes, "rowmeans"=rowMeans(gene_counts[, mask]), "subcluster"=fibro_type)
-}) %>% purrr::reduce(rbind)
-
-plt1 <- ggplot(res[res$genes %in% papillary_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
-  geom_bar(stat="identity", position="dodge") +
-  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
-  labs(title="Papillary fibroblasts",
-       y="Average of logcounts",
-       x="")
-
-plt2 <- ggplot(res[res$genes %in% reticular_genes, ], aes(x=genes, y=rowmeans, fill=subcluster)) +
-  geom_bar(stat="identity", position="dodge") +
-  theme(axis.text.x = element_text(angle = 45,hjust=1), axis.ticks.x=element_blank()) +
-  labs(title="Reticular fibroblasts",
-       y="Average of logcounts",
-       x="")
-
-gridExtra::grid.arrange(plt1, plt2)
-```
-
-
-# Expression values by Fibroblast subcluster
-
-```{r, fig.width=14, fig.height=7, warning=F}
-# average of logcounts for papillary fibroblast genes
-fibro_sce$papillary_gene_avg <- colMeans(logcounts(fibro_sce)[papillary_genes,])
-# average of logcounts for reticular fibroblast genes
-fibro_sce$reticular_gene_avg <- colMeans(logcounts(fibro_sce)[reticular_genes,])
-
-plt1 <- plotColData(fibro_sce, x="subcluster_id_k50", y="papillary_gene_avg", colour_by="subcluster_id_k50") +
-  labs(title="Papillary Fibroblasts",
-       subtitle="Average gene expression for a selection of genes",
-       y="",
-       x="") +
-  ylim(0,3.25) +
-  theme_ipsum_rc() +
-  theme(legend.position="none")
-
-
-plt2 <- plotColData(fibro_sce, x="subcluster_id_k50", y="reticular_gene_avg", colour_by="subcluster_id_k50") +
-  labs(title="Reticular Fibroblasts",
-       subtitle="Average gene expression for a selection of genes",
-       y="",
-       x="") +
-  ylim(0,3.25) +
-  theme_ipsum_rc() +
-  theme(legend.position="none")
-
-gridExtra::grid.arrange(plt1, plt2, nrow=1)
-```
-
-# Supplementary Figures
-
-```{r}
-folder_path = "../output/plots/"
-```
-
-## Figure 3
-
-```{r figure 3 , fig.width=10, fig.height=12}
-figure3 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
-  fig3a2,
-  fig3b,
-  heights=c(1,1),
-  ncol = 1, nrow = 2,labels = "AUTO"
-)))
-
-
-suppressMessages(suppressWarnings((figure3)))
-
-ggsave(paste0(folder_path, "figure3.png"),
-       plot=figure3,
-       width=20*0.75,
-       height=24*0.75,
-       units="in",
-       bg="white")
-```
-
-## Figure 3 supplementary
-
-```{r supplementary figure 3, fig.width=10, fig.height=7}
-figure3_supplemental <- fig3a1
-
-ggsave(paste0(folder_path, "figure3_supplemental.png"),
-       plot=figure3_supplemental,
-       width=14*0.75,
-       height=10*0.75,
-       units="in",
-       bg="white")
-```
-
-
-## Figure 4
-
-```{r supplementary figure 4 , fig.width=7, fig.height=8, warnings=F}
-figure4 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
-  fig4,
-  heights=c(1),
-  ncol = 1, nrow = 1, labels = NULL
-)))
-
-suppressMessages(suppressWarnings((figure4)))
-
-ggsave(paste0(folder_path, "figure4.png"),
-       plot=figure4,
-       width=8*0.75,
-       height=7*0.75,
-       units="in",
-       bg="white")
-```
-
-## Figure 5
-
-```{r supplementary figure 5, fig.width=20, fig.height=24, warnings=F}
-figure5 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
-  fig5a,
-  fig5b,
-  heights=c(1,1),
-  ncol = 1, nrow = 2, labels = "AUTO"
-)))
-
-suppressMessages(suppressWarnings(figure5))
-
-ggsave(paste0(folder_path, "figure5.png"),
-       plot=figure5,
-       width=20*0.75,
-       height=24*0.75,
-       units="in",
-       bg="white")
-```
-
-## Figure 6
-
-```{r add subcluster labels}
-sce_fresh$subcluster_names <- NA
-
-for (cell_type in unique(subclustering_labels$Cell.type)){
-  # if the cell type was not found in the excel, then its skipped
-  if (cell_type %in% sce_fresh$manual_labels_coarse2 == FALSE) {
-    cat(paste0(cell_type, " not found in subclustering mapping"))
-    next
-  }
-
-  sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-  subset_subcluster_annot <- subclustering_labels[subclustering_labels$Cell.type == cell_type, ] %>%
-    select(Cluster, Label) %>%
-    distinct()
-  
-  subcluster_labels <- as.vector(sce_subset$subcluster_id_k50)
-  
-  colData(sce_fresh)[sce_fresh$manual_labels_coarse2 == cell_type, "subcluster_names"] <- mapvalues(subcluster_labels, subset_subcluster_annot$Cluster, subset_subcluster_annot$Label)
-  
-}
-
-# unique(subclustering_labels$Cell.type)
-# unique(colData(sce_fresh)[sce_fresh$manual_labels_coarse2 == "Fibroblasts", "subcluster_names"])
-```
-
-```{r supplementary figure 6, fig.width=20, fig.height=24, warnings=F}
-cell_types_fig6 <- c("Fibroblasts", "Endothelial cells", "Keratinocytes", "Pericytes/VSMC", "Macrophages/DC")
-
-get_annotated_subcluster <- function(cell_type){
-  sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-  
-  plt <- plotReducedDim(sce_subset, "UMAP",
-                 colour_by = "subcluster_names", text_by="subcluster_names") +
-    theme_ipsum_rc() +
-    labs(title=cell_type) +
-    # guides(colour=guide_legend(title="Subcluster")) +
-    get_unnamed_colours(unique(sce_subset$subcluster_names), "Subcluster", type="colour") + 
-    theme(legend.position="none",
-          plot.margin = margin(t = 0.5,  # Top margin
-                               r = 0.5,  # Right margin
-                               b = 0.5,  # Bottom margin
-                               l = 20)) # Left margin 
-  plt
-}
-
-get_stratified_barplot <- function(cell_type){
-   sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-
-  data_complete <- as.data.frame(colData(sce_subset)) %>%
-    dplyr::group_by(subcluster_names) %>%
-    dplyr::summarise(n_cells=n()) %>%
-    dplyr::mutate(share= round(n_cells/sum(n_cells),3)) %>%
-    mutate(Sample="Samples combined") %>%
-    select(Sample, subcluster_names, n_cells, share)
-
-  data_stratified <- as.data.frame(colData(sce_subset)) %>%
-    dplyr::group_by(Sample, subcluster_names) %>%
-    dplyr::summarise(n_cells=n()) %>%
-    dplyr::mutate(share= round(n_cells/sum(n_cells),3))
-  
-  plt <- ggplot(rbind(data_complete, data_stratified),
-               aes(x=Sample, y=share, fill=subcluster_names)) +
-    geom_bar(stat="identity") +
-    facet_grid(subcluster_names ~ .) +
-    labs(title=cell_type,
-         subtitle="Bars show fraction of cells for given cell type and sample",
-         y="") +
-    theme_ipsum_rc() +
-    theme(strip.text.y=element_blank()) +
-    # guides(fill=guide_legend(title="Subcluster")) +
-    get_unnamed_colours(unique(sce_subset$subcluster_names), "Subcluster", type="fill") + 
-    scale_y_continuous(labels = scales::percent, n.breaks=3) +
-    theme(panel.spacing = unit(2, "mm"),
-          # legend.key = element_rect(size=5),
-          legend.key.size = unit(2, "lines"),
-          plot.margin = margin(t = 0.5,  # Top margin
-                               r = 0.5,  # Right margin
-                               b = 0.5,  # Bottom margin
-                               l = 20)) # Left margin
-  plt
-}
-
-
-# UMAPs
-fig6a1 <- get_annotated_subcluster(cell_types_fig6[1]) +
-  ylim(c(3,7))
-fig6b1 <- get_annotated_subcluster(cell_types_fig6[2]) +
-  xlim(c(9,16))
-fig6c1 <- get_annotated_subcluster(cell_types_fig6[3]) +
-  xlim(c(-11,-7)) +
-  ylim(c(-5,1))
-fig6d1 <- get_annotated_subcluster(cell_types_fig6[4]) +
-  xlim(c(-7,-3)) +
-  ylim(c(12.5,15.5))
-fig6e1 <- get_annotated_subcluster(cell_types_fig6[5])
-
-# barcharts
-fig6a2 <- get_stratified_barplot(cell_types_fig6[1])
-fig6b2 <- get_stratified_barplot(cell_types_fig6[2])
-fig6c2 <- get_stratified_barplot(cell_types_fig6[3])
-fig6d2 <- get_stratified_barplot(cell_types_fig6[4])
-fig6e2 <- get_stratified_barplot(cell_types_fig6[5])
-
-figure6 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
-  ggpubr::ggarrange(fig6a1, fig6a2, ncol = 2),
-  ggpubr::ggarrange(fig6b1, fig6b2, ncol = 2),
-  ggpubr::ggarrange(fig6c1, fig6c2, ncol = 2),
-  ggpubr::ggarrange(fig6d1, fig6d2, ncol = 2),
-  ggpubr::ggarrange(fig6e1, fig6e2, ncol = 2),
-  ncol = 1, nrow = 5,labels = "AUTO"
-)))
-
-suppressMessages(suppressWarnings(figure6))
-
-ggsave(paste0(folder_path, "figure6.png"),
-       plot=figure6,
-       width=20*0.9,
-       height=24*0.9,
-       units="in",
-       bg="white")
-```
-
-
-## Figure 7 - Subcluster heatmaps
-
-```{r read heatmap genes}
-# sort subclustering_labels alphabetically by the names
-heatmap_marker_genes_subclusters <- subclustering_labels %>% 
-  arrange(Label)
-```
-
-```{r subcluster heatmaps, fig.width=20, fig.height=24, results="asis"}
-folder_path <- "/Users/dominiquepaul/xRobinson Group/01_Systemic Sclerosis/output/plots/"
-
-plot_heatmap <- function(cell_type){
-  
-  sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-  
-  # the genes which we want to display
-  genes <- heatmap_marker_genes_subclusters %>%
-    filter(Cell.type==cell_type) %>%
-    pull(Gene)
-  
-  # check whether genes are in rownames
-  genes_not_found <- genes[genes %in% rownames(sce_subset) == FALSE]
-  if (length(genes_not_found) > 0) cat(paste0("\nGenes not found for cell type ", cell_type, ": ", genes_not_found))
-  
-  genes <- genes[genes %in% rownames(sce_subset)] 
-  
-  # the cells which we want to display, ordered by subcluster
-  column_annotations <- data.frame(row.names=colnames(sce_subset), "Subcluster"=sce_subset$subcluster_names) %>%
-    arrange(Subcluster)
-  
-  # the logcounts which we need for the pheatmap function
-  sce_plot <- logcounts(sce_subset[genes, rownames(column_annotations)])
-  
-  # Use own colours for the column annotations
-  colours <- get_unnamed_colours(unique(column_annotations$Subcluster), type="raw")
-  annotation_colours <- list("Subcluster"=colours)
-
-  #plt <- grid.grabExpr(draw(hmap, annotation_legend_side="bottom", heatmap_legend_side="right")) +
-  plt <- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
-                  show_rownames=TRUE, show_colnames=FALSE, color=viridis(50), 
-                  annotation_col=column_annotations, annotation_colors=annotation_colours)) +
-    theme_ipsum_rc()+ 
-    theme(axis.line=element_blank(),axis.text.x=element_blank(),
-            axis.text.y=element_blank(),axis.ticks=element_blank(),
-            axis.title.x=element_blank(),
-            axis.title.y=element_blank(),legend.position="none",
-            panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
-            panel.grid.minor=element_blank(),plot.background=element_blank()) +
-    labs(title=paste0("Selected subcluster marker genes for ", cell_type))
-  
-  return(plt)
-}
-
-subcluster_heatmap_cell_types <- unique(subclustering_labels$Cell.type)
-
-fig7a <- plot_heatmap(subcluster_heatmap_cell_types[1])
-fig7b <- plot_heatmap(subcluster_heatmap_cell_types[2])
-fig7c <- plot_heatmap(subcluster_heatmap_cell_types[3])
-fig7d <- plot_heatmap(subcluster_heatmap_cell_types[4])
-fig7e <- plot_heatmap(subcluster_heatmap_cell_types[5])
-
-
-figure7 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
-  fig7a, 
-  fig7b,
-  fig7c,
-  fig7d,
-  fig7e,
-  ncol = 1, nrow = 5,labels = "AUTO"
-)))
-
-suppressMessages(suppressWarnings(figure7))
-
-ggsave(paste0(folder_path, "figure7.png"),
-       plot=figure7,
-       width=20*0.9,
-       height=24*0.9,
-       units="in",
-       bg="white")
-
-```
-
-```{r}
-sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-  
-# the genes which we want to display
-genes <- heatmap_marker_genes_subclusters %>%
-  filter(Cell.type==cell_type) %>%
-  pull(Gene)
-
-# check whether genes are in rownames
-genes_not_found <- genes[genes %in% rownames(sce_subset) == FALSE]
-if (length(genes_not_found) > 0) cat(paste0("\nGenes not found for cell type ", cell_type, ": ", genes_not_found))
-
-genes <- genes[genes %in% rownames(sce_subset)] 
-
-# the cells which we want to display, ordered by subcluster
-column_annotations <- data.frame(row.names=colnames(sce_subset), "Subcluster"=sce_subset$subcluster_names) %>%
-  arrange(Subcluster)
-
-# the logcounts which we need for the pheatmap function
-sce_plot <- logcounts(sce_subset[genes, rownames(column_annotations)])
-
-# Use own colours for the column annotations
-colours <- get_unnamed_colours(unique(column_annotations$Subcluster), type="raw")
-annotation_colours <- list("Subcluster"=colours)
-```
 
 
 # Save Files

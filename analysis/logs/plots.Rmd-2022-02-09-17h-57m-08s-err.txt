@@ -1,0 +1,57 @@
+Error in parse_block(g[-1], g[1], params.src, markdown_mode) : 
+  Duplicate chunk label 'suppl. figure 3', which has been used for the chunk:
+subclustering_labels <- read.xlsx("../metadata/marker_genes_heatmaps.xlsx", sheet="Fresh only - subclusters")
+
+# sort subclustering_labels alphabetically by the names
+heatmap_marker_genes_subclusters <- subclustering_labels %>% 
+  mutate(Gene=factor(Gene, levels=unique(Gene))) # %>%
+  # arrange(Label)
+
+plot_heatmap <- function(cell_type, normalise=TRUE){
+  
+  sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  
+  # the genes which we want to display
+  genes <- heatmap_marker_genes_subclusters %>%
+    filter(Cell.type==cell_type) %>%
+    pull(Gene)
+  
+  # check whether genes are in rownames
+  genes_not_found <- genes[genes %in% rownames(sce_subset) == FALSE]
+  if (length(genes_not_found) > 0) cat(paste0("\nGenes not found for cell type ", cell_type, ": ", genes_not_found))
+  
+  genes <- genes[genes %in% rownames(sce_subset)] 
+  
+  # the cells which we want to display, ordered by subcluster
+  column_annotations <- data.frame(row.names=colnames(sce_subset), "Subcluster"=sce_subset$subcluster_names) %>%
+    arrange(Subcluster)
+  
+  # the logcounts which we need for the pheatmap function
+  sce_plot <- logcounts(sce_subset[as.vector(genes), rownames(column_annotations)])
+  # normalise by row
+  sce_plot <- normalise_by_row(sce_plot)
+  
+  # Use own colours for the column annotations
+  colours <- get_unnamed_colours(unique(column_annotations$Subcluster), type="raw")
+  annotation_colours <- list("Subcluster"=colours)
+
+  #plt <- grid.grabExpr(draw(hmap, annotation_legend_side="bottom", heatmap_legend_side="right")) +
+  plt <- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
+                  show_rownames=TRUE, show_colnames=FALSE, color=viridis(50), 
+                  annotation_col=column_annotations, annotation_colors=annotation_colours)) +
+    theme_ipsum_updated + 
+    theme(axis.line=element_blank(),axis.text.x=element_blank(),
+            axis.text.y=element_blank(),axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),legend.position="none",
+            panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),plot.background=element_blank()) +
+    labs(title=cell_type)
+  
+  plt
+}
+
+
+sfig2a <- plot_heatmap("Fibroblasts")
+sfig2b <- plot_heatmap("Keratinocytes")
+sfig2c <- plot_heatmap("Pericytes/VSMC")

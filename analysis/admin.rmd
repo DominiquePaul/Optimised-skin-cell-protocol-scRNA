@@ -1,13 +1,3 @@
----
-title: "workflowr_test"
-author: "Dominique Paul"
-date: "5/18/2021"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 
 ```{r cars}
@@ -35,12 +25,13 @@ wflow_build(files=c(
   # P2 workflow
   # "P2_01_data_comparison.Rmd",
   # "P2_02_Cell_Cycle.Rmd",
-  "P2_03_Fresh_only_subclustering.Rmd",
-  "P2_03_FvC_Annotations.Rmd",
-  "P2_04_FvC_gene_expression_plot.Rmd",
+  # "P2_03_Fresh_only_subclustering.Rmd",
+  # "P2_03_FvC_Annotations.Rmd",
+  # "P2_04_FvC_gene_expression_plot.Rmd",
   
   # Index
-  "index.Rmd"
+  # "index.Rmd",
+  "plots.Rmd"
                     ),
               # make=TRUE,
               # dry_run=TRUE,

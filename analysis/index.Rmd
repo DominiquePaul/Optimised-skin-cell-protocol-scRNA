@@ -41,7 +41,6 @@ Click here to open iSEE app: <a target="_blank" href="http://imlspenticton.uzh.c
     1. [Fresh only subclustering](P2_03_Fresh_only_subclustering.html) `r give_date("P2_03_Fresh_only_subclustering.html")`
 1. Fresh vs. Culture:
     1. [FvC: Annotations](P2_03_FvC_Annotations.html) `r give_date("P2_03_FvC_Annotations.html")`
-    1. [FvC: Gene expression plot](P2_04_FvC_gene_expression_plot.html) `r give_date("P2_04_FvC_gene_expression_plot.html")` 
 
 
 ### Downloads

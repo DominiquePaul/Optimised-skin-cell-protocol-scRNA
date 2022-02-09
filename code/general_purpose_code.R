@@ -3,10 +3,14 @@ library(dplyr)
 library(openxlsx)
 library(stringr)
 
-hrbrthemes::import_roboto_condensed()
+# Fixes an issue where a warning message is shown repeatedly
+# hrbrthemes::import_roboto_condensed()
+suppressMessages(extrafont::loadfonts())
 
-### Upload a file to iSEE
 
+################################################################################
+###### Upload a file to iSEE ######
+################################################################################
 upload_file_to_iSEE <- function(file_path){
   ssh_key <- "~/.ssh/id_imls_servers"
   file_path <- gsub(" ", "\\\\ ", normalizePath(file_path))
@@ -26,182 +30,106 @@ upload_file_to_iSEE <- function(file_path){
 }
 
 
-
-
-
-
-
-
-
 ################################################################################
 ###### Color palettes ######
 ################################################################################
 
-########################
 ### Colours Protocol ###
-########################
-
-get_protocol_colours <- function(protocol_names, type="colour"){
-  protocol_names <- sort(as.vector(unique(protocol_names)))
+get_protocol_colours <- function(protocol_names, type="colour", sort=T){
   colours_protocol <- c("#1C65AE", "#E62B8A", "#39A642", "#B17BA5", "#DB1E0D")
-  #colours_protocol <- c("#0081a7", "#E62B8A", "#A4F42F", "#EF55FD", "#FF7F00")
   names(colours_protocol) <- c("Fresh", "Culture", "Tabib_et_al", "Sole_Boldo_et_al", "He_et_al")
+  # Ensure values do not occur multiple times
+  protocol_names <-as.vector(unique(protocol_names))
+  # Optionally sort
+  if (sort==T) protocol_names <- sort(protocol_names)
+  # Only select values passed as parameter
   colours_protocol <- colours_protocol[protocol_names]
-  
   # return different object depending on whether we are working with colour values or fill values
-  if (type == "raw"){
-    return_value <- colours_protocol
-  } else if (type == "colour"){
-    return_value <- scale_colour_manual(name = "Protocol", values = colours_protocol)
-  } else if (type == "fill") {
-    return_value <- scale_fill_manual(name = "Protocol", values = colours_protocol)
-  }
-  # return value
-  return_value
+  if (type=="raw") return(colours_protocol)
+  scale_colour_manual(name = "Protocol", values = colours_protocol, labels = names(colours_protocol), aesthetics = type)
 }
 
 
-#######################
+
 ### Colours samples ###
-#######################
-
-get_sample_colours <- function(sample_names, type="colour"){
-  sample_names_ <- sort(as.vector(unique(sample_names)))
-  
-  unique_sample_names <- c("Fresh_S1", "Fresh_S2",
-                           "Tabib_S1","Tabib_S124", "Tabib_S125", "Tabib_S18", "Tabib_S32", "Tabib_S33", "Tabib_S34", "Tabib_S4", "Tabib_S50", "Tabib_S68",
-                           "Sole_Boldo_S396", "Sole_Boldo_S397", "Sole_Boldo_S398", "Sole_Boldo_S399", "Sole_Boldo_S400",
-                           "He_S62", "He_S64", "He_S67", "He_S68", "He_S70", "He_S71", "He_S75",
-                           "Culture_S1", "Culture_S2", "Culture_S4", "Culture_S5"
-                           )
-
+get_sample_colours <- function(sample_names, type="colour", sort=T){
+  # Mapping of colours to names
   colours_sample <- c("#023e8a", "#90e0ef", # blue
                       "#007f5f", "#2b9348", "#55a630", "#80b918", "#aacc00", "#bfd200", "#d4d700", "#dddf00", "#eeef20", "#ffff3f", # greens
                       "#6843E0", "#845AE8", "#A171F0", "#BD88F7", "#D99FFF", # purples
-                      #"#03045e", "#023e8a", "#0077b6", "#00b4d8", "#90e0ef", # blues
                       "#a41623", "#d00000", "#dc2f02", "#e85d04", "#f48c06", "#d81159", "#ef476f", # reds
-                      "#a41623", "#DC0202", "#f48c06", "#EF26DE" # reds
-                      )
-  
-  names(colours_sample) <- unique_sample_names
+                      "#a41623", "#DC0202", "#f48c06", "#EF26DE") # reds
+  names(colours_sample) <- c("Fresh_S1", "Fresh_S2",
+                             "Tabib_S1","Tabib_S124", "Tabib_S125", "Tabib_S18", "Tabib_S32", "Tabib_S33", "Tabib_S34", "Tabib_S4", "Tabib_S50", "Tabib_S68",
+                             "Sole_Boldo_S396", "Sole_Boldo_S397", "Sole_Boldo_S398", "Sole_Boldo_S399", "Sole_Boldo_S400",
+                             "He_S62", "He_S64", "He_S67", "He_S68", "He_S70", "He_S71", "He_S75",
+                             "Culture_S1", "Culture_S2", "Culture_S4", "Culture_S5")
+  # Ensure values do not occur multiple times
+  sample_names_ <- as.vector(unique(sample_names)) 
+  # optionally sort
+  if (sort) sample_names_ <- sort(sample_names_) 
+  # Subset the mapping for only values in the plot
   colours_sample <- colours_sample[sample_names_]
-  
-  label_names <- stringr::str_wrap(names(colours_sample), width=30)
-  
   # return different object depending on whether we are working with colour values or fill values
-  if (type == "raw"){
-    return_value <- colours_sample
-  } else if (type == "colour"){
-    return_value <- scale_colour_manual(name = "Sample", values = colours_sample, labels=label_names)
-  } else if (type == "fill") {
-    return_value <- scale_fill_manual(name = "Sample", values = colours_sample, labels=label_names)
-  }
-  # return value
-  return_value
+  if (type=="raw") return(colours_sample)
+  scale_colour_manual(name = "Sample", values = colours_sample, labels=sample_names_, aesthetics = type)
 }
 
 
-#########################
 ### Colours Cell_type ###
-#########################
-
-get_cell_colours <- function(cell_names, type="colour"){
+get_cell_colours <- function(cell_names, type="colour", sort=T, reverse=F){
+  cell_colours <-  c("#000000", "#1A65AF", "#7BAEDE", "#008886", "#42C24D", "#42C24D", "#882E72", 
+                     "#B17BA5", "#B17BA5", "#B17BA5", "#FF7F00", "#FDF133", "#E62B8A", "#FF9B8E", "#DB1E0D") 
+  names(cell_colours) <- c("Dendritic cells", "Fibroblasts", "Keratinocytes", "Lymphatic endothelial", "Macrophages", 
+                           "Macrophages/DC", "Mast cells", "Melanocytes", "Melanocytes/Schwann cells/Neuronal cells", 
+                           "Melanocytes/Schwann cells",
+                           "Pericytes/VSMC", "Schwann cells", "Sweat gland cells", "T cells", "Vascular endothelial") 
+  # get unique values
+  cell_names <- as.vector(unique(cell_names))
+  # Sort by name if specified
+  if (sort) cell_names <- sort(cell_names)
   
-  cell_names <- sort(as.vector(unique(cell_names)))
-  
-  unique_cell_types <- c("Dendritic cells", "Fibroblasts", "Keratinocytes", "Lymphatic endothelial", "Macrophages", 
-                         "Macrophages/DC", "Mast cells", "Melanocytes", "Melanocytes/Schwann cells/Neuronal cells", 
-                         "Melanocytes/Schwann cells",
-                         "Pericytes/VSMC", "Schwann cells", "Sweat gland cells", "T cells", "Vascular endothelial"
-                         ) 
-  # colours_cells <-  c("#000000", "#1A65AF", "#F5220F", "#2E8836", "#FDB462", "#FDB462", "#FA8172", 
-  #                    "#7BAEDE", "#7BAEDE", "#B17BA5", "#882E72", "#E62B8A", "#FF7F00", "#3BB050") 
-  
-  #colours_cells <-  c("#000000", "#DB1E0D", "#FA8172", "#1A65AF", "#7BAEDE", "#7BAEDE", "#2E8876",  # normal
-  #                 "#2E8836", "#2E8836", "#882E72", "#B17BA5", "#FF7F00", "#FDB462", "#E62B8A") 
-  
-  colours_cells <-  c("#000000", "#1A65AF", "#7BAEDE", "#008886", "#42C24D", "#42C24D", "#882E72", 
-                      "#B17BA5", "#B17BA5", "#B17BA5", "#FF7F00", "#FDF133", "#E62B8A", "#FF9B8E", "#DB1E0D") 
-  
-  # colours_cells <-  c("#000000", "#F18175", "#D89B00", "#ACAF00", "#54BE00", "#54BE00", "#3DC786", 
-  #                  "#3FC6CC", "#3DB9FA", "#3DB9FA", "#4BC9F0", "#A09AFF", "#E476F8", "#F76DC5") 
-  
-  names(colours_cells) <- unique_cell_types
-  colours_cells_ <- colours_cells[cell_names]
-  
+  # Select only the values that were passed as parameter
+  colours_cells_ <- cell_colours[cell_names]
+  # Make sure that the labels for the legend are not excessively long
   label_names <- stringr::str_wrap(names(colours_cells_), width=30)
-  
   # return different object depending on whether we are working with colour values or fill values
-  if (type == "raw"){
-    return_value <- colours_cells_
-  } else if (type == "colour"){
-    return_value <- scale_colour_manual(name = "Cell type", values = colours_cells_, labels=label_names)
-  } else if (type == "fill") {
-    return_value <- scale_fill_manual(name = "Cell type", values = colours_cells_, labels=label_names)
-  }
-  # return value
-  return_value
+  if (type=="raw") return(colours_cells_)
+  scale_colour_manual(name = "Cell type", values = colours_cells_, labels=label_names, aesthetics = type)
 }
 
 
-##################################
-### Colours for unnamed values ###
-##################################
 
+### Colours for unnamed values ###
 get_unnamed_colours <- function(unique_ids, colour_name, type="colour"){
-  
-  colour_names <- sort(as.vector(unique(unique_ids)))
+  # Colours that can be used
   colours <-  c("#1A65AF", "#42C24D", "#882E72", "#FF7F00", "#E62B8A", "#DB1E0D") 
-  
-  # get only as many colours as we need
-  if (length(colours) > length(colours)){
-    stop("More unique IDs than colours in colour palette")
-  }
+  # Error if more labels are needed than colours defined above
+  if (length(colours) > length(colours)) stop("More unique IDs than colours in colour palette")
+  # Select colours for values passed
+  colour_names <- sort(as.vector(unique(unique_ids)))
   colours_subset <- colours[1:length(colour_names)]
   names(colours_subset) <- unique(colour_names)
-  
+  # Ensures that labels aren't excessively long
   label_names <- stringr::str_wrap(names(colours_subset), width=30)
-  
-  # return different object depending on whether we are working with colour values or fill values
-  if (type == "raw"){
-    return_value <- colours_subset
-  } else if (type == "colour"){
-    return_value <- scale_colour_manual(name = colour_name, values = colours_subset, labels=label_names)
-  } else if (type == "fill") {
-    return_value <- scale_fill_manual(name = colour_name, values = colours_subset, labels=label_names)
-  }
-  # return value
-  return_value
+  # return raw values, else return colour palette for colour or fill
+  if (type=="raw") return(colours_subset)
+  scale_colour_manual(name = colour_name, values = colours_subset, labels=label_names, aesthetics = type)
 }
 
+
+
+### Colours for boolean values ###
 get_boolean_colour_scale <- function(type="colour", reverse=FALSE){
-  if (reverse==FALSE){
-    colour_scale <- c("#EA6458", "#008ACC")
-  } else {
-    colour_scale <- c("#008ACC", "#EA6458")
-    
-  }
+  colour_scale <- c("#EA6458", "#008ACC")
+  # optionally flip colour scale
+  if (reverse==FALSE) colour_scale <- rev(colour_scale)
+  # Set names for the colours
   names(colour_scale) <- c(TRUE, FALSE)
-  
   # return different object depending on whether we are working with colour values or fill values
-  if (type == "raw"){
-    return_value <- colours_subset
-  } else if (type == "colour"){
-    return_value <- scale_colour_manual(values = colour_scale)
-  } else if (type == "fill") {
-    return_value <- scale_fill_manual(values = colour_scale)
-  }
-  # return value
-  return_value
+  if (type=="raw") return(colour_scale)
+  scale_colour_manual(name = names(colour_scale), values = colour_scale, aesthetics = type)
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -222,12 +150,6 @@ plot_stratified_views <- function(sce_object, dimred, stratify_by, colour_by=NUL
             theme_ipsum_rc())
   }
 }
-
-
-
-
-
-
 
 
 

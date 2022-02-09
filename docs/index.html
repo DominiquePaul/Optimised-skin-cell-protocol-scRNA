@@ -291,7 +291,7 @@ $(document).ready(function () {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -300,7 +300,7 @@ $(document).ready(function () {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -309,10 +309,10 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-02-03
+<strong>Last updated:</strong> 2022-02-09
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>02_Protocol/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -328,12 +328,12 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -400,16 +400,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree72e313b2d94d91bf92f1e44091c409b1e4e5cf4dtargetblank72e313ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/72e313b2d94d91bf92f1e44091c409b1e4e5cf4d" target="_blank">72e313b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtreef9fe4849b4248969dc7847f44706308dc8911357targetblankf9fe484a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/f9fe4849b4248969dc7847f44706308dc8911357" target="_blank">f9fe484</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulSkincellprotocolscRNAtree72e313b2d94d91bf92f1e44091c409b1e4e5cf4dtargetblank72e313ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtreef9fe4849b4248969dc7847f44706308dc8911357targetblankf9fe484a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/tree/72e313b2d94d91bf92f1e44091c409b1e4e5cf4d" target="_blank">72e313b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/f9fe4849b4248969dc7847f44706308dc8911357" target="_blank">f9fe484</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -426,44 +426,78 @@ Ignored files:
     Ignored:    analysis/Supple_table_1.png
     Ignored:    analysis/Unused/.DS_Store
     Ignored:    code/.DS_Store
-    Ignored:    code/seeds/.DS_Store
     Ignored:    data/
     Ignored:    output/.DS_Store
-    Ignored:    output/plots/.DS_Store
-    Ignored:    output/plots_31Jan/.DS_Store
 
 Untracked files:
-    Untracked:  Metadata/cluster_annotation_map 2_2_22.xlsx
-    Untracked:  Metadata/~$cluster_annotation_map 2_2_22.xlsx
-    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-02-02-22h-57m-44s-err.txt
-    Untracked:  analysis/logs/P2_01_data_comparison.Rmd-2022-02-02-22h-57m-44s-out.txt
-    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-02-22h-58m-43s-err.txt
-    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-02-22h-58m-43s-out.txt
-    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-03-09h-46m-00s-err.txt
-    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-03-09h-46m-00s-out.txt
-    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-03-15h-03m-09s-err.txt
-    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-03-15h-03m-09s-out.txt
-    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-02-03-15h-13m-47s-err.txt
-    Untracked:  analysis/logs/P2_03_FvC_Annotations.Rmd-2022-02-03-15h-13m-47s-out.txt
-    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-02-03-15h-16m-32s-err.txt
-    Untracked:  analysis/logs/P2_04_FvC_gene_expression_plot.Rmd-2022-02-03-15h-16m-32s-out.txt
-    Untracked:  analysis/logs/index.Rmd-2022-02-01-22h-39m-12s-err.txt
-    Untracked:  analysis/logs/index.Rmd-2022-02-01-22h-39m-12s-out.txt
-    Untracked:  analysis/logs/index.Rmd-2022-02-03-15h-19m-59s-err.txt
-    Untracked:  analysis/logs/index.Rmd-2022-02-03-15h-19m-59s-out.txt
-    Untracked:  output/plots/figure6.png
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-11h-27m-06s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-11h-27m-06s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-17h-02m-31s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-17h-02m-31s-out.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-18h-20m-01s-err.txt
+    Untracked:  analysis/logs/P2_03_Fresh_only_subclustering.Rmd-2022-02-05-18h-20m-01s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-17h-15m-56s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-17h-15m-56s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-18h-32m-03s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-05-18h-32m-03s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-09-17h-57m-04s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-02-09-17h-57m-04s-out.txt
+    Untracked:  output/plots_paper_png/
 
 Unstaged changes:
-    Modified:   Metadata/cluster_annotation_map.xlsx
+    Deleted:    Metadata/cluster_annotation_map 2_2_22.xlsx
+    Modified:   Metadata/marker_genes_heatmaps.xlsx
+    Deleted:    Metadata/~$cluster_annotation_map 2_2_22.xlsx
+    Modified:   README.md
+    Deleted:    analysis/FVC_quick_marker.Rmd
     Modified:   analysis/P2_03_Fresh_only_subclustering.Rmd
+    Deleted:    analysis/P2_03_Fresh_only_subclustering_v2.Rmd
     Modified:   analysis/admin.rmd
-    Modified:   analysis/logs/P2_02_Cell_Cycle.Rmd-2022-02-01-22h-30m-28s-err.txt
-    Modified:   analysis/logs/P2_02_Cell_Cycle.Rmd-2022-02-01-22h-30m-28s-out.txt
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/plots.Rmd
     Modified:   code/general_purpose_code.R
-    Modified:   output/plots/figure3.png
-    Modified:   output/plots/figure3_supplemental.png
-    Modified:   output/plots/figure4.png
-    Modified:   output/plots/figure5.png
+    Deleted:    code/seeds/seed1.rds
+    Deleted:    code/seeds/seed2.rds
+    Deleted:    code/seeds/seed3.rds
+    Deleted:    code/seeds/seed4.rds
+    Deleted:    code/seeds/seed5.rds
+    Deleted:    code/seeds/seed6.rds
+    Deleted:    code/seeds/seed7.rds
+    Deleted:    code/seeds/seed8_fresh.rds
+    Deleted:    code/seeds/seed9_all.rds
+    Deleted:    code/upload_iSEE.sh
+    Deleted:    output/plots/Suppl_Figure5.png
+    Deleted:    output/plots/Suppl_table_1.csv
+    Deleted:    output/plots/Suppl_table_1.png
+    Deleted:    output/plots/Suppl_table_2.csv
+    Deleted:    output/plots/Suppl_table_2.png
+    Deleted:    output/plots/figure10.png
+    Deleted:    output/plots/figure3.png
+    Deleted:    output/plots/figure3_supplemental.png
+    Deleted:    output/plots/figure4.png
+    Deleted:    output/plots/figure5.png
+    Deleted:    output/plots/figure6.png
+    Deleted:    output/plots/old/figure3.png
+    Deleted:    output/plots/old/figure3_supplemental.png
+    Deleted:    output/plots/old/figure4.png
+    Deleted:    output/plots/old/figure5.png
+    Deleted:    output/plots/old/figure6.png
+    Deleted:    output/plots/overview_figure_fvc.png
+    Deleted:    output/plots_31Jan/Suppl_Figure3.png
+    Deleted:    output/plots_31Jan/Suppl_Figure3_v2.png
+    Deleted:    output/plots_31Jan/Suppl_Figure5.png
+    Deleted:    output/plots_31Jan/Suppl_figure4.png
+    Deleted:    output/plots_31Jan/Suppl_figure6.png
+    Deleted:    output/plots_31Jan/Suppl_table_1.csv
+    Deleted:    output/plots_31Jan/Suppl_table_1.png
+    Deleted:    output/plots_31Jan/Suppl_table_2.csv
+    Deleted:    output/plots_31Jan/Suppl_table_2.png
+    Deleted:    output/plots_31Jan/figure2.png
+    Deleted:    output/plots_31Jan/figure3.png
+    Deleted:    output/plots_31Jan/figure5.png
+    Deleted:    output/plots_31Jan/figure6.png
+    Deleted:    output/plots_31Jan/figure7.png
+    Deleted:    output/plots_31Jan/overview_figure_fvc.png
 
 </code></pre>
 <p>
@@ -507,7 +541,24 @@ Message
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/DominiquePaul/Skin-cell-protocol-scRNA/c4b210d95296965afb4378ce3e6c9dbef53901f5/docs/index.html" target="_blank">c4b210d</a>
+<a href="https://rawcdn.githack.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/f9fe4849b4248969dc7847f44706308dc8911357/docs/index.html" target="_blank">f9fe484</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-02-03
+</td>
+<td>
+Subclustering of fresh samples
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/c4b210d95296965afb4378ce3e6c9dbef53901f5/docs/index.html" target="_blank">c4b210d</a>
 </td>
 <td>
 dominique-paul-uzh
@@ -524,7 +575,7 @@ Annotated clusters, next step is subclustering
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/DominiquePaul/Skin-cell-protocol-scRNA/5f4cea35c55dabe976c91d654f1dd6c72b777689/docs/index.html" target="_blank">5f4cea3</a>
+<a href="https://rawcdn.githack.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/5f4cea35c55dabe976c91d654f1dd6c72b777689/docs/index.html" target="_blank">5f4cea3</a>
 </td>
 <td>
 dominique-paul-uzh
@@ -541,7 +592,7 @@ re-ran fresh and FvC
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/DominiquePaul/Skin-cell-protocol-scRNA/97b097bcd93105d275ebb47c066a8129eb61b5b2/docs/index.html" target="_blank">97b097b</a>
+<a href="https://rawcdn.githack.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/97b097bcd93105d275ebb47c066a8129eb61b5b2/docs/index.html" target="_blank">97b097b</a>
 </td>
 <td>
 dominique-paul-uzh
@@ -558,7 +609,7 @@ Added new clustering after meeting 29-Jan-2022
 Rmd
 </td>
 <td>
-<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/analysis/index.Rmd" target="_blank">239a294</a>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/239a294b77f8417881912b9058abc84dad2da0ac/analysis/index.Rmd" target="_blank">239a294</a>
 </td>
 <td>
 dominique-paul-uzh
@@ -575,7 +626,7 @@ Added new clustering after meeting 29-Jan-2022
 Rmd
 </td>
 <td>
-<a href="https://github.com/DominiquePaul/Skin-cell-protocol-scRNA/blob/1923ae36314462857191f55817eed51512a6c060/analysis/index.Rmd" target="_blank">1923ae3</a>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/1923ae36314462857191f55817eed51512a6c060/analysis/index.Rmd" target="_blank">1923ae3</a>
 </td>
 <td>
 dominique-paul-uzh
@@ -592,7 +643,7 @@ first commit
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/DominiquePaul/Skin-cell-protocol-scRNA/1923ae36314462857191f55817eed51512a6c060/docs/index.html" target="_blank">1923ae3</a>
+<a href="https://rawcdn.githack.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/1923ae36314462857191f55817eed51512a6c060/docs/index.html" target="_blank">1923ae3</a>
 </td>
 <td>
 dominique-paul-uzh
@@ -622,12 +673,11 @@ first commit
 <li><a href="P2_02_Cell_Cycle.html">Cell cycle analysis</a> <em><font size="1">(Last modified: never )</font></em></li>
 <li>Fresh only:
 <ol style="list-style-type: decimal">
-<li><a href="P2_03_Fresh_only_subclustering.html">Fresh only subclustering</a> <em><font size="1">(Last modified: 2022-02-03 )</font></em></li>
+<li><a href="P2_03_Fresh_only_subclustering.html">Fresh only subclustering</a> <em><font size="1">(Last modified: 2022-02-05 )</font></em></li>
 </ol></li>
 <li>Fresh vs. Culture:
 <ol style="list-style-type: decimal">
 <li><a href="P2_03_FvC_Annotations.html">FvC: Annotations</a> <em><font size="1">(Last modified: 2022-02-03 )</font></em></li>
-<li><a href="P2_04_FvC_gene_expression_plot.html">FvC: Gene expression plot</a> <em><font size="1">(Last modified: 2022-02-03 )</font></em></li>
 </ol></li>
 </ol>
 <div id="downloads" class="section level3">

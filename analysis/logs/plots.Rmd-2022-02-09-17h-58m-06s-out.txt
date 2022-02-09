@@ -1,0 +1,97 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   1%
+   inline R code fragments
+
+  |                                                                              |..                                                                    |   3%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |...                                                                   |   4%
+  ordinary text without R code
+
+  |                                                                              |....                                                                  |   5%
+label: setup (with options) 
+List of 1
+ $ include: logi TRUE
+
+  |                                                                              |.....                                                                 |   6%
+  ordinary text without R code
+
+  |                                                                              |.....                                                                 |   8%
+label: unnamed-chunk-1
+  |                                                                              |......                                                                |   9%
+  ordinary text without R code
+
+  |                                                                              |.......                                                               |  10%
+label: subcluster labels
+  |                                                                              |........                                                              |  12%
+  ordinary text without R code
+
+  |                                                                              |.........                                                             |  13%
+label: helper functions
+  |                                                                              |..........                                                            |  14%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  16%
+label: unnamed-chunk-2
+  |                                                                              |............                                                          |  17%
+  ordinary text without R code
+
+  |                                                                              |.............                                                         |  18%
+label: unnamed-chunk-3
+  |                                                                              |..............                                                        |  19%
+  ordinary text without R code
+
+  |                                                                              |...............                                                       |  21%
+label: unnamed-chunk-4
+  |                                                                              |...............                                                       |  22%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  23%
+label: unnamed-chunk-5 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 26
+
+  |                                                                              |.................                                                     |  25%
+  ordinary text without R code
+
+  |                                                                              |..................                                                    |  26%
+label: Figure 3
+  |                                                                              |...................                                                   |  27%
+  ordinary text without R code
+
+  |                                                                              |....................                                                  |  29%
+label: unnamed-chunk-6 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 20
+
+  |                                                                              |.....................                                                 |  30%
+  ordinary text without R code
+
+  |                                                                              |......................                                                |  31%
+label: unnamed-chunk-7
+  |                                                                              |.......................                                               |  32%
+  ordinary text without R code
+
+  |                                                                              |........................                                              |  34%
+label: unnamed-chunk-8 (with options) 
+List of 2
+ $ fig.width : num 20
+ $ fig.height: num 24
+
+  |                                                                              |.........................                                             |  35%
+  ordinary text without R code
+
+  |                                                                              |.........................                                             |  36%
+label: Figure 4
+  |                                                                              |..........................                                            |  38%
+  ordinary text without R code
+
+  |                                                                              |...........................                                           |  39%
+label: unnamed-chunk-9 (with options) 
+List of 2
+ $ fig.width : num 14
+ $ fig.height: num 5
+
