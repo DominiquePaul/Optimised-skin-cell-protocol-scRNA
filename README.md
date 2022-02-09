@@ -4,6 +4,8 @@ This repository contains all the necessary code and analyses for the paper *An o
 
 **All analyses can be viewed in a `workflowr`<sup>[1](#f1)</sup> website [HERE](http://htmlpreview.github.io/?.https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA)**
 
+#### References
+
 <a name="f1">[1]</a>:
 John Blischak, Peter Carbonetto and Matthew Stephens (2019).  
 workflowr: A Framework for Reproducible and Collaborative Data Science.  
