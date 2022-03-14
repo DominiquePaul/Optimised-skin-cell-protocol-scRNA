@@ -66,3 +66,9 @@ Click here to open iSEE app: <a target="_blank" href="http://imlspenticton.uzh.c
 1. <p>EDI: Marker genes: <a href="output/EDI_marker_results_hvg_genes.xlsx" download>Click to download</a> `r give_date("EDI_marker_results_hvg_genes.xlsx")` </p>
 1. <p>EDI subclustering: Marker genes: <a href="output/EDI_subclustering_markers_genes.xlsx" download>Click to download</a> `r give_date("EDI_subclustering_markers_genes.xlsx")` </p>
 
+# Additional analysis
+
+1. [Heat shock proteins](HSP_analysis.html)  `r give_date("HSP_analysis.html")`
+
+
+
