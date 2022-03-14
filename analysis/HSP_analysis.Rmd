@@ -140,11 +140,11 @@ run_ds_topn <- function(control_protocol, test_protocol, genes=hsps){
     labs(title=paste0(control_protocol, " vs. ", test_protocol))
 }
 
-cat("\n\n### Fresh vs. Tabib et al \n\n")
+cat("\n\n## Fresh vs. Tabib et al \n\n")
 run_ds_topn("Fresh", "Tabib_et_al")
-cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+cat("\n\n## Fresh vs. Sole-Boldo et al \n\n")
 run_ds_topn("Fresh", "Sole_Boldo_et_al")
-cat("\n\n### Fresh vs. He et al \n\n")
+cat("\n\n## Fresh vs. He et al \n\n")
 run_ds_topn("Fresh", "He_et_al")
 ```
 
@@ -165,18 +165,18 @@ run_ds <- function(control_protocol, test_protocol, genes=hsps){
   ns <- length(sids <- levels(sce_muscat$sample_id))
   names(kids) <- kids; names(sids) <- sids
   
-  pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "sample_id"))
-  res <- pbDS(pb)
+  pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "sample_id"), verbose=F)
+  res <- pbDS(pb, verbose=F)
   
   as.ggplot(pbHeatmap(sce_muscat, res, g = hsps, fdr=1, lfc=0)) +
     labs(title=paste0(control_protocol, " vs. ", test_protocol))
 }
 
-cat("\n\n### Fresh vs. Tabib et al \n\n")
+cat("\n\n## Fresh vs. Tabib et al \n\n")
 run_ds("Fresh", "Tabib_et_al")
-cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+cat("\n\n## Fresh vs. Sole-Boldo et al \n\n")
 run_ds("Fresh", "Sole_Boldo_et_al")
-cat("\n\n### Fresh vs. He et al \n\n")
+cat("\n\n## Fresh vs. He et al \n\n")
 run_ds("Fresh", "He_et_al")
 ```
 

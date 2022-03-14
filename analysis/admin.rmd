@@ -29,10 +29,10 @@ wflow_build(files=c(
   # "P2_03_FvC_Annotations.Rmd",
   # "P2_04_FvC_gene_expression_plot.Rmd",
   
-  # Index
-  "index.Rmd"
   # "plots.Rmd"
-  # "HSP_analysis.Rmd"
+  "HSP_analysis.Rmd",
+  
+  "index.Rmd"
                     ),
               # make=TRUE,
               # dry_run=TRUE,
