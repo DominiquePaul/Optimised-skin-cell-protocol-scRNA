@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
   library(muscat)
   library(ggplot2)
   library(ggplotify)
+  library(kableExtra)
 })
 ```
 
@@ -117,10 +118,10 @@ pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "s
 #     summarise_all(mean)
 ```
 
-# Run DS for all Protocols {.tabset}
+# Run DS for all Protocols
 
-```{r, results="asis", fig.width=7, fig.height=12}
-run_ds_topn <- function(control_protocol, test_protocol, genes=hsps){
+```{r}
+run_ds <- function(control_protocol, test_protocol){
   sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
   sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
   
@@ -136,48 +137,82 @@ run_ds_topn <- function(control_protocol, test_protocol, genes=hsps){
   
   pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "sample_id"), verbose=F)
   res <- pbDS(pb, verbose=F)
-  as.ggplot(pbHeatmap(sce_muscat, res, top_n=20)) +
-    labs(title=paste0(control_protocol, " vs. ", test_protocol))
+  list("muscat"=res, "sce"=sce_muscat)
 }
 
-cat("\n\n## Fresh vs. Tabib et al \n\n")
-run_ds_topn("Fresh", "Tabib_et_al")
-cat("\n\n## Fresh vs. Sole-Boldo et al \n\n")
-run_ds_topn("Fresh", "Sole_Boldo_et_al")
-cat("\n\n## Fresh vs. He et al \n\n")
-run_ds_topn("Fresh", "He_et_al")
+print_tables <- function(res){
+  sapply(names(res$muscat$table[[1]]), function(cell_type){
+    print(kable(head(format(res$muscat$table[[1]][[cell_type]], digits=2), 10)))
+  })
+}
+
+print_hsp_tables <- function(res){
+  sapply(names(res$muscat$table[[1]]), function(cell_type){
+    tbl <- res$muscat$table[[1]][[cell_type]]
+    hsps_in_table <- hsps[hsps %in% tbl$gene]
+    print(kable(head(format(tbl[tbl$gene %in% hsps_in_table,], digits=2), 10)))
+  })
+}
+
+plot_topn_heatmap <- function(res, test_protocol){
+  as.ggplot(pbHeatmap(res$sce, res$muscat, top_n=20)) +
+    labs(title=paste0("Fresh vs. ", test_protocol))
+}
+
+plot_hsp_heatmap <- function(res, test_protocol){
+  as.ggplot(pbHeatmap(res$sce, res$muscat, g = hsps, fdr=1, lfc=0)) +
+    labs(title=paste0("Fresh vs. ", test_protocol))
+}
+
+# Run DE analyses
+res_tabib <- run_ds("Fresh", "Tabib_et_al")
+res_sb <- run_ds("Fresh", "Sole_Boldo_et_al")
+res_he <- run_ds("Fresh", "He_et_al")
 ```
 
-# Run DS for heatmap genes {.tabset}
+# Top DS genes
 
 ```{r, results="asis"}
-run_ds <- function(control_protocol, test_protocol, genes=hsps){
-  sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
-  sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
-  
-  sce_muscat <- prepSCE(sce_subset,
-                        kid="manual_labels_coarse",
-                        gid="Protocol",
-                        sid="Sample",
-                        drop=TRUE)
-  
-  nk <- length(kids <- levels(sce_muscat$cluster_id))
-  ns <- length(sids <- levels(sce_muscat$sample_id))
-  names(kids) <- kids; names(sids) <- sids
-  
-  pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "sample_id"), verbose=F)
-  res <- pbDS(pb, verbose=F)
-  
-  as.ggplot(pbHeatmap(sce_muscat, res, g = hsps, fdr=1, lfc=0)) +
-    labs(title=paste0(control_protocol, " vs. ", test_protocol))
-}
+cat("\n\n## Top DS genes: tabular data {.tabset} \n\n")
+cat("\n\n### Fresh vs. Tabib et al \n\n")
+invisible(print_tables(res_tabib))
+cat("\n\n### Fresh vs. He et al \n\n")
+invisible(print_tables(res_he))
+cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+invisible(print_tables(res_sb))
+```
 
+
+```{r, results="asis", fig.width=7, fig.height=12}
+cat("\n\n## Top DS genes: heatmap {.tabset} \n\n")
+cat("\n\n### Fresh vs. Tabib et al \n\n")
+plot_topn_heatmap(res_tabib, "Tabib et al")
+cat("\n\n### Fresh vs. He et al \n\n")
+plot_topn_heatmap(res_he, "He et al")
+cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+plot_topn_heatmap(res_sb, "Sole-Boldo et al")
+```
+
+# HSP DS
+
+```{r, results="asis"}
+cat("\n\n## HSP genes: tabular data {.tabset} \n\n")
+cat("\n\n### Fresh vs. Tabib et al \n\n")
+invisible(print_hsp_tables(res_tabib))
+cat("\n\n### Fresh vs. He et al \n\n")
+invisible(print_hsp_tables(res_he))
+cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+invisible(print_hsp_tables(res_sb))
+```
+
+```{r, results="asis"}
+cat("\n\n## HSP genes: heatmaps {.tabset} \n\n")
 cat("\n\n## Fresh vs. Tabib et al \n\n")
-run_ds("Fresh", "Tabib_et_al")
-cat("\n\n## Fresh vs. Sole-Boldo et al \n\n")
-run_ds("Fresh", "Sole_Boldo_et_al")
+plot_hsp_heatmap(res_tabib, "Tabib et al")
 cat("\n\n## Fresh vs. He et al \n\n")
-run_ds("Fresh", "He_et_al")
+plot_hsp_heatmap(res_he, "He et al")
+cat("\n\n## Fresh vs. Sole-Boldo et al \n\n")
+plot_hsp_heatmap(res_sb, "Sole-Boldo et al")
 ```
 
 
