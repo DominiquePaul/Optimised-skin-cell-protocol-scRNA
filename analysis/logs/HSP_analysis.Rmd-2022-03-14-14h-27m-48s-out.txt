@@ -1,0 +1,50 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
+   inline R code fragments
+
+  |                                                                              |......                                                                |   8%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |........                                                              |  12%
+  ordinary text without R code
+
+  |                                                                              |...........                                                           |  16%
+label: unnamed-chunk-1 (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |..............                                                        |  20%
+  ordinary text without R code
+
+  |                                                                              |.................                                                     |  24%
+label: unnamed-chunk-2
+  |                                                                              |....................                                                  |  28%
+  ordinary text without R code
+
+  |                                                                              |......................                                                |  32%
+label: unnamed-chunk-3
+  |                                                                              |.........................                                             |  36%
+  ordinary text without R code
+
+  |                                                                              |............................                                          |  40%
+label: unnamed-chunk-4
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  48%
+label: unnamed-chunk-5
+  |                                                                              |....................................                                  |  52%
+  ordinary text without R code
+
+  |                                                                              |.......................................                               |  56%
+label: unnamed-chunk-6
+  |                                                                              |..........................................                            |  60%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  64%
+label: unnamed-chunk-7 (with options) 
+List of 1
+ $ include: logi FALSE
+
+

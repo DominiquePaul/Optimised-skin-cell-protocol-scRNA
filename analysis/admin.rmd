@@ -31,7 +31,8 @@ wflow_build(files=c(
   
   # Index
   # "index.Rmd",
-  "plots.Rmd"
+  # "plots.Rmd"
+  "HSP_analysis.Rmd"
                     ),
               # make=TRUE,
               # dry_run=TRUE,

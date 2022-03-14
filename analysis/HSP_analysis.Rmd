@@ -1,0 +1,188 @@
+---
+title: "Analysis of heat shock proteins"
+author: "Dominique Paul"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r, include=FALSE}
+suppressPackageStartupMessages({
+  library(SingleCellExperiment)
+  library(muscat)
+  library(ggplot2)
+  library(ggplotify)
+})
+```
+
+# Heat shock proteins
+
+Heat shock proteins (HSPs) are specific proteins that are made when cells are briefly exposed to temperatures above their normal growth temperature. The synthesis of HSPs is a universal phenomenon, occurring in all plant and animal species studied, including humans.
+
+Some people have demonstrated that during tissue dissociation, digestion results in a stress response. Some proteins are produced by cells in response to exposure to stressful conditions (Heat shock proteins). 
+
+In this analysis we examine whether the genes involved in the heat shock are differentially expressed depending on the protocol used.
+
+The genes for HSPs are commonly also termed HSP[...]. We searched the [GenAge database](https://genomics.senescence.info/genes/query.php?search=HSP) for the query term "HSP".
+
+```{r}
+hsps <- c("HSP90AA1", "HSPA9", "HSPD1", "HSPA1A", "HSPA1B", "HSPA8")
+cat(hsps)
+```
+
+# Load data
+
+```{r}
+sce_integrated <- readRDS(file="../data/EOS_Files/EDI_EOS5_sce.rds")
+# colnames(colData(sce))
+# table(sce_integrated$manual_labels_coarse)
+
+# We remove some cell types due to low expression levels
+# t(table(sce_integrated$manual_labels_coarse, sce_integrated$Sample))
+removed_cell_types <- c("Mast cells", "Sweat gland cells", "Melanocytes/Schwann cells/Neuronal cells")
+sce <- sce_integrated[,!sce_integrated$manual_labels_coarse  %in% removed_cell_types]
+```
+
+Are all of the genes in our data?
+
+```{r}
+# all hsp genes appear to be present in the data
+hsps %in% rowData(sce)$Symbol
+```
+
+# Single run of a Pseudobulk DE
+
+```{r}
+# Fresh Sole_Boldo_et_al He_et_al Tabib_et_al
+control_protocol <- "Fresh"
+test_protocol <- "Sole_Boldo_et_al"
+
+refactorise <- function(sce_object, column_vector){
+  if (length(column_vector) == 1){
+    colData(sce_object)[,column_vector] <- factor(colData(sce_object)[, column_vector])
+  } else {
+    for (col in column_vector){
+      colData(sce_object)[,col] <- factor(colData(sce_object)[,col])
+    }
+  }
+  sce_object
+}
+
+sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
+sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
+
+sce_muscat <- prepSCE(sce_subset,
+                      kid="manual_labels_coarse",
+                      gid="Protocol",
+                      sid="Sample",
+                      drop=TRUE)
+```
+
+We store number of clusters and number of sample IDs as variables
+
+```{r}
+nk <- length(kids <- levels(sce_muscat$cluster_id))
+ns <- length(sids <- levels(sce_muscat$sample_id))
+names(kids) <- kids; names(sids) <- sids
+
+pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "sample_id"))
+
+(pb_mds <- pbMDS(pb))
+```
+
+```{r, include=FALSE}
+# res <- pbDS(pb)
+# tbl <- res$table[[1]]
+# names(tbl)
+# 
+# k1 <- tbl[[1]]
+# 
+# sapply(1:7, function(idx){
+#   k1 <- tbl[[idx]]
+#   print(k1[k1$gene %in% hsps[-2],])
+# })
+# 
+# head(format(k1[, -ncol(k1)], digits=2))
+# 
+# sapply(res$table[[1]], function(tlb){
+#   hsps[-2] %in% tlb$gene
+# })
+# 
+# library(dplyr)
+# library(magrittr)
+# library(pheatmap)
+# 
+# logNormExpres <- as.data.frame(as.matrix(t(counts(sce_subset)[hsps,]))) %>% 
+#     dplyr::mutate(cluster= colData(sce_subset)[,"Sample"]) %>%
+#     group_by(cluster) %>% 
+#     summarise_all(mean)
+```
+
+# Run DS for all Protocols {.tabset}
+
+```{r, results="asis", fig.width=7, fig.height=12}
+run_ds_topn <- function(control_protocol, test_protocol, genes=hsps){
+  sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
+  sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
+  
+  sce_muscat <- prepSCE(sce_subset,
+                        kid="manual_labels_coarse",
+                        gid="Protocol",
+                        sid="Sample",
+                        drop=TRUE)
+  
+  nk <- length(kids <- levels(sce_muscat$cluster_id))
+  ns <- length(sids <- levels(sce_muscat$sample_id))
+  names(kids) <- kids; names(sids) <- sids
+  
+  pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "sample_id"), verbose=F)
+  res <- pbDS(pb, verbose=F)
+  as.ggplot(pbHeatmap(sce_muscat, res, top_n=20)) +
+    labs(title=paste0(control_protocol, " vs. ", test_protocol))
+}
+
+cat("\n\n### Fresh vs. Tabib et al \n\n")
+run_ds_topn("Fresh", "Tabib_et_al")
+cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+run_ds_topn("Fresh", "Sole_Boldo_et_al")
+cat("\n\n### Fresh vs. He et al \n\n")
+run_ds_topn("Fresh", "He_et_al")
+```
+
+# Run DS for heatmap genes {.tabset}
+
+```{r, results="asis"}
+run_ds <- function(control_protocol, test_protocol, genes=hsps){
+  sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
+  sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
+  
+  sce_muscat <- prepSCE(sce_subset,
+                        kid="manual_labels_coarse",
+                        gid="Protocol",
+                        sid="Sample",
+                        drop=TRUE)
+  
+  nk <- length(kids <- levels(sce_muscat$cluster_id))
+  ns <- length(sids <- levels(sce_muscat$sample_id))
+  names(kids) <- kids; names(sids) <- sids
+  
+  pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "sample_id"))
+  res <- pbDS(pb)
+  
+  as.ggplot(pbHeatmap(sce_muscat, res, g = hsps, fdr=1, lfc=0)) +
+    labs(title=paste0(control_protocol, " vs. ", test_protocol))
+}
+
+cat("\n\n### Fresh vs. Tabib et al \n\n")
+run_ds("Fresh", "Tabib_et_al")
+cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+run_ds("Fresh", "Sole_Boldo_et_al")
+cat("\n\n### Fresh vs. He et al \n\n")
+run_ds("Fresh", "He_et_al")
+```
+
+
+
+
+```{r}
+sessionInfo()
+```
