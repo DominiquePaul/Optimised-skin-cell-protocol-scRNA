@@ -1,0 +1,2 @@
+Error in if (!kable_format %in% c("html", "latex")) { : 
+  argument is of length zero

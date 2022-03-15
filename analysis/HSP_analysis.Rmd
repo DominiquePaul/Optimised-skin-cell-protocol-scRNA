@@ -146,7 +146,7 @@ run_ds <- function(control_protocol, test_protocol){
 print_tables <- function(res){
   sapply(names(res$muscat$table[[1]]), function(cell_type){
     cat(paste0("\n\n#### ", cell_type," \n\n"))
-    print(kable(head(format(res$muscat$table[[1]][[cell_type]], digits=2), 10)))
+    print(kable_styling(head(format(res$muscat$table[[1]][[cell_type]], digits=2), 10)))
   })
 }
 
@@ -155,7 +155,9 @@ print_hsp_tables <- function(res){
     tbl <- res$muscat$table[[1]][[cell_type]]
     hsps_in_table <- hsps[hsps %in% tbl$gene]
     cat(paste0("\n\n#### ", cell_type," \n\n"))
-    print(kableExtra::kable(format(tbl[tbl$gene %in% hsps_in_table,], digits=2)))
+    tbl <- tbl[tbl$gene %in% hsps_in_table,] %>%
+      arrange(p_adj.loc)
+    print(kable_styling(format(tbl, digits=2)))
   })
 }
 
