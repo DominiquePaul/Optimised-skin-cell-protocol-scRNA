@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(ggplotify)
   library(kableExtra)
+  library(dplyr)
 })
 #update.packages(ask=FALSE)
 ```
@@ -146,7 +147,7 @@ run_ds <- function(control_protocol, test_protocol){
 print_tables <- function(res){
   sapply(names(res$muscat$table[[1]]), function(cell_type){
     cat(paste0("\n\n#### ", cell_type," \n\n"))
-    print(kable_styling(head(format(res$muscat$table[[1]][[cell_type]], digits=2), 10)))
+    print(kable_styling(kable(head(format(res$muscat$table[[1]][[cell_type]], digits=2), 10))))
   })
 }
 
@@ -157,7 +158,7 @@ print_hsp_tables <- function(res){
     cat(paste0("\n\n#### ", cell_type," \n\n"))
     tbl <- tbl[tbl$gene %in% hsps_in_table,] %>%
       arrange(p_adj.loc)
-    print(kable_styling(format(tbl, digits=2)))
+    print(kable_styling(kable(format(tbl, digits=2))))
   })
 }
 
@@ -192,11 +193,11 @@ invisible(print_tables(res_sb))
 
 ```{r heatmap top, results="asis", fig.width=7, fig.height=12}
 cat("\n\n## Top DS genes: heatmap {.tabset} \n\n")
-cat("\n\n### Fresh vs. Tabib et al {.tabset} \n\n")
+cat("\n\n### Fresh vs. Tabib et al \n\n")
 plot_topn_heatmap(res_tabib, "Tabib et al")
 cat("\n\n### Fresh vs. He et al \n\n")
-plot_topn_heatmap(res_he, "He et al {.tabset}")
-cat("\n\n### Fresh vs. Sole-Boldo et al {.tabset} \n\n")
+plot_topn_heatmap(res_he, "He et al")
+cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
 plot_topn_heatmap(res_sb, "Sole-Boldo et al")
 ```
 
@@ -214,11 +215,11 @@ invisible(print_hsp_tables(res_sb))
 
 ```{r heatmap hsp, results="asis", fig.width=7, fig.height=12}
 cat("\n\n## HSP genes: heatmaps {.tabset} \n\n")
-cat("\n\n## Fresh vs. Tabib et al \n\n")
+cat("\n\n### Fresh vs. Tabib et al \n\n")
 plot_hsp_heatmap(res_tabib, "Tabib et al")
-cat("\n\n## Fresh vs. He et al \n\n")
+cat("\n\n### Fresh vs. He et al \n\n")
 plot_hsp_heatmap(res_he, "He et al")
-cat("\n\n## Fresh vs. Sole-Boldo et al \n\n")
+cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
 plot_hsp_heatmap(res_sb, "Sole-Boldo et al")
 ```
 
