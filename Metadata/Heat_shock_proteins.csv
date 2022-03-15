@@ -1,0 +1,98 @@
+HGNC ID (gene),gene_name,Approved name,Previous symbols,Aliases,Chromosome,
+HGNC:5232,HSPA1A,heat shock protein family A (Hsp70) member 1A,HSPA1,HSP70-1,6p21.33,Heat shock 70kDa proteins
+HGNC:5233,HSPA1B,heat shock protein family A (Hsp70) member 1B,,HSP70-2,6p21.33,Heat shock 70kDa proteins
+HGNC:5234,HSPA1L,heat shock protein family A (Hsp70) member 1 like,,"HSP70-HOM,hum70t",6p21.33,Heat shock 70kDa proteins
+HGNC:5235,HSPA2,heat shock protein family A (Hsp70) member 2,,,14q23.3,Heat shock 70kDa proteins
+HGNC:5237,HSPA4,heat shock protein family A (Hsp70) member 4,,"HS24/P52,HSPH2",5q31.1,Heat shock 70kDa proteins
+HGNC:17041,HSPA4L,heat shock protein family A (Hsp70) member 4 like,,"APG-1,Osp94,HSPH3",4q28.1,Heat shock 70kDa proteins
+HGNC:5238,HSPA5,heat shock protein family A (Hsp70) member 5,GRP78,BiP,9q33.3,Heat shock 70kDa proteins
+HGNC:5239,HSPA6,heat shock protein family A (Hsp70) member 6,,HSP70B',1q23.3,Heat shock 70kDa proteins
+HGNC:5240,HSPA7,heat shock protein family A (Hsp70) member 7 (pseudogene),,HSP70B,1q23.3,Heat shock 70kDa proteins
+HGNC:5241,HSPA8,heat shock protein family A (Hsp70) member 8,HSPA10,"HSC71,HSC70,HSP73",11q24.1,Heat shock 70kDa proteins
+HGNC:5244,HSPA9,heat shock protein family A (Hsp70) member 9,HSPA9B,"GRP75,PBP74,mot-2,mthsp75",5q31.2,Heat shock 70kDa proteins
+HGNC:19022,HSPA12A,heat shock protein family A (Hsp70) member 12A,,"FLJ13874,KIAA0417",10q25.3,Heat shock 70kDa proteins
+HGNC:16193,HSPA12B,heat shock protein family A (Hsp70) member 12B,C20orf60,dJ1009E24.2,20p13,Heat shock 70kDa proteins
+HGNC:11375,HSPA13,heat shock protein family A (Hsp70) member 13,STCH,,21q11.2,Heat shock 70kDa proteins
+HGNC:29526,HSPA14,heat shock protein family A (Hsp70) member 14,,"HSP70-4,HSP70L1",10p13,Heat shock 70kDa proteins
+HGNC:16969,HSPH1,heat shock protein family H (Hsp110) member 1,,"HSP105B,KIAA0201,HSP105A,NY-CO-25",13q12.3,Heat shock 70kDa proteins
+HGNC:16931,HYOU1,hypoxia up-regulated 1,,"ORP150,HSP12A,Grp170",11q23.3,Heat shock 70kDa proteins
+HGNC:5229,DNAJA1,DnaJ heat shock protein family (Hsp40) member A1,HSJ2,"HSPF4,hdj-2,dj-2,NEDD7",9p21.1,DNAJ (HSP40) heat shock proteins
+HGNC:14884,DNAJA2,DnaJ heat shock protein family (Hsp40) member A2,,"HIRIP4,DNAJ,CPR3,DNJ3",16q11.2,DNAJ (HSP40) heat shock proteins
+HGNC:11808,DNAJA3,DnaJ heat shock protein family (Hsp40) member A3,TID1,hTid-1,16p13.3,DNAJ (HSP40) heat shock proteins
+HGNC:14885,DNAJA4,DnaJ heat shock protein family (Hsp40) member A4,,PRO1472,15q25.1,DNAJ (HSP40) heat shock proteins
+HGNC:5270,DNAJB1,DnaJ heat shock protein family (Hsp40) member B1,HSPF1,"Hsp40,Sis1,RSPH16B",19p13.12,DNAJ (HSP40) heat shock proteins
+HGNC:5228,DNAJB2,DnaJ heat shock protein family (Hsp40) member B2,HSJ1,"HSPF3,CMT2T",2q35,DNAJ (HSP40) heat shock proteins
+HGNC:32397,DNAJB3,DnaJ heat shock protein family (Hsp40) member B3,,HCG3,2q37.1,DNAJ (HSP40) heat shock proteins
+HGNC:14886,DNAJB4,DnaJ heat shock protein family (Hsp40) member B4,,HLJ1,1p31.1,DNAJ (HSP40) heat shock proteins
+HGNC:14887,DNAJB5,DnaJ heat shock protein family (Hsp40) member B5,,Hsc40,9p13.3,DNAJ (HSP40) heat shock proteins
+HGNC:14888,DNAJB6,DnaJ heat shock protein family (Hsp40) member B6,LGMD1D,MRJ,7q36.3,DNAJ (HSP40) heat shock proteins
+HGNC:24986,DNAJB7,DnaJ heat shock protein family (Hsp40) member B7,,HSC3,22q13.2,DNAJ (HSP40) heat shock proteins
+HGNC:23699,DNAJB8,DnaJ heat shock protein family (Hsp40) member B8,,"MGC33884,CT156",3q21.3,DNAJ (HSP40) heat shock proteins
+HGNC:6968,DNAJB9,DnaJ heat shock protein family (Hsp40) member B9,MDG1,,7q31.1,DNAJ (HSP40) heat shock proteins
+HGNC:14889,DNAJB11,DnaJ heat shock protein family (Hsp40) member B11,,"EDJ,HEDJ,ERdj3",3q27.3,DNAJ (HSP40) heat shock proteins
+HGNC:14891,DNAJB12,DnaJ heat shock protein family (Hsp40) member B12,,"DJ10,FLJ20027",10q22.1,DNAJ (HSP40) heat shock proteins
+HGNC:30718,DNAJB13,DnaJ heat shock protein family (Hsp40) member B13,,"TSARG6,RSPH16A",11q13.4,DNAJ (HSP40) heat shock proteins
+HGNC:25881,DNAJB14,DnaJ heat shock protein family (Hsp40) member B14,,FLJ14281,4q23,DNAJ (HSP40) heat shock proteins
+HGNC:20090,DNAJC1,DnaJ heat shock protein family (Hsp40) member C1,,"DNAJL1,ERdj1,MTJ1",10p12.31,DNAJ (HSP40) heat shock proteins
+HGNC:13192,DNAJC2,DnaJ heat shock protein family (Hsp40) member C2,ZRF1,"MPP11,MPHOSPH11,ZUO1,zuotin",7q22.1,DNAJ (HSP40) heat shock proteins
+HGNC:9439,DNAJC3,DnaJ heat shock protein family (Hsp40) member C3,PRKRI,"P58,P58IPK,HP58,ERdj6,p58(IPK)",13q32.1,DNAJ (HSP40) heat shock proteins
+HGNC:5271,DNAJC4,DnaJ heat shock protein family (Hsp40) member C4,HSPF2,MCG18,11q13.1,DNAJ (HSP40) heat shock proteins
+HGNC:16235,DNAJC5,DnaJ heat shock protein family (Hsp40) member C5,CLN4,"FLJ00118,FLJ13070,DNAJC5A",20q13.33,DNAJ (HSP40) heat shock proteins
+HGNC:24138,DNAJC5B,DnaJ heat shock protein family (Hsp40) member C5 beta,,"MGC26226,CSP-beta",8q13.1,DNAJ (HSP40) heat shock proteins
+HGNC:24844,DNAJC5G,DnaJ heat shock protein family (Hsp40) member C5 gamma,,"FLJ40417,CSP-gamma",2p23.3,DNAJ (HSP40) heat shock proteins
+HGNC:15469,DNAJC6,DnaJ heat shock protein family (Hsp40) member C6,,"KIAA0473,PARK19",1p31.3,DNAJ (HSP40) heat shock proteins
+HGNC:12392,DNAJC7,DnaJ heat shock protein family (Hsp40) member C7,TTC2,TPR2,17q21.2,DNAJ (HSP40) heat shock proteins
+HGNC:15470,DNAJC8,DnaJ heat shock protein family (Hsp40) member C8,,SPF31,1p35.3,DNAJ (HSP40) heat shock proteins
+HGNC:19123,DNAJC9,DnaJ heat shock protein family (Hsp40) member C9,,"JDD1,SB73",10q22.2,DNAJ (HSP40) heat shock proteins
+HGNC:24637,DNAJC10,DnaJ heat shock protein family (Hsp40) member C10,,"ERdj5,PDIA19",2q32.1,DNAJ (HSP40) heat shock proteins
+HGNC:25570,DNAJC11,DnaJ heat shock protein family (Hsp40) member C11,,FLJ10737,1p36.31,DNAJ (HSP40) heat shock proteins
+HGNC:28908,DNAJC12,DnaJ heat shock protein family (Hsp40) member C12,,JDP1,10q21.3,DNAJ (HSP40) heat shock proteins
+HGNC:30343,DNAJC13,DnaJ heat shock protein family (Hsp40) member C13,,"RME8,KIAA0678",3q22.1,DNAJ (HSP40) heat shock proteins
+HGNC:24581,DNAJC14,DnaJ heat shock protein family (Hsp40) member C14,,"DNAJ,DRIP78,HDJ3,LIP6,FLJ32792",12q13.2,DNAJ (HSP40) heat shock proteins
+HGNC:20325,DNAJC15,DnaJ heat shock protein family (Hsp40) member C15,DNAJD1,MCJ,13q14.11,DNAJ (HSP40) heat shock proteins
+HGNC:29157,DNAJC16,DnaJ heat shock protein family (Hsp40) member C16,,KIAA0962,1p36.21,DNAJ (HSP40) heat shock proteins
+HGNC:25556,DNAJC17,DnaJ heat shock protein family (Hsp40) member C17,,FLJ10634,15q15.1,DNAJ (HSP40) heat shock proteins
+HGNC:28429,DNAJC18,DnaJ heat shock protein family (Hsp40) member C18,,MGC29463,5q31.2,DNAJ (HSP40) heat shock proteins
+HGNC:30528,DNAJC19,DnaJ heat shock protein family (Hsp40) member C19,,"TIMM14,Tim14,Pam18",3q26.33,DNAJ (HSP40) heat shock proteins
+HGNC:28913,HSCB,HscB mitochondrial iron-sulfur cluster cochaperone,,"HSC20,DNAJC20,Jac1",22q12.1,DNAJ (HSP40) heat shock proteins
+HGNC:27030,DNAJC21,DnaJ heat shock protein family (Hsp40) member C21,,"GS3,DNAJA5,JJJ1",5p13.2,DNAJ (HSP40) heat shock proteins
+HGNC:25802,DNAJC22,DnaJ heat shock protein family (Hsp40) member C22,,"wus,FLJ13236",12q13.12,DNAJ (HSP40) heat shock proteins
+HGNC:21082,SEC63,"SEC63 homolog, protein translocation regulator",,"SEC63L,PRO2507,ERdj2,DNAJC23",6q21,DNAJ (HSP40) heat shock proteins
+HGNC:26979,DNAJC24,DnaJ heat shock protein family (Hsp40) member C24,"ZCSL3,DPH4",JJJ3,11p13,DNAJ (HSP40) heat shock proteins
+HGNC:34187,DNAJC25,DnaJ heat shock protein family (Hsp40) member C25,,bA16L21.2.1,9q31.3,DNAJ (HSP40) heat shock proteins
+HGNC:4113,GAK,cyclin G associated kinase,,DNAJC26,4p16.3,DNAJ (HSP40) heat shock proteins
+HGNC:30290,DNAJC27,DnaJ heat shock protein family (Hsp40) member C27,RBJ,RabJS,2p23.3,DNAJ (HSP40) heat shock proteins
+HGNC:1297,DNAJC28,DnaJ heat shock protein family (Hsp40) member C28,C21orf55,C21orf78,21q22.11,DNAJ (HSP40) heat shock proteins
+HGNC:10519,SACS,sacsin molecular chaperone,,"ARSACS,KIAA0730,DKFZp686B15167,DNAJC29,SPAX6,PPP1R138",13q12.12,DNAJ (HSP40) heat shock proteins
+HGNC:16410,DNAJC30,DnaJ heat shock protein family (Hsp40) member C30,WBSCR18,,7q11.23,DNAJ (HSP40) heat shock proteins
+HGNC:5246,HSPB1,heat shock protein family B (small) member 1,,"HSP27,HSP28,Hs.76067,Hsp25,CMT2F",7q11.23,Small heat shock proteins
+HGNC:5247,HSPB2,heat shock protein family B (small) member 2,,"Hs.78846,MKBP",11q23.1,Small heat shock proteins
+HGNC:5248,HSPB3,heat shock protein family B (small) member 3,,HSPL27,5q11.2,Small heat shock proteins
+HGNC:2388,CRYAA,crystallin alpha A,CRYA1,HSPB4,21q22.3,Small heat shock proteins
+HGNC:2389,CRYAB,crystallin alpha B,CRYA2,HSPB5,11q23.1,Small heat shock proteins
+HGNC:26511,HSPB6,heat shock protein family B (small) member 6,,"FLJ32389,Hsp20,PPP1R91",19q13.12,Small heat shock proteins
+HGNC:5249,HSPB7,heat shock protein family B (small) member 7,,cvHSP,1p36.13,Small heat shock proteins
+HGNC:30171,HSPB8,heat shock protein family B (small) member 8,,"H11,E2IG1,HSP22,CMT2L",12q24.23,Small heat shock proteins
+HGNC:30589,HSPB9,heat shock protein family B (small) member 9,,CT51,17q21.2,Small heat shock proteins
+HGNC:8113,ODF1,outer dense fiber of sperm tails 1,,"ODFPG,ODF27,RT7,HSPB10,CT133",8q22.3,Small heat shock proteins
+HGNC:25019,HSPB11,heat shock protein family B (small) member 11,C1orf41,"HSPCO34,PP25,IFT25,FAP232",1p32.3,Small heat shock proteins
+HGNC:5253,HSP90AA1,heat shock protein 90 alpha family class A member 1,"HSPC1,HSPCA","Hsp89,Hsp90,FLJ31884,HSP90N",14q32.31,Heat shock 90kDa proteins
+HGNC:5254,HSP90AA3P,"heat shock protein 90 alpha family class A member 3, pseudogene",HSPCAL1,,1q23.1,Heat shock 90kDa proteins
+HGNC:5258,HSP90AB1,heat shock protein 90 alpha family class B member 1,"HSPC2,HSPCB",,6p21.1,Heat shock 90kDa proteins
+HGNC:12028,HSP90B1,heat shock protein 90 beta family member 1,TRA1,"GP96,GRP94",12q23.3,Heat shock 90kDa proteins
+HGNC:16264,TRAP1,TNF receptor associated protein 1,,"HSP75,HSP90L",16p13.3,Heat shock 90kDa proteins
+HGNC:26291,BBS10,Bardet-Biedl syndrome 10,C12orf58,FLJ23560,12q21.2,Chaperonins
+HGNC:26648,BBS12,Bardet-Biedl syndrome 12,C4orf24,"FLJ35630,FLJ41559",4q27,Chaperonins
+HGNC:11655,TCP1,t-complex 1,,"D6S230E,CCT1,Ccta",6q25.3,Chaperonins
+HGNC:1615,CCT2,chaperonin containing TCP1 subunit 2,,Cctb,12q15,Chaperonins
+HGNC:1616,CCT3,chaperonin containing TCP1 subunit 3,TRIC5,Cctg,1q22,Chaperonins
+HGNC:1617,CCT4,chaperonin containing TCP1 subunit 4,,Cctd,2p15,Chaperonins
+HGNC:1618,CCT5,chaperonin containing TCP1 subunit 5,,KIAA0098,5p15.2,Chaperonins
+HGNC:1620,CCT6A,chaperonin containing TCP1 subunit 6A,CCT6,"TTCP20,TCPZ,Cctz,HTR3,TCP20",7p11.2,Chaperonins
+HGNC:1621,CCT6B,chaperonin containing TCP1 subunit 6B,,"Cctz2,TSA303",17q12,Chaperonins
+HGNC:1622,CCT7,chaperonin containing TCP1 subunit 7,,"Ccth,Nip7-1",2p13.2,Chaperonins
+HGNC:1623,CCT8,chaperonin containing TCP1 subunit 8,C21orf112,"Cctq,PRED71",21q21.3,Chaperonins
+HGNC:30664,CLPB,caseinolytic mitochondrial matrix peptidase chaperone subunit B,,"HSP78,SKD3,FLJ13152,ANKCLB",11q13.4,Chaperonins
+HGNC:5261,HSPD1,heat shock protein family D (Hsp60) member 1,SPG13,"GroEL,HSP60",2q33.1,Chaperonins
+HGNC:5269,HSPE1,heat shock protein family E (Hsp10) member 1,,"CPN10,GroES,HSP10,EPF",2q33.1,Chaperonins
+HGNC:7108,MKKS,MKKS centrosomal shuttling protein,BBS6,,20p12.2,Chaperonins

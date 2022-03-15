@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
   library(ggplotify)
   library(kableExtra)
 })
+#update.packages(ask=FALSE)
 ```
 
 # Heat shock proteins
@@ -23,16 +24,18 @@ Some people have demonstrated that during tissue dissociation, digestion results
 
 In this analysis we examine whether the genes involved in the heat shock are differentially expressed depending on the protocol used.
 
-The genes for HSPs are commonly also termed HSP[...]. We searched the [GenAge database](https://genomics.senescence.info/genes/query.php?search=HSP) for the query term "HSP".
+The genes for HSPs are commonly also termed HSP[...]. The list of genes examined was acquired from the [HGNC database](https://www.genenames.org/data/genegroup/#!/group/582).
 
-```{r}
-hsps <- c("HSP90AA1", "HSPA9", "HSPD1", "HSPA1A", "HSPA1B", "HSPA8")
+```{r hsp0}
+# hsps <- c("HSP90AA1", "HSPA9", "HSPD1", "HSPA1A", "HSPA1B", "HSPA8")
+hsp_csv <- read.csv("../Metadata/Heat_shock_proteins.csv")
+hsps <- hsp_csv$gene_name
 cat(hsps)
 ```
 
 # Load data
 
-```{r}
+```{r hsp2} 
 sce_integrated <- readRDS(file="../data/EOS_Files/EDI_EOS5_sce.rds")
 # colnames(colData(sce))
 # table(sce_integrated$manual_labels_coarse)
@@ -45,14 +48,14 @@ sce <- sce_integrated[,!sce_integrated$manual_labels_coarse  %in% removed_cell_t
 
 Are all of the genes in our data?
 
-```{r}
+```{r hsp 2}
 # all hsp genes appear to be present in the data
-hsps %in% rowData(sce)$Symbol
+hsps <- hsps[hsps %in% rowData(sce)$Symbol]
 ```
 
 # Single run of a Pseudobulk DE
 
-```{r}
+```{r manual 1}
 # Fresh Sole_Boldo_et_al He_et_al Tabib_et_al
 control_protocol <- "Fresh"
 test_protocol <- "Sole_Boldo_et_al"
@@ -80,7 +83,7 @@ sce_muscat <- prepSCE(sce_subset,
 
 We store number of clusters and number of sample IDs as variables
 
-```{r}
+```{r manual 2}
 nk <- length(kids <- levels(sce_muscat$cluster_id))
 ns <- length(sids <- levels(sce_muscat$sample_id))
 names(kids) <- kids; names(sids) <- sids
@@ -120,7 +123,7 @@ pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "s
 
 # Run DS for all Protocols
 
-```{r}
+```{r ds functions}
 run_ds <- function(control_protocol, test_protocol){
   sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
   sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
@@ -142,6 +145,7 @@ run_ds <- function(control_protocol, test_protocol){
 
 print_tables <- function(res){
   sapply(names(res$muscat$table[[1]]), function(cell_type){
+    cat(paste0("\n\n#### ", cell_type," \n\n"))
     print(kable(head(format(res$muscat$table[[1]][[cell_type]], digits=2), 10)))
   })
 }
@@ -150,7 +154,8 @@ print_hsp_tables <- function(res){
   sapply(names(res$muscat$table[[1]]), function(cell_type){
     tbl <- res$muscat$table[[1]][[cell_type]]
     hsps_in_table <- hsps[hsps %in% tbl$gene]
-    print(kable(head(format(tbl[tbl$gene %in% hsps_in_table,], digits=2), 10)))
+    cat(paste0("\n\n#### ", cell_type," \n\n"))
+    print(kableExtra::kable(format(tbl[tbl$gene %in% hsps_in_table,], digits=2)))
   })
 }
 
@@ -172,30 +177,30 @@ res_he <- run_ds("Fresh", "He_et_al")
 
 # Top DS genes
 
-```{r, results="asis"}
+```{r table top, results="asis"}
 cat("\n\n## Top DS genes: tabular data {.tabset} \n\n")
 cat("\n\n### Fresh vs. Tabib et al \n\n")
 invisible(print_tables(res_tabib))
-cat("\n\n### Fresh vs. He et al \n\n")
+cat("\n\n### Fresh vs. He et al {.tabset}\n\n")
 invisible(print_tables(res_he))
-cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+cat("\n\n### Fresh vs. Sole-Boldo et al  {.tabset} \n\n")
 invisible(print_tables(res_sb))
 ```
 
 
-```{r, results="asis", fig.width=7, fig.height=12}
+```{r heatmap top, results="asis", fig.width=7, fig.height=12}
 cat("\n\n## Top DS genes: heatmap {.tabset} \n\n")
-cat("\n\n### Fresh vs. Tabib et al \n\n")
+cat("\n\n### Fresh vs. Tabib et al {.tabset} \n\n")
 plot_topn_heatmap(res_tabib, "Tabib et al")
 cat("\n\n### Fresh vs. He et al \n\n")
-plot_topn_heatmap(res_he, "He et al")
-cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+plot_topn_heatmap(res_he, "He et al {.tabset}")
+cat("\n\n### Fresh vs. Sole-Boldo et al {.tabset} \n\n")
 plot_topn_heatmap(res_sb, "Sole-Boldo et al")
 ```
 
 # HSP DS
 
-```{r, results="asis"}
+```{r table hsp, results="asis"}
 cat("\n\n## HSP genes: tabular data {.tabset} \n\n")
 cat("\n\n### Fresh vs. Tabib et al \n\n")
 invisible(print_hsp_tables(res_tabib))
@@ -205,7 +210,7 @@ cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
 invisible(print_hsp_tables(res_sb))
 ```
 
-```{r, results="asis"}
+```{r heatmap hsp, results="asis", fig.width=7, fig.height=12}
 cat("\n\n## HSP genes: heatmaps {.tabset} \n\n")
 cat("\n\n## Fresh vs. Tabib et al \n\n")
 plot_hsp_heatmap(res_tabib, "Tabib et al")
@@ -214,7 +219,6 @@ plot_hsp_heatmap(res_he, "He et al")
 cat("\n\n## Fresh vs. Sole-Boldo et al \n\n")
 plot_hsp_heatmap(res_sb, "Sole-Boldo et al")
 ```
-
 
 
 

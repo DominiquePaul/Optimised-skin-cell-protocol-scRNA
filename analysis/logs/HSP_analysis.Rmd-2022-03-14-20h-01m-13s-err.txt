@@ -1,0 +1,4 @@
+Error in parse(text = x, srcfile = src) : <text>:2:41: unexpected symbol
+1: cat("\n\n## HSP genes: heatmaps {.tabset} \n\n")
+2: cat("\n\n## Fresh vs. Tabib et al \n\n")c
+                                           ^

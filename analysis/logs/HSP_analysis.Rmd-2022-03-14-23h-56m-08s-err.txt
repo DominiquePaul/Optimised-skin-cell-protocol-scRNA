@@ -1,0 +1,2 @@
+Error in kable_(x = structure(c("64", "116", "123", "227", "428", "499",  : 
+  could not find function "kable_"
