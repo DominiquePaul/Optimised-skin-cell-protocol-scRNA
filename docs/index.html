@@ -13,7 +13,7 @@
 
 <title>Home</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -71,6 +71,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -91,6 +92,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -246,7 +250,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -275,7 +279,7 @@ $(document).ready(function () {
 <div id="header">
 
 <div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
 <ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
@@ -400,16 +404,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree8a80e9f85688d2299aae6df1e0459e8bfc0d0d25targetblank8a80e9fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/8a80e9f85688d2299aae6df1e0459e8bfc0d0d25" target="_blank">8a80e9f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree054d13eef7c841d17104217da2bcf34769892f7dtargetblank054d13ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/054d13eef7c841d17104217da2bcf34769892f7d" target="_blank">054d13e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree8a80e9f85688d2299aae6df1e0459e8bfc0d0d25targetblank8a80e9fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree054d13eef7c841d17104217da2bcf34769892f7dtargetblank054d13ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/8a80e9f85688d2299aae6df1e0459e8bfc0d0d25" target="_blank">8a80e9f</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/054d13eef7c841d17104217da2bcf34769892f7d" target="_blank">054d13e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -435,21 +439,10 @@ Ignored files:
     Ignored:    output/plots_paper_png/.DS_Store
 
 Untracked files:
-    Untracked:  Metadata/Heat_shock_proteins.csv
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-01m-13s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-01m-13s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-06m-16s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-06m-16s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-23h-56m-08s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-23h-56m-08s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-08h-38m-42s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-08h-38m-42s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-05m-27s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-05m-27s-out.txt
-    Untracked:  analysis/logs/index.Rmd-2022-03-14-20h-09m-48s-err.txt
-    Untracked:  analysis/logs/index.Rmd-2022-03-14-20h-09m-48s-out.txt
-    Untracked:  analysis/logs/index.Rmd-2022-03-15-09h-09m-17s-err.txt
-    Untracked:  analysis/logs/index.Rmd-2022-03-15-09h-09m-17s-out.txt
+    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-24m-25s-err.txt
+    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-24m-25s-out.txt
+    Untracked:  analysis/logs/index.Rmd-2022-03-15-09h-27m-56s-err.txt
+    Untracked:  analysis/logs/index.Rmd-2022-03-15-09h-27m-56s-out.txt
 
 Unstaged changes:
     Modified:   analysis/HSP_analysis.Rmd
@@ -491,6 +484,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/054d13eef7c841d17104217da2bcf34769892f7d/docs/index.html" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+<td>
+added heatshock analysis
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -804,7 +814,7 @@ other attached packages:
 [1] magrittr_2.0.2
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.8       rstudioapi_0.13  whisker_0.4      knitr_1.37      
+ [1] Rcpp_1.0.8.2     rstudioapi_0.13  whisker_0.4      knitr_1.37      
  [5] workflowr_1.7.0  here_1.0.1       R6_2.5.1         rlang_1.0.2     
  [9] fastmap_1.1.0    fansi_1.0.2      stringr_1.4.0    tools_4.1.0     
 [13] xfun_0.30        utf8_1.2.2       cli_3.2.0        git2r_0.29.0    
@@ -812,7 +822,7 @@ loaded via a namespace (and not attached):
 [21] yaml_2.3.5       digest_0.6.29    tibble_3.1.6     lifecycle_1.0.1 
 [25] crayon_1.5.0     later_1.3.0      sass_0.4.0       vctrs_0.3.8     
 [29] fs_1.5.2         promises_1.2.0.1 glue_1.6.2       evaluate_0.15   
-[33] rmarkdown_2.11   stringi_1.7.6    bslib_0.3.1      compiler_4.1.0  
+[33] rmarkdown_2.13   stringi_1.7.6    bslib_0.3.1      compiler_4.1.0  
 [37] pillar_1.7.0     jsonlite_1.8.0   httpuv_1.6.5     pkgconfig_2.0.3 </code></pre>
 </div>
 </div>

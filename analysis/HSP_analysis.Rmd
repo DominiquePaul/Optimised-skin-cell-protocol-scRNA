@@ -179,7 +179,7 @@ res_he <- run_ds("Fresh", "He_et_al")
 
 ```{r table top, results="asis"}
 cat("\n\n## Top DS genes: tabular data {.tabset} \n\n")
-cat("\n\n### Fresh vs. Tabib et al \n\n")
+cat("\n\n### Fresh vs. Tabib et al {.tabset} \n\n")
 invisible(print_tables(res_tabib))
 cat("\n\n### Fresh vs. He et al {.tabset}\n\n")
 invisible(print_tables(res_he))
@@ -202,11 +202,11 @@ plot_topn_heatmap(res_sb, "Sole-Boldo et al")
 
 ```{r table hsp, results="asis"}
 cat("\n\n## HSP genes: tabular data {.tabset} \n\n")
-cat("\n\n### Fresh vs. Tabib et al \n\n")
+cat("\n\n### Fresh vs. Tabib et al {.tabset} \n\n")
 invisible(print_hsp_tables(res_tabib))
-cat("\n\n### Fresh vs. He et al \n\n")
+cat("\n\n### Fresh vs. He et al {.tabset} \n\n")
 invisible(print_hsp_tables(res_he))
-cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
+cat("\n\n### Fresh vs. Sole-Boldo et al {.tabset} \n\n")
 invisible(print_hsp_tables(res_sb))
 ```
 

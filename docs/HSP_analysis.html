@@ -15,7 +15,7 @@
 
 <title>Analysis of heat shock proteins</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -76,6 +76,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -96,6 +97,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -324,7 +328,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -353,7 +357,7 @@ div.tocify {
 <div id="header">
 
 <div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
 <ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
@@ -480,16 +484,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree8a80e9f85688d2299aae6df1e0459e8bfc0d0d25targetblank8a80e9fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/8a80e9f85688d2299aae6df1e0459e8bfc0d0d25" target="_blank">8a80e9f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree054d13eef7c841d17104217da2bcf34769892f7dtargetblank054d13ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/054d13eef7c841d17104217da2bcf34769892f7d" target="_blank">054d13e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree8a80e9f85688d2299aae6df1e0459e8bfc0d0d25targetblank8a80e9fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomDominiquePaulOptimisedskincellprotocolscRNAtree054d13eef7c841d17104217da2bcf34769892f7dtargetblank054d13ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/8a80e9f85688d2299aae6df1e0459e8bfc0d0d25" target="_blank">8a80e9f</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/tree/054d13eef7c841d17104217da2bcf34769892f7d" target="_blank">054d13e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -509,26 +513,14 @@ Ignored files:
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/Supple_table_1.png
     Ignored:    analysis/Unused/.DS_Store
-    Ignored:    analysis/figure/
     Ignored:    code/.DS_Store
     Ignored:    data/
     Ignored:    output/.DS_Store
     Ignored:    output/plots_paper_png/.DS_Store
 
 Untracked files:
-    Untracked:  Metadata/Heat_shock_proteins.csv
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-01m-13s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-01m-13s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-06m-16s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-20h-06m-16s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-23h-56m-08s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-14-23h-56m-08s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-08h-38m-42s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-08h-38m-42s-out.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-05m-27s-err.txt
-    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-05m-27s-out.txt
-    Untracked:  analysis/logs/index.Rmd-2022-03-14-20h-09m-48s-err.txt
-    Untracked:  analysis/logs/index.Rmd-2022-03-14-20h-09m-48s-out.txt
+    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-24m-25s-err.txt
+    Untracked:  analysis/logs/HSP_analysis.Rmd-2022-03-15-09h-24m-25s-out.txt
 
 Unstaged changes:
     Modified:   analysis/HSP_analysis.Rmd
@@ -570,6 +562,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/analysis/HSP_analysis.Rmd" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+<td>
+added heatshock analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/054d13eef7c841d17104217da2bcf34769892f7d/docs/HSP_analysis.html" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+<td>
+added heatshock analysis
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -740,6 +766,43 @@ pb &lt;- aggregateData(sce_muscat, assay=&quot;counts&quot;, fun=&quot;sum&quot;
 (pb_mds &lt;- pbMDS(pb))</code></pre>
 <pre><code>Removing 1 rows with all zero counts</code></pre>
 <p><img src="figure/HSP_analysis.Rmd/manual%202-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-manual-2-1">
+Past versions of “manual 2-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-manual-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/docs/figure/HSP_analysis.Rmd/manual 2-1.png" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="run-ds-for-all-protocols" class="section level1">
 <h1>Run DS for all Protocols</h1>
@@ -798,9 +861,9 @@ res_he &lt;- run_ds(&quot;Fresh&quot;, &quot;He_et_al&quot;)</code></pre>
 <pre class="r"><code>cat(&quot;\n\n## Top DS genes: tabular data {.tabset} \n\n&quot;)</code></pre>
 <div id="top-ds-genes-tabular-data" class="section level2 tabset">
 <h2 class="tabset">Top DS genes: tabular data</h2>
-<pre class="r"><code>cat(&quot;\n\n### Fresh vs. Tabib et al \n\n&quot;)</code></pre>
-<div id="fresh-vs.-tabib-et-al" class="section level3">
-<h3>Fresh vs. Tabib et al</h3>
+<pre class="r"><code>cat(&quot;\n\n### Fresh vs. Tabib et al {.tabset} \n\n&quot;)</code></pre>
+<div id="fresh-vs.-tabib-et-al" class="section level3 tabset">
+<h3 class="tabset">Fresh vs. Tabib et al</h3>
 <pre class="r"><code>invisible(print_tables(res_tabib))</code></pre>
 <div id="fibroblasts" class="section level4">
 <h4>Fibroblasts</h4>
@@ -7715,18 +7778,129 @@ See vignette(&#39;programming&#39;) for more help
 This warning is displayed once every 8 hours.
 Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
 <p><img src="figure/HSP_analysis.Rmd/heatmap%20top-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-heatmap-top-1">
+Past versions of “heatmap top-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-heatmap-top-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/docs/figure/HSP_analysis.Rmd/heatmap top-1.png" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cat(&quot;\n\n### Fresh vs. He et al \n\n&quot;)</code></pre>
 </div>
 <div id="fresh-vs.-he-et-al-1" class="section level3">
 <h3>Fresh vs. He et al</h3>
 <pre class="r"><code>plot_topn_heatmap(res_he, &quot;He et al {.tabset}&quot;)</code></pre>
 <p><img src="figure/HSP_analysis.Rmd/heatmap%20top-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-heatmap-top-2">
+Past versions of “heatmap top-2.png”
+</button>
+</p>
+<div id="fig-no-spaces-heatmap-top-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/docs/figure/HSP_analysis.Rmd/heatmap top-2.png" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cat(&quot;\n\n### Fresh vs. Sole-Boldo et al {.tabset} \n\n&quot;)</code></pre>
 </div>
 <div id="fresh-vs.-sole-boldo-et-al-1" class="section level3 tabset">
 <h3 class="tabset">Fresh vs. Sole-Boldo et al</h3>
 <pre class="r"><code>plot_topn_heatmap(res_sb, &quot;Sole-Boldo et al&quot;)</code></pre>
 <p><img src="figure/HSP_analysis.Rmd/heatmap%20top-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-heatmap-top-3">
+Past versions of “heatmap top-3.png”
+</button>
+</p>
+<div id="fig-no-spaces-heatmap-top-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/docs/figure/HSP_analysis.Rmd/heatmap top-3.png" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -7735,9 +7909,9 @@ Call `lifecycle::last_lifecycle_warnings()` to see where this warning was genera
 <pre class="r"><code>cat(&quot;\n\n## HSP genes: tabular data {.tabset} \n\n&quot;)</code></pre>
 <div id="hsp-genes-tabular-data" class="section level2 tabset">
 <h2 class="tabset">HSP genes: tabular data</h2>
-<pre class="r"><code>cat(&quot;\n\n### Fresh vs. Tabib et al \n\n&quot;)</code></pre>
-<div id="fresh-vs.-tabib-et-al-2" class="section level3">
-<h3>Fresh vs. Tabib et al</h3>
+<pre class="r"><code>cat(&quot;\n\n### Fresh vs. Tabib et al {.tabset} \n\n&quot;)</code></pre>
+<div id="fresh-vs.-tabib-et-al-2" class="section level3 tabset">
+<h3 class="tabset">Fresh vs. Tabib et al</h3>
 <pre class="r"><code>invisible(print_hsp_tables(res_tabib))</code></pre>
 <div id="fibroblasts-3" class="section level4">
 <h4>Fibroblasts</h4>
@@ -21650,11 +21824,11 @@ Tabib_et_al
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>cat(&quot;\n\n### Fresh vs. He et al \n\n&quot;)</code></pre>
+<pre class="r"><code>cat(&quot;\n\n### Fresh vs. He et al {.tabset} \n\n&quot;)</code></pre>
 </div>
 </div>
-<div id="fresh-vs.-he-et-al-2" class="section level3">
-<h3>Fresh vs. He et al</h3>
+<div id="fresh-vs.-he-et-al-2" class="section level3 tabset">
+<h3 class="tabset">Fresh vs. He et al</h3>
 <pre class="r"><code>invisible(print_hsp_tables(res_he))</code></pre>
 <div id="fibroblasts-4" class="section level4">
 <h4>Fibroblasts</h4>
@@ -35855,11 +36029,11 @@ He_et_al
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>cat(&quot;\n\n### Fresh vs. Sole-Boldo et al \n\n&quot;)</code></pre>
+<pre class="r"><code>cat(&quot;\n\n### Fresh vs. Sole-Boldo et al {.tabset} \n\n&quot;)</code></pre>
 </div>
 </div>
-<div id="fresh-vs.-sole-boldo-et-al-2" class="section level3">
-<h3>Fresh vs. Sole-Boldo et al</h3>
+<div id="fresh-vs.-sole-boldo-et-al-2" class="section level3 tabset">
+<h3 class="tabset">Fresh vs. Sole-Boldo et al</h3>
 <pre class="r"><code>invisible(print_hsp_tables(res_sb))</code></pre>
 <div id="fibroblasts-5" class="section level4">
 <h4>Fibroblasts</h4>
@@ -51256,18 +51430,129 @@ Sole_Boldo_et_al
 <h2>Fresh vs. Tabib et al</h2>
 <pre class="r"><code>plot_hsp_heatmap(res_tabib, &quot;Tabib et al&quot;)</code></pre>
 <p><img src="figure/HSP_analysis.Rmd/heatmap%20hsp-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-heatmap-hsp-1">
+Past versions of “heatmap hsp-1.png”
+</button>
+</p>
+<div id="fig-no-spaces-heatmap-hsp-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/docs/figure/HSP_analysis.Rmd/heatmap hsp-1.png" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cat(&quot;\n\n## Fresh vs. He et al \n\n&quot;)</code></pre>
 </div>
 <div id="fresh-vs.-he-et-al-3" class="section level2">
 <h2>Fresh vs. He et al</h2>
 <pre class="r"><code>plot_hsp_heatmap(res_he, &quot;He et al&quot;)</code></pre>
 <p><img src="figure/HSP_analysis.Rmd/heatmap%20hsp-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-heatmap-hsp-2">
+Past versions of “heatmap hsp-2.png”
+</button>
+</p>
+<div id="fig-no-spaces-heatmap-hsp-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/docs/figure/HSP_analysis.Rmd/heatmap hsp-2.png" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cat(&quot;\n\n## Fresh vs. Sole-Boldo et al \n\n&quot;)</code></pre>
 </div>
 <div id="fresh-vs.-sole-boldo-et-al-3" class="section level2">
 <h2>Fresh vs. Sole-Boldo et al</h2>
 <pre class="r"><code>plot_hsp_heatmap(res_sb, &quot;Sole-Boldo et al&quot;)</code></pre>
 <p><img src="figure/HSP_analysis.Rmd/heatmap%20hsp-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-heatmap-hsp-3">
+Past versions of “heatmap hsp-3.png”
+</button>
+</p>
+<div id="fig-no-spaces-heatmap-hsp-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/DominiquePaul/Optimised-skin-cell-protocol-scRNA/blob/054d13eef7c841d17104217da2bcf34769892f7d/docs/figure/HSP_analysis.Rmd/heatmap hsp-3.png" target="_blank">054d13e</a>
+</td>
+<td>
+dominique-paul-uzh
+</td>
+<td>
+2022-03-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.1.0 (2021-05-18)
 Platform: x86_64-apple-darwin17.0 (64-bit)
@@ -51305,7 +51590,7 @@ loaded via a namespace (and not attached):
  [17] listenv_0.8.0             labeling_0.4.2           
  [19] git2r_0.29.0              GenomeInfoDbData_1.2.7   
  [21] bit64_4.0.5               farver_2.1.0             
- [23] glmmTMB_1.1.2.3           rprojroot_2.0.2          
+ [23] glmmTMB_1.1.3             rprojroot_2.0.2          
  [25] parallelly_1.30.0         vctrs_0.3.8              
  [27] generics_0.1.2            xfun_0.30                
  [29] R6_2.5.1                  doParallel_1.0.17        
@@ -51320,12 +51605,12 @@ loaded via a namespace (and not attached):
  [47] workflowr_1.7.0           rlang_1.0.2              
  [49] genefilter_1.76.0         systemfonts_1.0.4        
  [51] GlobalOptions_0.1.2       splines_4.1.0            
- [53] TMB_1.7.22                broom_0.7.12             
+ [53] TMB_1.8.0                 broom_0.7.12             
  [55] yaml_2.3.5                reshape2_1.4.4           
  [57] backports_1.4.1           httpuv_1.6.5             
  [59] tools_4.1.0               ellipsis_0.3.2           
  [61] gplots_3.1.1              jquerylib_0.1.4          
- [63] RColorBrewer_1.1-2        Rcpp_1.0.8               
+ [63] RColorBrewer_1.1-2        Rcpp_1.0.8.2             
  [65] plyr_1.8.6                sparseMatrixStats_1.6.0  
  [67] progress_1.2.2            zlibbioc_1.40.0          
  [69] purrr_0.3.4               RCurl_1.98-1.6           
@@ -51356,7 +51641,7 @@ loaded via a namespace (and not attached):
 [119] XVector_0.34.0            rvest_1.0.2              
 [121] yulab.utils_0.0.4         stringr_1.4.0            
 [123] digest_0.6.29             sctransform_0.3.3        
-[125] Biostrings_2.62.0         rmarkdown_2.11           
+[125] Biostrings_2.62.0         rmarkdown_2.13           
 [127] edgeR_3.36.0              DelayedMatrixStats_1.16.0
 [129] gtools_3.9.2              rjson_0.2.21             
 [131] nloptr_2.0.0              lifecycle_1.0.1          
@@ -51365,7 +51650,7 @@ loaded via a namespace (and not attached):
 [137] limma_3.50.1              fansi_1.0.2              
 [139] pillar_1.7.0              lattice_0.20-45          
 [141] KEGGREST_1.34.0           fastmap_1.1.0            
-[143] httr_1.4.2                survival_3.2-13          
+[143] httr_1.4.2                survival_3.3-1           
 [145] glue_1.6.2                png_0.1-7                
 [147] iterators_1.0.14          bit_4.0.4                
 [149] stringi_1.7.6             sass_0.4.0               
@@ -51417,7 +51702,7 @@ loaded via a namespace (and not attached):
  [17] listenv_0.8.0             labeling_0.4.2           
  [19] git2r_0.29.0              GenomeInfoDbData_1.2.7   
  [21] bit64_4.0.5               farver_2.1.0             
- [23] glmmTMB_1.1.2.3           rprojroot_2.0.2          
+ [23] glmmTMB_1.1.3             rprojroot_2.0.2          
  [25] parallelly_1.30.0         vctrs_0.3.8              
  [27] generics_0.1.2            xfun_0.30                
  [29] R6_2.5.1                  doParallel_1.0.17        
@@ -51432,12 +51717,12 @@ loaded via a namespace (and not attached):
  [47] workflowr_1.7.0           rlang_1.0.2              
  [49] genefilter_1.76.0         systemfonts_1.0.4        
  [51] GlobalOptions_0.1.2       splines_4.1.0            
- [53] TMB_1.7.22                broom_0.7.12             
+ [53] TMB_1.8.0                 broom_0.7.12             
  [55] yaml_2.3.5                reshape2_1.4.4           
  [57] backports_1.4.1           httpuv_1.6.5             
  [59] tools_4.1.0               ellipsis_0.3.2           
  [61] gplots_3.1.1              jquerylib_0.1.4          
- [63] RColorBrewer_1.1-2        Rcpp_1.0.8               
+ [63] RColorBrewer_1.1-2        Rcpp_1.0.8.2             
  [65] plyr_1.8.6                sparseMatrixStats_1.6.0  
  [67] progress_1.2.2            zlibbioc_1.40.0          
  [69] purrr_0.3.4               RCurl_1.98-1.6           
@@ -51468,7 +51753,7 @@ loaded via a namespace (and not attached):
 [119] XVector_0.34.0            rvest_1.0.2              
 [121] yulab.utils_0.0.4         stringr_1.4.0            
 [123] digest_0.6.29             sctransform_0.3.3        
-[125] Biostrings_2.62.0         rmarkdown_2.11           
+[125] Biostrings_2.62.0         rmarkdown_2.13           
 [127] edgeR_3.36.0              DelayedMatrixStats_1.16.0
 [129] gtools_3.9.2              rjson_0.2.21             
 [131] nloptr_2.0.0              lifecycle_1.0.1          
@@ -51477,7 +51762,7 @@ loaded via a namespace (and not attached):
 [137] limma_3.50.1              fansi_1.0.2              
 [139] pillar_1.7.0              lattice_0.20-45          
 [141] KEGGREST_1.34.0           fastmap_1.1.0            
-[143] httr_1.4.2                survival_3.2-13          
+[143] httr_1.4.2                survival_3.3-1           
 [145] glue_1.6.2                png_0.1-7                
 [147] iterators_1.0.14          bit_4.0.4                
 [149] stringi_1.7.6             sass_0.4.0               
