@@ -1,0 +1,2 @@
+Error in run_ds(sce_integated, "Fresh", "Tabib_et_al") : 
+  object 'sce_integated' not found

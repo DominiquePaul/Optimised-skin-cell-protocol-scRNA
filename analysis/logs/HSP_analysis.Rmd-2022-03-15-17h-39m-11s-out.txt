@@ -1,0 +1,105 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   3%
+   inline R code fragments
+
+  |                                                                              |.....                                                                 |   6%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |.......                                                               |  10%
+  ordinary text without R code
+
+  |                                                                              |.........                                                             |  13%
+label: unnamed-chunk-1 (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |...........                                                           |  16%
+  ordinary text without R code
+
+  |                                                                              |..............                                                        |  19%
+label: hsp0
+  |                                                                              |................                                                      |  23%
+  ordinary text without R code
+
+  |                                                                              |..................                                                    |  26%
+label: hsp2
+  |                                                                              |....................                                                  |  29%
+  ordinary text without R code
+
+  |                                                                              |.......................                                               |  32%
+label: hsp 2
+  |                                                                              |.........................                                             |  35%
+  ordinary text without R code
+
+  |                                                                              |...........................                                           |  39%
+label: manual 1
+  |                                                                              |.............................                                         |  42%
+  ordinary text without R code
+
+  |                                                                              |................................                                      |  45%
+label: manual 2
+  |                                                                              |..................................                                    |  48%
+  ordinary text without R code
+
+  |                                                                              |....................................                                  |  52%
+label: unnamed-chunk-2 (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |......................................                                |  55%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  58%
+label: ds functions
+  |                                                                              |...........................................                           |  61%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  65%
+label: table top (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |...............................................                       |  68%
+  ordinary text without R code
+
+  |                                                                              |..................................................                    |  71%
+label: heatmap top (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 7
+ $ fig.height: num 12
+
+  |                                                                              |....................................................                  |  74%
+  ordinary text without R code
+
+  |                                                                              |......................................................                |  77%
+label: table hsp (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                              |........................................................              |  81%
+  ordinary text without R code
+
+  |                                                                              |...........................................................           |  84%
+label: heatmap hsp (with options) 
+List of 3
+ $ results   : chr "asis"
+ $ fig.width : num 7
+ $ fig.height: num 12
+
+  |                                                                              |.............................................................         |  87%
+  ordinary text without R code
+
+  |                                                                              |...............................................................       |  90%
+label: unnamed-chunk-3
+  |                                                                              |.................................................................     |  94%
+  ordinary text without R code
+
+  |                                                                              |....................................................................  |  97%
+label: session-info-chunk-inserted-by-workflowr
+  |                                                                              |......................................................................| 100%
+  ordinary text without R code
+
+
+/Applications/RStudio.app/Contents/MacOS/pandoc/pandoc +RTS -K512m -RTS HSP_analysis.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HSP_analysis.html --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --variable bs3=TRUE --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --include-before-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmp81ftOp/rmarkdown-str21ee6f804d33.html --variable navbar=1 --variable theme=cosmo --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmp81ftOp/rmarkdown-str21ee504c8875.html --variable code_folding=hide --variable code_menu=1 --include-in-header /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmp81ftOp/header21ee5092e282.html --include-after-body /var/folders/1y/bxr6rnvn3cxbn5j2rd5mbxwm0000gn/T//Rtmp81ftOp/footer21ee5b54ee21.html 

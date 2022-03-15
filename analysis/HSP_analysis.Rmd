@@ -23,9 +23,23 @@ Heat shock proteins (HSPs) are specific proteins that are made when cells are br
 
 Some people have demonstrated that during tissue dissociation, digestion results in a stress response. Some proteins are produced by cells in response to exposure to stressful conditions (Heat shock proteins). 
 
-In this analysis we examine whether the genes involved in the heat shock are differentially expressed depending on the protocol used.
+In this analysis we examine whether the genes involved in the heat shock are differentially expressed depending on the protocol used. We look at differential states between the protocols. Comparing by cell type makes more sense as differences in average expression could be distorted by different cell type abundances.
+
+The method used for DE in the pseudobulk analysis has a strong impact on the results. The three main options are:
+* EdgeR
+* Limma
+* DESeq2
 
 The genes for HSPs are commonly also termed HSP[...]. The list of genes examined was acquired from the [HGNC database](https://www.genenames.org/data/genegroup/#!/group/582).
+
+## Notes to facilitate coding
+
+The counts matrix includes the raw counts. The logcounts are normalised using scTransform.
+
+Open questions
+* Use prefiltered data??
+* For which method does normalisation make a difference?
+* Use an intercept/samples in design matrix?
 
 ```{r hsp0}
 # hsps <- c("HSP90AA1", "HSPA9", "HSPD1", "HSPA1A", "HSPA1B", "HSPA8")
@@ -38,28 +52,40 @@ cat(hsps)
 
 ```{r hsp2} 
 sce_integrated <- readRDS(file="../data/EOS_Files/EDI_EOS5_sce.rds")
-# colnames(colData(sce))
+sce_fvc <- readRDS(file="../data/EOS_Files/FvC_EOS3_sce.rds")
+
 # table(sce_integrated$manual_labels_coarse)
+# table(sce_fvc$manual_labels_coarse)
 
 # We remove some cell types due to low expression levels
 # t(table(sce_integrated$manual_labels_coarse, sce_integrated$Sample))
-removed_cell_types <- c("Mast cells", "Sweat gland cells", "Melanocytes/Schwann cells/Neuronal cells")
-sce <- sce_integrated[,!sce_integrated$manual_labels_coarse  %in% removed_cell_types]
+removed_cell_types <- c("Mast cells","Melanocytes/Schwann cells/Neuronal cells") #, "Sweat gland cells")
+sce_integrated <- sce_integrated[,!sce_integrated$manual_labels_coarse  %in% removed_cell_types]
+
+# t(table(sce_fvc$manual_labels_coarse, sce_fvc$Protocol))
+removed_cell_types_fvc <- c("Schwann cells", "Dendritic cells", "Macrophages")
+sce_fvc <- sce_fvc[,!sce_fvc$manual_labels_coarse  %in% removed_cell_types_fvc]
 ```
 
 Are all of the genes in our data?
 
 ```{r hsp 2}
 # all hsp genes appear to be present in the data
-hsps <- hsps[hsps %in% rowData(sce)$Symbol]
+hsps %in% rowData(sce_integrated)$Symbol # integrated data
+hsps %in% rowData(sce_fvc)$Symbol # fresh v culture
+
+### Optionally drop genes from list
+# hsps <- hsps[hsps %in% rowData(sce_integrated)$Symbol]
+# hsps <- hsps[hsps %in% rowData(sce_fvc)$Symbol]
 ```
 
 # Single run of a Pseudobulk DE
 
+
 ```{r manual 1}
 # Fresh Sole_Boldo_et_al He_et_al Tabib_et_al
 control_protocol <- "Fresh"
-test_protocol <- "Sole_Boldo_et_al"
+test_protocol <- "Culture"
 
 refactorise <- function(sce_object, column_vector){
   if (length(column_vector) == 1){
@@ -72,7 +98,7 @@ refactorise <- function(sce_object, column_vector){
   sce_object
 }
 
-sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
+sce_subset <- sce_fvc[,sce_fvc$Protocol %in% c(control_protocol, test_protocol)]
 sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
 
 sce_muscat <- prepSCE(sce_subset,
@@ -80,6 +106,8 @@ sce_muscat <- prepSCE(sce_subset,
                       gid="Protocol",
                       sid="Sample",
                       drop=TRUE)
+
+# table(sce_subset$Sample, sce_subset$manual_labels_coarse)
 ```
 
 We store number of clusters and number of sample IDs as variables
@@ -95,38 +123,38 @@ pb <- aggregateData(sce_muscat, assay="counts", fun="sum", by=c("cluster_id", "s
 ```
 
 ```{r, include=FALSE}
-# res <- pbDS(pb)
+# res1 <- pbDS(pb)
+# sapply(levels(res$sce$cluster_id), function(cell_type){
+#   print(cell_type)
+#   pbHeatmap(res$sce, res$muscat, k = cell_type)
+# })
+
+# pbHeatmap(sce_muscat, res1, top_n = 2, fdr = 1, lfc = 0)
+
+# library(limma)
+# ei <- metadata(sce_muscat)$experiment_info
+# mm <- model.matrix(~ ei$group_id)
+# dimnames(mm) <- list(ei$sample_id, levels(ei$group_id))
+# contrast <- makeContrasts("Sole_Boldo_et_al-Fresh", levels = mm)
+
+# res1 <- pbDS(pb)
+# res2 <- pbDS(pb, design = mm, contrast = contrast)
+# res1==res2
+# 
+# # Are they the same?
+# res1$table[[1]][[1]]
+
 # tbl <- res$table[[1]]
 # names(tbl)
-# 
 # k1 <- tbl[[1]]
-# 
-# sapply(1:7, function(idx){
-#   k1 <- tbl[[idx]]
-#   print(k1[k1$gene %in% hsps[-2],])
-# })
-# 
-# head(format(k1[, -ncol(k1)], digits=2))
-# 
-# sapply(res$table[[1]], function(tlb){
-#   hsps[-2] %in% tlb$gene
-# })
-# 
-# library(dplyr)
-# library(magrittr)
-# library(pheatmap)
-# 
-# logNormExpres <- as.data.frame(as.matrix(t(counts(sce_subset)[hsps,]))) %>% 
-#     dplyr::mutate(cluster= colData(sce_subset)[,"Sample"]) %>%
-#     group_by(cluster) %>% 
-#     summarise_all(mean)
 ```
+
 
 # Run DS for all Protocols
 
 ```{r ds functions}
-run_ds <- function(control_protocol, test_protocol){
-  sce_subset <- sce[,sce$Protocol %in% c(control_protocol, test_protocol)]
+run_ds <- function(sce_object, control_protocol, test_protocol){
+  sce_subset <- sce_object[,sce_object$Protocol %in% c(control_protocol, test_protocol)]
   sce_subset <- refactorise(sce_subset, c("Protocol", "Sample", "manual_labels_coarse"))
   
   sce_muscat <- prepSCE(sce_subset,
@@ -162,20 +190,25 @@ print_hsp_tables <- function(res){
   })
 }
 
-plot_topn_heatmap <- function(res, test_protocol){
+plot_topn_heatmap <- function(res, title){
   as.ggplot(pbHeatmap(res$sce, res$muscat, top_n=20)) +
-    labs(title=paste0("Fresh vs. ", test_protocol))
+    labs(title=title)
 }
 
-plot_hsp_heatmap <- function(res, test_protocol){
-  as.ggplot(pbHeatmap(res$sce, res$muscat, g = hsps, fdr=1, lfc=0)) +
-    labs(title=paste0("Fresh vs. ", test_protocol))
+plot_hsp_heatmap <- function(res, title){
+  hsps_in_dataset <- hsps[hsps %in% rownames(res$sce)]
+  as.ggplot(pbHeatmap(res$sce, res$muscat, g = hsps_in_dataset, fdr=1, lfc=0)) +
+    labs(title=title)
 }
 
 # Run DE analyses
-res_tabib <- run_ds("Fresh", "Tabib_et_al")
-res_sb <- run_ds("Fresh", "Sole_Boldo_et_al")
-res_he <- run_ds("Fresh", "He_et_al")
+res_tabib <- run_ds(sce_integrated, "Fresh", "Tabib_et_al")
+res_sb <- run_ds(sce_integrated, "Fresh", "Sole_Boldo_et_al")
+res_he <- run_ds(sce_integrated, "Fresh", "He_et_al")
+res_tabib_v_sb <- run_ds(sce_integrated, "Tabib_et_al", "Sole_Boldo_et_al")
+res_tabib_v_he <- run_ds(sce_integrated, "Tabib_et_al", "He_et_al")
+res_sb_v_he <- run_ds(sce_integrated, "Sole_Boldo_et_al", "He_et_al")
+res_culture <- run_ds(sce_fvc, "Fresh", "Culture")
 ```
 
 # Top DS genes
@@ -188,6 +221,15 @@ cat("\n\n### Fresh vs. He et al {.tabset}\n\n")
 invisible(print_tables(res_he))
 cat("\n\n### Fresh vs. Sole-Boldo et al  {.tabset} \n\n")
 invisible(print_tables(res_sb))
+cat("\n\n### Fresh vs. Cultured  {.tabset} \n\n")
+invisible(print_tables(res_culture))
+
+cat("\n\n### Tabib vs. Sole-Boldo  {.tabset} \n\n")
+invisible(print_tables(res_tabib_v_sb))
+cat("\n\n### Tabib vs. He  {.tabset} \n\n")
+invisible(print_tables(res_tabib_v_he))
+cat("\n\n### Sole-Boldo vs. He  {.tabset} \n\n")
+invisible(print_tables(res_sb_v_he))
 ```
 
 
@@ -199,6 +241,15 @@ cat("\n\n### Fresh vs. He et al \n\n")
 plot_topn_heatmap(res_he, "He et al")
 cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
 plot_topn_heatmap(res_sb, "Sole-Boldo et al")
+cat("\n\n### Fresh vs. Cultured  {.tabset} \n\n")
+plot_topn_heatmap(res_culture, "Cultured")
+
+cat("\n\n### Tabib vs. Sole-Boldo  {.tabset} \n\n")
+plot_topn_heatmap(res_tabib_v_sb, "Tabib vs. Sole-Boldo")
+cat("\n\n### Tabib vs. He  {.tabset} \n\n")
+plot_topn_heatmap(res_tabib_v_he, "Tabib vs. He")
+cat("\n\n### Sole-Boldo vs. He  {.tabset} \n\n")
+plot_topn_heatmap(res_sb_v_he, "Sole-Boldo vs. He")
 ```
 
 # HSP DS
@@ -211,16 +262,34 @@ cat("\n\n### Fresh vs. He et al {.tabset} \n\n")
 invisible(print_hsp_tables(res_he))
 cat("\n\n### Fresh vs. Sole-Boldo et al {.tabset} \n\n")
 invisible(print_hsp_tables(res_sb))
+cat("\n\n### Fresh vs. Cultured  {.tabset} \n\n")
+invisible(print_hsp_tables(res_culture))
+
+cat("\n\n### Tabib vs. Sole-Boldo  {.tabset} \n\n")
+invisible(print_hsp_tables(res_tabib_v_sb))
+cat("\n\n### Tabib vs. He  {.tabset} \n\n")
+invisible(print_hsp_tables(res_tabib_v_he))
+cat("\n\n### Sole-Boldo vs. He  {.tabset} \n\n")
+invisible(print_hsp_tables(res_sb_v_he))
 ```
 
 ```{r heatmap hsp, results="asis", fig.width=7, fig.height=12}
 cat("\n\n## HSP genes: heatmaps {.tabset} \n\n")
 cat("\n\n### Fresh vs. Tabib et al \n\n")
-plot_hsp_heatmap(res_tabib, "Tabib et al")
+plot_hsp_heatmap(res_tabib, "Fresh vs. Tabib et al")
 cat("\n\n### Fresh vs. He et al \n\n")
-plot_hsp_heatmap(res_he, "He et al")
+plot_hsp_heatmap(res_he, "Fresh vs. He et al")
 cat("\n\n### Fresh vs. Sole-Boldo et al \n\n")
-plot_hsp_heatmap(res_sb, "Sole-Boldo et al")
+plot_hsp_heatmap(res_sb, "Fresh vs. Sole-Boldo et al")
+cat("\n\n### Fresh vs. Cultured  {.tabset} \n\n")
+plot_hsp_heatmap(res_culture, "Fresh vs. Cultured")
+
+cat("\n\n### Tabib vs. Sole-Boldo  {.tabset} \n\n")
+plot_hsp_heatmap(res_tabib_v_sb, "Tabib vs. Sole-Boldo")
+cat("\n\n### Tabib vs. He  {.tabset} \n\n")
+plot_hsp_heatmap(res_tabib_v_he, "Tabib vs. He")
+cat("\n\n### Sole-Boldo vs. He  {.tabset} \n\n")
+plot_hsp_heatmap(res_sb_v_he, "Sole-Boldo vs. He")
 ```
 
 
