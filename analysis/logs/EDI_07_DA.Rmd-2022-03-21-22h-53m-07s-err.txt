@@ -1,0 +1,7 @@
+Error in parse_block(g[-1], g[1], params.src, markdown_mode) : 
+  Duplicate chunk label 'He vs. Tabib', which has been used for the chunk:
+da_objects[["He_et_al-Tabib_et_al"]] <- res_he_tabib <- glmQLFTest(fit.ab, contrast = contrast[,"He_et_al-Tabib_et_al", drop=FALSE])
+knitr::kable(summary(decideTests(res_he_tabib)))
+
+as.data.frame(topTags(res_he_tabib, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
+  knitr::kable(digits=2)

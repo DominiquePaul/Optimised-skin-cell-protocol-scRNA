@@ -1,0 +1,2 @@
+Error in save_kable(., file = paste0(folder_path, "DA_", comparison, ".jpg")) : 
+  could not find function "save_kable"

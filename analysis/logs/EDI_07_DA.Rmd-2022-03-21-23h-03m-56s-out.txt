@@ -1,0 +1,71 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   2%
+  ordinary text without R code
+
+  |                                                                              |...                                                                   |   4%
+label: seed-set-by-workflowr (with options) 
+List of 1
+ $ echo: logi FALSE
+
+  |                                                                              |.....                                                                 |   7%
+  ordinary text without R code
+
+  |                                                                              |......                                                                |   9%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |........                                                              |  11%
+  ordinary text without R code
+
+  |                                                                              |.........                                                             |  13%
+label: load-data (with options) 
+List of 2
+ $ fig.width : num 16
+ $ fig.height: num 10
+
+  |                                                                              |...........                                                           |  16%
+  ordinary text without R code
+
+  |                                                                              |............                                                          |  18%
+label: code setup
+  |                                                                              |..............                                                        |  20%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  22%
+label: design matrix and basic plots
+  |                                                                              |.................                                                     |  24%
+  ordinary text without R code
+
+  |                                                                              |...................                                                   |  27%
+label: Fresh vs. Tabib
+  |                                                                              |....................                                                  |  29%
+  ordinary text without R code
+
+  |                                                                              |......................                                                |  31%
+label: Fresh vs. He
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |.........................                                             |  36%
+label: Fresh vs. Sole-Boldo
+  |                                                                              |..........................                                            |  38%
+  ordinary text without R code
+
+  |                                                                              |............................                                          |  40%
+label: He vs. Sole-Boldo
+  |                                                                              |..............................                                        |  42%
+  ordinary text without R code
+
+  |                                                                              |...............................                                       |  44%
+label: He vs. Tabib
+  |                                                                              |.................................                                     |  47%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  49%
+label: SB vs. Tabib
+  |                                                                              |....................................                                  |  51%
+  ordinary text without R code
+
+  |                                                                              |.....................................                                 |  53%
+label: unnamed-chunk-1
+

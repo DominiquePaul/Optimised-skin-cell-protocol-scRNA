@@ -12,6 +12,7 @@ suppressMessages({
   library(ggplot2)
   library(hrbrthemes)
   library(scater)
+  library(kableExtra)
 })
 
 # load utils functions
@@ -144,7 +145,7 @@ as.data.frame(topTags(res_he_tabib, n=20)[,c("logFC", "logCPM",	"F", "PValue", "
 
 ## Test Sole-Boldo vs. Tabib
 
-```{r He vs. Tabib}
+```{r SB vs. Tabib}
 da_objects[["Sole_Boldo_et_al-Tabib_et_al"]] <- res_sb_tabib <- glmQLFTest(fit.ab, contrast = contrast[,"Sole_Boldo_et_al-Tabib_et_al", drop=FALSE])
 knitr::kable(summary(decideTests(res_sb_tabib)))
 
