@@ -140,6 +140,30 @@ Update the theme we will use
 theme_ipsum_updated <- theme_ipsum_rc(base_size = 15, plot_margin = margin(30, 30, 30, 50),  axis_title_size = 12)
 ```
 
+
+# Add extra columns for plots
+
+In previous versions of UMAPs the cells are sometimes covered by their labels. We reduce these to (1) just numbers on the plot (2) "[number]-[annotation]" in the legend. For this we add two additional columns for thes
+
+
+```{r numbered labels}
+# Major labels for fresh cells
+lvls_labels_fresh <- levels(sce_fresh$manual_labels_coarse)
+number_labels_fresh <- 1:length(lvls_labels_fresh)
+sce_fresh$manual_labels_numeric <- mapvalues(sce_fresh$manual_labels_coarse, from=lvls_labels_fresh, to=number_labels_fresh)
+
+# Major labels for the integrated data
+lvls_labels_fvc <- levels(sce_fvc$manual_labels_coarse)
+number_labels_fvc <- 1:length(lvls_labels_fvc)
+sce_fvc$manual_labels_numeric <- mapvalues(sce_fvc$manual_labels_coarse, from=lvls_labels_fvc, to=number_labels_fvc)
+
+# Major labels for the integrated data
+lvls_labels_integ <- levels(sce_integrated$manual_labels_coarse)
+number_labels_integ <- 1:length(lvls_labels_integ)
+sce_integrated$manual_labels_numeric <- mapvalues(sce_integrated$manual_labels_coarse, from=lvls_labels_integ, to=number_labels_integ)
+
+```
+
 # Figure 2 (Fresh only)
 
 * A: UMAP (Fresh only)
@@ -152,9 +176,9 @@ theme_ipsum_updated <- theme_ipsum_rc(base_size = 15, plot_margin = margin(30, 3
 ### A ###
 #########
 
-Fig2a <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25, text_size=7) +
+Fig2a <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_numeric", point_size=0.25, text_size=7) +
   theme_ipsum_updated +
-  get_cell_colours(levels(sce_fresh$manual_labels_coarse)) +
+  get_cell_colours(levels(sce_fresh$manual_labels_coarse), number_labels=T) +
   theme(legend.position="bottom",
         panel.spacing = unit(10, "mm")) +
   guides(color=guide_legend(title="",
@@ -233,13 +257,18 @@ Fig2c
 #########
 get_annotated_subcluster <- function(cell_type){
   sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
+  # sce_subset$labels_numeric <- sce_subset$subcluster_names
   
   plt <- plotReducedDim(sce_subset, paste0("UMAP_", cell_type),
-                 colour_by = "subcluster_names", text_by="subcluster_names", text_size=7) +
+                 colour_by = "subcluster_names", text_by="subcluster_id", text_size=7) +
     theme_ipsum_updated +
     labs(x="UMAP 1", y="UMAP 2") +
     get_unnamed_colours(unique(sce_subset$subcluster_names), "Subcluster", type="colour") +
-    theme(legend.position="none") +
+    theme(legend.position="bottom",
+          panel.spacing = unit(10, "mm")) +
+    guides(color=guide_legend(title="",
+                              nrow=ceiling(length(unique(sce_subset$subcluster_names)) / 3),
+                              override.aes=list(size=5, shape=15, alpha=1))) +
     labs(title=cell_type)
   plt
 }
@@ -251,19 +280,28 @@ Fig2d
 ## Output
 
 ```{r, fig.width=20, fig.height=26}
+# figure2 <- ggarrange(
+#   Fig2a,
+#   ggarrange(Fig2b, 
+#             ggarrange(Fig2c, Fig2d, ncol = 1, 
+#                       labels = c("C", "D"), font.label = list(size = 30)),
+#             ncol = 2, widths=c(1.4,1)),
+#   ncol = 1, nrow = 2,labels = c("A", "B"), font.label = list(size = 30)
+# )
+
 figure2 <- ggarrange(
   Fig2a,
-  ggarrange(Fig2b, 
-            ggarrange(Fig2c, Fig2d, ncol = 1, 
-                      labels = c("C", "D"), font.label = list(size = 30)),
-            ncol = 2, widths=c(1.4,1)),
-  ncol = 1, nrow = 2,labels = c("A", "B"), font.label = list(size = 30)
+  Fig2b,
+  ggarrange(Fig2c, Fig2d, ncol = 2, labels = c("C", "D"), font.label = list(size = 30)),
+  ncol = 1, nrow = 3,labels = c("A", "B", ""), heights=c(1.5,1,1), font.label = list(size = 30)
 )
+
+
 
 suppressWarnings(figure2)
 
 scale <- 0.8
-ggsave(paste0(folder_path, "figure2..jpg"),
+ggsave(paste0(folder_path, "figure2.jpg"),
        plot=figure2,
        width=20*scale,
        height=26*scale,
@@ -367,7 +405,7 @@ figure3 <- ggarrange(
 # suppressWarnings(figure3)
 
 scale <- 0.8
-ggsave(paste0(folder_path, "figure3..jpg"),
+ggsave(paste0(folder_path, "figure3.jpg"),
        plot=figure3,
        width=20*scale,
        height=26*scale,
@@ -434,7 +472,7 @@ sfig5 <- ggarrange(sfig6a, sfig6b, sfig6c, ncol=1, heights=c(1,1,2), labels="AUT
 suppressWarnings(sfig5)
 
 scale <- 0.7
-ggsave(paste0(folder_path, "Suppl_figure5..jpg"),
+ggsave(paste0(folder_path, "Suppl_figure5.jpg"),
        plot=sfig5,
        width=20*scale,
        height=26*scale,
@@ -451,13 +489,14 @@ ggsave(paste0(folder_path, "Suppl_figure5..jpg"),
 
 ## A and B 
 
-```{r Figure 4}
+```{r Figure 4, fig.width=14, fig.height=8}
 # A
-Fig4a <- plotReducedDim(sce_fvc, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
+Fig4a <- plotReducedDim(sce_fvc, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_numeric", point_size=0.25,
+                        text_size=7) +
   # labs(title="UMAP coloured by cell type",
   #      subtitle = "Fresh and cultured samples") +
   theme_ipsum_updated +
-  get_cell_colours(levels(sce_fvc$manual_labels_coarse)) +
+  get_cell_colours(levels(sce_fvc$manual_labels_coarse), number_labels=T) +
   theme(legend.position="right",
         panel.spacing = unit(5, "mm"),
         plot.margin=margin(t=5, l=50, r=100, b=5)) +
@@ -468,11 +507,11 @@ Fig4a <- plotReducedDim(sce_fvc, "UMAP", colour_by="manual_labels_coarse", text_
 Fig4a
 
 # B
-Fig4b <- plotReducedDim(sce_fvc, "UMAP", colour_by="Protocol", point_size=0.25) +
+Fig4b <- plotReducedDim(sce_fvc, "UMAP", colour_by="Sample", point_size=0.25) +
   # labs(title="UMAP coloured by protocol",
   #      subtitle = "Fresh and cultured samples") +
   theme_ipsum_updated +
-  get_protocol_colours(levels(sce_fvc$Protocol)) +
+  # get_protocol_colours(levels(sce_fvc$Protocol)) +
   theme(legend.position="right",
         panel.spacing = unit(5, "mm"),
         plot.margin=margin(t=5, l=50, r=100, b=5)) +
@@ -748,31 +787,31 @@ figure4 <- ggarrange(
 # suppressWarnings(figure4)
 
 scale <- 0.7
-ggsave(paste0(folder_path, "figure4..jpg"),
+ggsave(paste0(folder_path, "figure4.jpg"),
        plot=figure4,
        width=20*scale,
        height=26*scale,
        units="in",
        bg="white")
-
-figure4_v2 <- ggarrange(
-  Fig4a,
-  Fig4b,
-  Fig4c_v2,
-  Fig4d,
-  ncol = 1,labels = c("AUTO"), font.label = list(size = 30),
-  heights = c(1,1,0.6,0.8)
-)
-
-# suppressWarnings(figure4)
-
-scale <- 0.7
-ggsave(paste0(folder_path, "figure4_v2..jpg"),
-       plot=figure4_v2,
-       width=20*scale,
-       height=26*scale,
-       units="in",
-       bg="white")
+# 
+# figure4_v2 <- ggarrange(
+#   Fig4a,
+#   Fig4b,
+#   Fig4c_v2,
+#   Fig4d,
+#   ncol = 1,labels = c("AUTO"), font.label = list(size = 30),
+#   heights = c(1,1,0.6,0.8)
+# )
+# 
+# # suppressWarnings(figure4)
+# 
+# scale <- 0.7
+# ggsave(paste0(folder_path, "figure4_v2.jpg"),
+#        plot=figure4_v2,
+#        width=20*scale,
+#        height=26*scale,
+#        units="in",
+#        bg="white")
 ```
 
 # Figure 5: 
@@ -950,7 +989,7 @@ Fig5 <- ggpubr::ggarrange(
 
 # suppressWarnings(Fig5)
 
-ggsave(paste0(folder_path, "figure5..jpg"),
+ggsave(paste0(folder_path, "figure5.jpg"),
        plot=Fig5,
        width=20*0.9,
        height=26*0.9,
@@ -968,11 +1007,11 @@ ggsave(paste0(folder_path, "figure5..jpg"),
 
 ```{r figure 6, fig.width=10, fig.height=7}
 # A
-Fig6a <- plotReducedDim(sce_integrated, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_coarse", point_size=0.25) +
+Fig6a <- plotReducedDim(sce_integrated, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_numeric", point_size=0.25, text_size=8) +
   # labs(title="UMAP coloured by cell type",
   #      subtitle = "Integrated datasets") +
   theme_ipsum_updated +
-  get_cell_colours(levels(sce_integrated$manual_labels_coarse)) +
+  get_cell_colours(levels(sce_integrated$manual_labels_coarse), number_labels=T) +
   theme(legend.position="right",
         panel.spacing = unit(5, "mm"),
         plot.margin = margin(30,100,30,150)) +
@@ -1069,7 +1108,7 @@ figure6 <- ggarrange(
 # suppressWarnings(figure6)
 
 scale <- 0.9
-ggsave(paste0(folder_path, "figure6..jpg"),
+ggsave(paste0(folder_path, "figure6.jpg"),
        plot=figure6,
        width=20*scale,
        height=26*scale,
@@ -1087,7 +1126,7 @@ ggsave(paste0(folder_path, "figure6..jpg"),
 # suppressWarnings(figure6)
 # 
 # scale <- 0.9
-# ggsave(paste0(folder_path, "figure6..jpg"),
+# ggsave(paste0(folder_path, "figure6.jpg"),
 #        plot=figure6,
 #        width=20*scale,
 #        height=26*scale,
@@ -1121,7 +1160,8 @@ plot_heatmap <- function(cell_type, normalise=TRUE){
   genes <- genes[genes %in% rownames(sce_subset)] 
   
   # the cells which we want to display, ordered by subcluster
-  column_annotations <- data.frame(row.names=colnames(sce_subset), "Subcluster"=sce_subset$subcluster_names) %>%
+  column_annotations <- data.frame(row.names=colnames(sce_subset),# "Sample"=sce_subset$Sample,
+                                   "Subcluster"=sce_subset$subcluster_names) %>%
     arrange(Subcluster)
   
   # the logcounts which we need for the pheatmap function
@@ -1131,7 +1171,9 @@ plot_heatmap <- function(cell_type, normalise=TRUE){
   
   # Use own colours for the column annotations
   colours <- get_unnamed_colours(unique(column_annotations$Subcluster), type="raw")
-  annotation_colours <- list("Subcluster"=colours)
+  # colours_sample <- get_sample_colours(unique(column_annotations$Sample), type="raw")
+  annotation_colours <- list(#"Sample"=colours_sample, 
+                             "Subcluster"=colours)
 
   #plt <- grid.grabExpr(draw(hmap, annotation_legend_side="bottom", heatmap_legend_side="right")) +
   plt <- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE, cluster_rows = FALSE, 
@@ -1170,7 +1212,7 @@ SFig2 <- suppressMessages(suppressWarnings(ggpubr::ggarrange(
 suppressMessages(suppressWarnings(SFig2))
 
 scale <- 0.8
-ggsave(paste0(folder_path, "Suppl_Figure2..jpg"),
+ggsave(paste0(folder_path, "Suppl_Figure2.jpg"),
        plot=SFig2,
        width=20*scale,
        height=26*scale,
@@ -1244,7 +1286,7 @@ SFig3_v2 <- as.ggplot(pheatmap::pheatmap(as.matrix(sce_plot), cluster_cols=FALSE
 
 suppressMessages(suppressWarnings(SFig3_v2))
 
-ggsave(paste0(folder_path, "Suppl_Figure3_v2..jpg"),
+ggsave(paste0(folder_path, "Suppl_Figure3_v2.jpg"),
        plot=SFig3_v2,
        width=18*scale,
        height=18*scale,
@@ -1437,7 +1479,7 @@ Suppl_Figure3 <- ggpubr::ggarrange(
 
 suppressWarnings(Suppl_Figure3)
 
-ggsave(paste0(folder_path, "Suppl_Figure3..jpg"),
+ggsave(paste0(folder_path, "Suppl_Figure3.jpg"),
        plot=Suppl_Figure3,
        width=20*0.9,
        height=26*0.9,
@@ -1535,7 +1577,7 @@ SFig4 <- suppressMessages(suppressWarnings(ggarrange(
 suppressMessages(suppressWarnings(SFig4))
 
 scale <- 0.8
-ggsave(paste0(folder_path, "Suppl_Figure4..jpg"),
+ggsave(paste0(folder_path, "Suppl_Figure4.jpg"),
        plot=SFig4,
        width=20*scale,
        height=26*scale,
@@ -1565,7 +1607,7 @@ data_integrated <- colData(sce_integrated) %>%
 # Save as image
 kable(data_integrated, digits=0) %>%
   kable_styling() %>%
-  save_kable(file = paste0(folder_path, "Suppl_table_1..jpg"))
+  save_kable(file = paste0(folder_path, "Suppl_table_1.jpg"))
 
 # Write as csv
 write.csv(data_integrated, paste0(folder_path, "Suppl_table_1.csv"))
@@ -1590,7 +1632,7 @@ data_fvc <- colData(sce_fvc) %>%
 # Save as image
 kable(data_fvc, digits=0) %>%
   kable_styling() %>%
-  save_kable(file = paste0(folder_path, "Suppl_table_2..jpg"))
+  save_kable(file = paste0(folder_path, "Suppl_table_2.jpg"))
 
 # Write as csv
 write.csv(data_fvc, paste0(folder_path, "Suppl_table_2.csv"))
@@ -1612,3 +1654,158 @@ data_integrated_protocol <- colData(sce_integrated) %>%
   left_join(integrated_data_mean_protocol)
 
 ```
+
+# Review
+
+```{r review folder}
+review_folder <- "../output/review_figures/"
+```
+
+
+## (1)
+
+Are some expression profiles associated with samples in certain cell types?
+
+Pursuant to review comment we check whether the overexpression of the following genes are associated with certain samples:
+
+* COL1A1 and COL6A1 (Fibroblasts)
+* TAGLN, ACTA2, and COL1A1 (Pericytes)
+* TAGLN (Vascular endothelial)
+
+This is relevant for the data from the fresh protocol only
+
+We will look at:
+
+* Expression values as a violin plot after subsetting for the given cell type. Samples on the x-axis
+
+```{r}
+cell_type_genes <- list("Fibroblasts"=c("COL1A1", "COL6A1"),
+                  "Pericytes/VSMC"=c("TAGLN", "ACTA2", "COL1A1"),
+                  "Vascular endothelial"=c("TAGLN")) #, "PECAM1", "VWF", "CLDN5"
+
+vio_plots <- lapply(names(cell_type_genes), function(ct){
+  sce <- sce_fresh[,sce_fresh$manual_labels_coarse == ct]
+
+  plotExpression(sce, features=cell_type_genes[[ct]], x = "Sample", colour_by = "Sample", ncol=3) +
+    theme_ipsum_updated +
+    get_sample_colours(levels(sce$Sample)) +
+    theme(legend.position="none") +
+    labs(title=paste0("Selected genes for ", ct),
+         x="")
+})
+
+```
+
+```{r supplementary figure 3, fig.width=20, fig.height=26}
+Review1 <- ggpubr::ggarrange(
+  vio_plots[[1]],
+  vio_plots[[2]],
+  vio_plots[[3]],
+  ncol = 1, nrow = 3,labels = "AUTO", font.label = list(size = 30)
+)
+
+suppressWarnings(Review1)
+
+ggsave(paste0(review_folder, "Review1.jpg"),
+       plot=Review1,
+       width=10*0.9,
+       height=13*0.9,
+       units="in",
+       bg="white")
+```
+
+
+```{r, fig.width=14, fig.height=10}
+
+#########
+### B ###
+#########
+
+genes <- c("DCN", "COL1A1", "COL6A1", "TAGLN", "ACTA2", "RGS5", "PECAM1", 
+           "VWF", "CLDN5", "FABP4", "LYVE1", "CCL21", "KRT5", "KRT10", "KRT15", 
+           "IL7R", "CD3D", "CXCR4", "LYZ", "HLA-DRA", "CXCL8", "TPSB2", "TPSAB1", 
+           "CTSG", "PMEL", "DCT", "MLANA", "CDH19", "CRYAB", "ITGB8")
+
+cell_type_order <- c("Fibroblasts", "Pericytes/VSMC",	"Vascular endothelial",	"Lymphatic endothelial", "Keratinocytes",	"T cells",	"Macrophages/DC",	"Mast cells", "Melanocytes", "Schwann cells")
+
+# the cells which we want to display, ordered by cell type
+column_annotations <- data.frame(cell_name=rownames(colData(sce_fresh)), 
+                                 Sample=colData(sce_fresh)[,"Sample"],
+                                Cell_type=factor(colData(sce_fresh)[,"manual_labels_coarse"], levels=cell_type_order)) %>%
+    filter(Cell_type!="NA") %>%
+    arrange(Cell_type) %>%
+    tibble::column_to_rownames(var="cell_name")
+
+# the logcounts which we need for the pheatmap function
+sce_plot <- logcounts(sce_fresh[genes, rownames(column_annotations)])
+sce_plot <- normalise_by_row(sce_plot)
+
+# Use own colours for the column annotations
+colours <- get_cell_colours(cell_type_order, type="raw", sort=F)
+colours_sample <- get_sample_colours(levels(sce_fresh$Sample), type="raw")
+annotation_colours <- list("Sample"=colours_sample, "Cell_type"=colours)
+
+
+# create the plot. We convert to ggplot to take advantage of some of the display functions
+Fig2b_review <- as.ggplot(pheatmap(sce_plot, annotation_col=column_annotations, annotation_colors=annotation_colours,
+         show_rownames=TRUE, show_colnames=FALSE, cluster_cols=FALSE, cluster_rows = FALSE, silent=TRUE,
+         color=viridis(50))) +
+  theme_ipsum_updated +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), 
+        legend.position="none",
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        plot.background=element_blank())
+Fig2b_review
+
+ggsave(paste0(review_folder, "Fig2b_review.jpg"),
+       plot=Fig2b_review,
+       width=12*0.9,
+       height=10*0.9,
+       units="in",
+       bg="white")
+```
+
+
+## (2) Technical variability
+
+```{r, fig.width=14, fig.height=8}
+plotReducedDim(sce_fvc, "UMAP", colour_by="Sample", point_size=0.25) +
+  # labs(title="UMAP coloured by protocol",
+  #      subtitle = "Fresh and cultured samples") +
+  theme_ipsum_updated +
+  get_sample_colours(levels(sce_fvc$Sample)) +
+  theme(legend.position="right",
+        panel.spacing = unit(5, "mm"),
+        plot.margin=margin(t=5, l=50, r=100, b=5)) +
+  guides(color=guide_legend(title="",
+                            # nrow=1,
+                            byrow=TRUE, 
+                            override.aes = list(size=4, shape = 15, alpha = 1)))
+```
+
+
+
+
+## Table of cell type abundances in figure 6
+
+```{r}
+dmm <- purrr::map(unique(sce_integrated$manual_labels_coarse), ~ {
+  tibble::tibble(counts = count_table[.x,],
+                 abundances = counts/lib_sizes,
+                 Protocol= sample_protocol_mapping[levels(sce_integrated$Sample), "Protocol"],
+                 Cluster = .x)}) %>% 
+  purrr::reduce(rbind) %>% 
+  dplyr::arrange("Cluster")
+
+write.csv(dmm,file="../output/ct_abundance.csv", sep=";")
+write.xlsx(dmm, file="../output/ct_abundance.xlsx")
+```
+

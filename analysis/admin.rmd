@@ -19,7 +19,7 @@ wflow_build(files=c(
   # "EDI_04_Cell_Cycle.Rmd",
   # "EDI_05_Annotation.Rmd",
   # "EDI_06_marker_genes.Rmd",
-  # "EDI_07_DA.Rmd",
+  "EDI_07_DA.Rmd",
   # "EDI_08_Subclustering.Rmd",
   
   # P2 workflow
@@ -30,7 +30,7 @@ wflow_build(files=c(
   # "P2_04_FvC_gene_expression_plot.Rmd",
   
   # "plots.Rmd"
-  "HSP_analysis.Rmd",
+  # "HSP_analysis.Rmd",
   
   "index.Rmd"
                     ),

@@ -50,6 +50,9 @@ keep <- filterByExpr(y.ab, group=factor(y.ab$samples[[test_col]]))
 y.ab <- y.ab[keep,]
 summary(keep)
 ```
+
+
+
 ```{r design matrix and basic plots}
 design_matrix <- rlang::eval_tidy(rlang::expr(
   model.matrix(!!as.formula(
@@ -64,7 +67,7 @@ colnames(design_matrix) <- stringr::str_extract(colnames(design_matrix),"(?<=\\)
 print(design_matrix)
 
 # Create a contrast matrix out of the design matrix
-combs_contr <- combn(unique(y.ab$samples[[test_col]]) ,2)
+combs_contr <- combn(sort(unique(y.ab$samples[[test_col]])), 2)
 contrast_names <- apply(combs_contr,2,function(x) paste(x,collapse = "-"))
 contrast <- makeContrasts(contrasts=contrast_names, 
                            levels = sort(c(unique(y.ab$samples[[test_col]]))))
@@ -81,26 +84,28 @@ plotBCV(y.ab, cex=1)
 fit.ab <- glmQLFit(y.ab, design_matrix, robust=TRUE, abundance.trend=FALSE)
 # Plot the per cell type quasi-likelihood dispersion against the cell type abundance (in log2 counts per million).
 plotQLDisp(fit.ab, cex=1)
+
+da_objects <- list()
 ```
 
 # Individual tests {.tabset}
 
 We test the fresh protocol versus other protocols for statistical changes in cell type abundances. The first table indicates how many cell types were identified to exhibit a statistically significant change. The second table shows the exact log fold changes and the associated p-value and false-discovery rate.
 
-## Tabib vs. Fresh
+## Test Fresh vs. Tabib
 
 ```{r Fresh vs. Tabib}
-res_fresh_lafa <- glmQLFTest(fit.ab, contrast = contrast[,"Tabib_et_al-Fresh", drop=FALSE])
+da_objects[["Fresh-Tabib_et_al"]] <- res_fresh_lafa <- glmQLFTest(fit.ab, contrast = contrast[,"Fresh-Tabib_et_al", drop=FALSE])
 knitr::kable(summary(decideTests(res_fresh_lafa)))
 
 as.data.frame(topTags(res_fresh_lafa, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
   knitr::kable(digits=2)
 ```
 
-## Test He et al. vs Fresh
+## Test Fresh vs. He et al.
 
 ```{r Fresh vs. He}
-res_fresh_he_et_al <- glmQLFTest(fit.ab, contrast = contrast[,"He_et_al-Fresh", drop=FALSE])
+da_objects[["Fresh-He_et_al"]] <- res_fresh_he_et_al <- glmQLFTest(fit.ab, contrast = contrast[,"Fresh-He_et_al", drop=FALSE])
 knitr::kable(summary(decideTests(res_fresh_he_et_al)))
 
 as.data.frame(topTags(res_fresh_he_et_al, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
@@ -110,11 +115,60 @@ as.data.frame(topTags(res_fresh_he_et_al, n=20)[,c("logFC", "logCPM",	"F", "PVal
 ## Test Fresh vs. Sole-Boldo
 
 ```{r Fresh vs. Sole-Boldo}
-res_fresh_sole_boldo <- glmQLFTest(fit.ab, contrast = contrast[,"Sole_Boldo_et_al-Fresh", drop=FALSE])
+da_objects[["Fresh-Sole_Boldo_et_al"]] <- res_fresh_sole_boldo <- glmQLFTest(fit.ab, contrast = contrast[,"Fresh-Sole_Boldo_et_al", drop=FALSE])
 knitr::kable(summary(decideTests(res_fresh_sole_boldo)))
 
 as.data.frame(topTags(res_fresh_sole_boldo, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
   knitr::kable(digits=2)
+```
+
+## Test He vs. Sole-Boldo
+
+```{r He vs. Sole-Boldo}
+da_objects[["He_et_al-Sole_Boldo_et_al"]] <- res_he_sb <- glmQLFTest(fit.ab, contrast = contrast[,"He_et_al-Sole_Boldo_et_al", drop=FALSE])
+knitr::kable(summary(decideTests(res_he_sb)))
+
+as.data.frame(topTags(res_he_sb, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
+  knitr::kable(digits=2)
+```
+
+## Test He vs. Tabib
+
+```{r He vs. Tabib}
+da_objects[["He_et_al-Tabib_et_al"]] <- res_he_tabib <- glmQLFTest(fit.ab, contrast = contrast[,"He_et_al-Tabib_et_al", drop=FALSE])
+knitr::kable(summary(decideTests(res_he_tabib)))
+
+as.data.frame(topTags(res_he_tabib, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
+  knitr::kable(digits=2)
+```
+
+## Test Sole-Boldo vs. Tabib
+
+```{r He vs. Tabib}
+da_objects[["Sole_Boldo_et_al-Tabib_et_al"]] <- res_sb_tabib <- glmQLFTest(fit.ab, contrast = contrast[,"Sole_Boldo_et_al-Tabib_et_al", drop=FALSE])
+knitr::kable(summary(decideTests(res_sb_tabib)))
+
+as.data.frame(topTags(res_sb_tabib, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
+  knitr::kable(digits=2)
+```
+
+
+## Save the tables
+
+```{r}
+folder_path <- "../output/review_figures/DA/"
+
+for (comparison in names(da_objects)){
+  df <- as.data.frame(topTags(da_objects[[comparison]], n=20)[,c("logFC", "logCPM", "PValue", "FDR")])
+  # Save as image
+  kable(df, digits=4) %>%
+    kable_styling() %>%
+    save_kable(file = paste0(folder_path, "DA_", comparison, ".jpg"))
+}
+
+
+# Write as c
+
 ```
 
 # Test all contrasts
