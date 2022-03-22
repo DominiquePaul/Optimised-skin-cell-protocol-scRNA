@@ -115,6 +115,16 @@ plot_aggregated_expr <- function(sce, genes, group_var, title, short = FALSE, no
            display_numbers = round(logNormExpresMa,2), silent=TRUE
            ))
 }
+
+# gets centroids of clusters for labelling
+get_celltype_centers <- function(sce, dimred, column, offset=c(0,0)){
+  cbind(reducedDim(sce, dimred), sce[[column]]) %>%
+    as.data.frame() %>%
+    dplyr::group_by(V3) %>%
+    dplyr::summarise(V1=mean(as.numeric(V1)),
+                     V2=mean(as.numeric(V2))) %>%
+    mutate(V1 =V1+offset[1], V2 =V2+offset[2])
+  }
 ```
 
 Save some code by defining these
@@ -176,16 +186,18 @@ sce_integrated$manual_labels_numeric <- mapvalues(sce_integrated$manual_labels_c
 ### A ###
 #########
 
-Fig2a <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_numeric", point_size=0.25, text_size=7) +
+celltype_centers <- get_celltype_centers(sce_fresh, "UMAP", "manual_labels_numeric", offset=c(0,2))
+
+Fig2a <- plotReducedDim(sce_fresh, "UMAP", colour_by="manual_labels_coarse", point_size=0.25, text_size=7) +
   theme_ipsum_updated +
   get_cell_colours(levels(sce_fresh$manual_labels_coarse), number_labels=T) +
   theme(legend.position="bottom",
         panel.spacing = unit(10, "mm")) +
+  geom_label(aes(V1, V2, label=V3), data=celltype_centers) +
   guides(color=guide_legend(title="",
                             nrow=2,
                             byrow=TRUE, 
                             override.aes = list(size=5, shape = 15, alpha = 1)))
-Fig2a
 
 #########
 ### B ###
@@ -198,20 +210,32 @@ genes <- c("DCN", "COL1A1", "COL6A1", "TAGLN", "ACTA2", "RGS5", "PECAM1",
 
 cell_type_order <- c("Fibroblasts", "Pericytes/VSMC",	"Vascular endothelial",	"Lymphatic endothelial", "Keratinocytes",	"T cells",	"Macrophages/DC",	"Mast cells", "Melanocytes", "Schwann cells")
 
+# sample at most 100 cells per celltype
+set.seed(100)
+selected_cells <- sapply(levels(sce_fresh$manual_labels_coarse), function(ctype){
+  cnames <- colnames(sce_fresh[,sce_fresh$manual_labels_coarse == ctype])
+  if (length(cnames) > 100) cnames <- cnames[sort(sample(1:length(cnames), 100))]
+  cnames
+}) %>% purrr::reduce(c)
+
+sce_fresh_plot <- sce_fresh[,selected_cells]
+
 # the cells which we want to display, ordered by cell type
-column_annotations <- data.frame(cell_name=rownames(colData(sce_fresh)), 
-                                Cell_type=factor(colData(sce_fresh)[,"manual_labels_coarse"], levels=cell_type_order)) %>%
+column_annotations <- data.frame(cell_name=rownames(colData(sce_fresh_plot)),
+                                 Sample=sce_fresh_plot$Sample,
+                                Cell_type=factor(colData(sce_fresh_plot)[,"manual_labels_coarse"], levels=cell_type_order)) %>%
     filter(Cell_type!="NA") %>%
     arrange(Cell_type) %>%
     tibble::column_to_rownames(var="cell_name")
 
 # the logcounts which we need for the pheatmap function
-sce_plot <- logcounts(sce_fresh[genes, rownames(column_annotations)])
+sce_plot <- logcounts(sce_fresh_plot[genes, rownames(column_annotations)])
 sce_plot <- normalise_by_row(sce_plot)
 
 # Use own colours for the column annotations
 colours <- get_cell_colours(cell_type_order, type="raw", sort=F)
-annotation_colours <- list("Cell_type"=colours)
+colours_sample <- get_sample_colours(levels(sce_fresh_plot$Sample), type="raw")
+annotation_colours <- list("Sample"=colours_sample, "Cell_type"=colours)
 
 
 # create the plot. We convert to ggplot to take advantage of some of the display functions
@@ -257,10 +281,11 @@ Fig2c
 #########
 get_annotated_subcluster <- function(cell_type){
   sce_subset <- sce_fresh[,sce_fresh$manual_labels_coarse2 == cell_type]
-  # sce_subset$labels_numeric <- sce_subset$subcluster_names
+  
+  celltype_centers <- get_celltype_centers(sce_subset, paste0("UMAP_", cell_type), "subcluster_id")
   
   plt <- plotReducedDim(sce_subset, paste0("UMAP_", cell_type),
-                 colour_by = "subcluster_names", text_by="subcluster_id", text_size=7) +
+                 colour_by = "subcluster_names") +
     theme_ipsum_updated +
     labs(x="UMAP 1", y="UMAP 2") +
     get_unnamed_colours(unique(sce_subset$subcluster_names), "Subcluster", type="colour") +
@@ -269,7 +294,8 @@ get_annotated_subcluster <- function(cell_type){
     guides(color=guide_legend(title="",
                               nrow=ceiling(length(unique(sce_subset$subcluster_names)) / 3),
                               override.aes=list(size=5, shape=15, alpha=1))) +
-    labs(title=cell_type)
+    labs(title=cell_type) +
+    geom_label(aes(V1, V2, label=V3), data=celltype_centers)
   plt
 }
 
@@ -320,8 +346,6 @@ ggsave(paste0(folder_path, "figure2.jpg"),
 ```{r Figure 3}
 # A: Fibroblasts
 Fig3a <- get_annotated_subcluster("Fibroblasts") 
-
-
 
 #########
 ### B ###
@@ -408,7 +432,7 @@ scale <- 0.8
 ggsave(paste0(folder_path, "figure3.jpg"),
        plot=figure3,
        width=20*scale,
-       height=26*scale,
+       height=26*scale, 
        units="in",
        bg="white")
 ```
@@ -490,9 +514,10 @@ ggsave(paste0(folder_path, "Suppl_figure5.jpg"),
 ## A and B 
 
 ```{r Figure 4, fig.width=14, fig.height=8}
-# A
-Fig4a <- plotReducedDim(sce_fvc, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_numeric", point_size=0.25,
-                        text_size=7) +
+ # A
+celltype_centers <- get_celltype_centers(sce_fvc, "UMAP", "manual_labels_numeric", offset=c(-.5,-1))
+
+Fig4a <- plotReducedDim(sce_fvc, "UMAP", colour_by="manual_labels_coarse", point_size=0.25) +
   # labs(title="UMAP coloured by cell type",
   #      subtitle = "Fresh and cultured samples") +
   theme_ipsum_updated +
@@ -503,7 +528,9 @@ Fig4a <- plotReducedDim(sce_fvc, "UMAP", colour_by="manual_labels_coarse", text_
   guides(color=guide_legend(title="",
                             # nrow=3,
                             byrow=TRUE, 
-                            override.aes = list(size=4, shape = 15, alpha = 1)))
+                            override.aes = list(size=4, shape = 15, alpha = 1))) +
+  geom_label(aes(V1, V2, label=V3), data=celltype_centers)
+
 Fig4a
 
 # B
@@ -1007,7 +1034,9 @@ ggsave(paste0(folder_path, "figure5.jpg"),
 
 ```{r figure 6, fig.width=10, fig.height=7}
 # A
-Fig6a <- plotReducedDim(sce_integrated, "UMAP", colour_by="manual_labels_coarse", text_by="manual_labels_numeric", point_size=0.25, text_size=8) +
+celltype_centers <- get_celltype_centers(sce_integrated, "UMAP", "manual_labels_numeric", offset=c(-0.6,-0.7))
+
+Fig6a <- plotReducedDim(sce_integrated, "UMAP", colour_by="manual_labels_coarse",point_size=0.25) +
   # labs(title="UMAP coloured by cell type",
   #      subtitle = "Integrated datasets") +
   theme_ipsum_updated +
@@ -1018,7 +1047,9 @@ Fig6a <- plotReducedDim(sce_integrated, "UMAP", colour_by="manual_labels_coarse"
   guides(color=guide_legend(title="",
                             # nrow=3,
                             byrow=TRUE, 
-                            override.aes = list(size=4, shape = 15, alpha = 1)))
+                            override.aes = list(size=4, shape = 15, alpha = 1))) +
+  geom_label(aes(V1, V2, label=V3), data=celltype_centers)
+  
 
 # B
 Fig6b <- plotReducedDim(sce_integrated, "UMAP", colour_by="Protocol", point_size=0.25) +
@@ -1728,16 +1759,19 @@ genes <- c("DCN", "COL1A1", "COL6A1", "TAGLN", "ACTA2", "RGS5", "PECAM1",
 
 cell_type_order <- c("Fibroblasts", "Pericytes/VSMC",	"Vascular endothelial",	"Lymphatic endothelial", "Keratinocytes",	"T cells",	"Macrophages/DC",	"Mast cells", "Melanocytes", "Schwann cells")
 
+sce_fresh_plot <- sce_fresh[,selected_cells]
+# sort(sce_fresh_plot$manual_labels_coarse, sce_fresh_plot$Sample)
+
 # the cells which we want to display, ordered by cell type
-column_annotations <- data.frame(cell_name=rownames(colData(sce_fresh)), 
-                                 Sample=colData(sce_fresh)[,"Sample"],
-                                Cell_type=factor(colData(sce_fresh)[,"manual_labels_coarse"], levels=cell_type_order)) %>%
+column_annotations <- data.frame(cell_name=rownames(colData(sce_fresh_plot)), 
+                                 Sample=colData(sce_fresh_plot)[,"Sample"],
+                                Cell_type=factor(colData(sce_fresh_plot)[,"manual_labels_coarse"], levels=cell_type_order)) %>%
     filter(Cell_type!="NA") %>%
     arrange(Cell_type) %>%
     tibble::column_to_rownames(var="cell_name")
 
 # the logcounts which we need for the pheatmap function
-sce_plot <- logcounts(sce_fresh[genes, rownames(column_annotations)])
+sce_plot <- logcounts(sce_fresh_plot[genes, rownames(column_annotations)])
 sce_plot <- normalise_by_row(sce_plot)
 
 # Use own colours for the column annotations
@@ -1807,5 +1841,59 @@ dmm <- purrr::map(unique(sce_integrated$manual_labels_coarse), ~ {
 
 write.csv(dmm,file="../output/ct_abundance.csv", sep=";")
 write.xlsx(dmm, file="../output/ct_abundance.xlsx")
+
+table(sce_integrated$Sample)
+table(sce_integrated$Protocol)
 ```
+
+
+
+## Median gene count vs median lib size per sample
+
+
+```{r sample gene vs lib size, fig.width=10, fig.height=7}
+
+review4 <- colData(sce_integrated) %>%
+  as.data.frame() %>%
+  group_by(Sample)  %>%
+  select(c(Sample, Protocol, sum, detected)) %>%
+  summarise_at(vars(sum, detected), median) %>%
+  ggplot() +
+  geom_point(aes(sum, detected, colour=Sample)) +
+  theme_ipsum_updated +
+  get_sample_colours(levels(sce_integrated$Sample)) +
+  guides(colour=guide_legend(ncol=1,override.aes = list(size=5, shape=15))) +
+  labs(title="Median gene count vs median library size per sample",
+       y="Median genes detected",
+       x="Median lib. size")
+
+ggsave(paste0(review_folder, "Review4.jpg"),
+       plot=review4,
+       width=12*0.9,
+       height=10*0.9,
+       units="in",
+       bg="white")
+ggsave(paste0(review_folder, "Fig2b_review.jpg"),
+       plot=Fig2b_review,
+       width=12*0.9,
+       height=10*0.9,
+       units="in",
+       bg="white")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
