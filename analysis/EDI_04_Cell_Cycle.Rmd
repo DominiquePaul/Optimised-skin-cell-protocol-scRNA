@@ -1,7 +1,7 @@
 ---
 title: "Cell Cycle Analysis"
 author: "Dominique Paul"
-date: "11/2/2021"
+date: "`R Sys.Date()`"
 output: html_document
 ---
 

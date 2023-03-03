@@ -50,6 +50,8 @@ y.ab <- DGEList(abundances, samples=extra.info, group=factor(extra.info[[test_co
 keep <- filterByExpr(y.ab, group=factor(y.ab$samples[[test_col]]))
 y.ab <- y.ab[keep,]
 summary(keep)
+
+table(sce$Protocol, sce$manual_labels_coarse)
 ```
 
 
@@ -419,4 +421,85 @@ ggsave(paste0(folder_path, "EDI_supplemental.png"),
        units="in",
        bg="white")
 
+```
+
+# Comparing only mast cells
+
+```{r}
+test_col <- "Protocol"
+plotvars <- c("Protocol")
+label <- "manual_labels_coarse"
+
+sce_reduced <- sce[,sce$manuals_labels_coarse]
+
+
+# Cross-tabulate the label and the samples
+abundances <- table(colData(sce)[[label]], colData(sce_reduced)[["Sample"]])
+# returns a copy of the table with its table class attribute removed
+abundances <- unclass(abundances) 
+
+# We attach the samples and protocol columns as additiona metadata
+extra.info <- colData(sce)[match(colnames(abundances), sce$Sample),c("Sample", plotvars)]
+extra.info[[test_col]] <- stringr::str_replace_all(extra.info[[test_col]]," ","_")
+
+# setup
+y.ab <- DGEList(abundances, samples=extra.info, group=factor(extra.info[[test_col]]))
+
+# filter out cell types which don't have enough cell counts
+keep <- filterByExpr(y.ab, group=factor(y.ab$samples[[test_col]]))
+y.ab <- y.ab[keep,]
+summary(keep)
+
+table(sce$Protocol, sce$manual_labels_coarse)
+```
+
+
+
+```{r design matrix and basic plots}
+design_matrix <- rlang::eval_tidy(rlang::expr(
+  model.matrix(!!as.formula(
+    paste("~",paste(c("0",paste0("factor(",test_col,")")),
+                    collapse = " + "))),
+    y.ab$samples)
+  ))
+
+# the columns of the design matrix contain 'factor(Protocol)' in front 
+# of the protocol name. We remove this
+colnames(design_matrix) <- stringr::str_extract(colnames(design_matrix),"(?<=\\))([:graph:]| )+|P_[:graph:]+")
+print(design_matrix)
+
+# Create a contrast matrix out of the design matrix
+combs_contr <- combn(sort(unique(y.ab$samples[[test_col]])), 2)
+contrast_names <- apply(combs_contr,2,function(x) paste(x,collapse = "-"))
+contrast <- makeContrasts(contrasts=contrast_names, 
+                           levels = sort(c(unique(y.ab$samples[[test_col]]))))
+print(contrast)
+
+# estimate dispersion
+# Plot the biological coefficient of variation (BCV) of a cell type against its abundance (in log2 counts per million).
+y.ab <- estimateDisp(y.ab, design_matrix, trend="none")
+plotBCV(y.ab, cex=1)
+
+# fit
+# Fit a quasi-likelihood negative binomial generalized log-linear model to count data. 
+# Conduct cell type specific statistical tests for a given coefficient or contrast.
+fit.ab <- glmQLFit(y.ab, design_matrix, robust=TRUE, abundance.trend=FALSE)
+# Plot the per cell type quasi-likelihood dispersion against the cell type abundance (in log2 counts per million).
+plotQLDisp(fit.ab, cex=1)
+
+da_objects <- list()
+```
+
+# Individual tests {.tabset}
+
+We test the fresh protocol versus other protocols for statistical changes in cell type abundances. The first table indicates how many cell types were identified to exhibit a statistically significant change. The second table shows the exact log fold changes and the associated p-value and false-discovery rate.
+
+## Test Fresh vs. Tabib
+
+```{r Fresh vs. Tabib}
+da_objects[["Fresh-Tabib_et_al"]] <- res_fresh_lafa <- glmQLFTest(fit.ab, contrast = contrast[,"Fresh-Tabib_et_al", drop=FALSE])
+knitr::kable(summary(decideTests(res_fresh_lafa)))
+
+as.data.frame(topTags(res_fresh_lafa, n=20)[,c("logFC", "logCPM",	"F", "PValue", "FDR")]) %>%
+  knitr::kable(digits=2)
 ```

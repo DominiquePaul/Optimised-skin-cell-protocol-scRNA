@@ -377,7 +377,6 @@ plot_label_barplots <- function(sce_object, column_name, level1="Protocol", leve
 
 
 
-
 ######################################################################################
 ### A function to run marker gene analysis with plots and writing results to excel ###
 ######################################################################################

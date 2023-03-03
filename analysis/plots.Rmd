@@ -322,8 +322,6 @@ figure2 <- ggarrange(
   ncol = 1, nrow = 3,labels = c("A", "B", ""), heights=c(1.5,1,1), font.label = list(size = 30)
 )
 
-
-
 suppressWarnings(figure2)
 
 scale <- 0.8

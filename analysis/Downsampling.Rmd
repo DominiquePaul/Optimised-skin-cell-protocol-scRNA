@@ -1,0 +1,301 @@
+---
+title: "Downsampling"
+author: "Dominique Paul"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# load utils functions
+source("../code/general_purpose_code.R")
+
+suppressMessages({
+  library(ggplotify)
+  library(plyr)
+  library(dplyr)
+  library(scater)
+  library(viridis)
+  library(ggpubr)
+  library(magrittr)
+  library(pheatmap)
+  library(hrbrthemes)
+  library(kableExtra)
+  library(tidyr)
+  library(tidySingleCellExperiment)
+  })
+
+# load utils functions
+source("../code/general_purpose_code.R")
+
+# Where to save plots
+folder_path <- "../output/plots_paper_jpg/"
+
+# Fixes an issue where a warning message is shown repeatedly
+suppressWarnings(suppressMessages(hrbrthemes::import_roboto_condensed()))
+
+theme_ipsum_updated <- theme_ipsum_rc(base_size = 15, plot_margin = margin(30, 30, 30, 50),  axis_title_size = 12)
+```
+
+
+# Load data
+
+```{r}
+# Filtered data form end of analysis
+sce_integrated <- readRDS(file="../data/EOS_Files/EDI_EOS8_sce.rds")
+# Load unfiltered data
+sce_edi_unfiltered <- readRDS("../data/EOS_Files/EDI_EOS1_sce_unfiltered.rds")
+```
+
+
+# Downsample data
+
+```{r downsample}
+sce_integrated_og <- sce_integrated
+
+assay(sce_integrated, "undownsampled") <- assay(sce_integrated, "counts")
+res <- downsampleBatches(sce_integrated, batch=sce_integrated$Sample)
+assay(sce_integrated, "downsampled") <- res
+assay(sce_integrated, "counts") <- res
+
+# recalculate qc metrics on downsampled data
+is_mitochondrial <- grepl("^(MT-)[^.]*", rownames(sce_integrated), ignore.case = TRUE)
+colData(sce_integrated)$detected <-  NULL
+colData(sce_integrated)$sum <-  NULL
+colData(sce_integrated)$total <-  NULL
+
+set.seed(100)
+sce_integrated <- scuttle::addPerCellQC(sce_integrated, 
+                            list(Mt = is_mitochondrial, 
+                                genes = !is_mitochondrial),
+                            percent_top=c(50,100,200,500)
+                            )
+
+colData(sce_integrated) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Sample) %>%
+  dplyr::summarise_all(mean) %>%
+  select(c(sum, log_sum, total, log_total))
+```
+
+# Plot data
+
+# Figure 5: 
+
+## Panel A
+
+```{r}
+# A1
+fig5a1 <- colData(sce_edi_unfiltered) %>% 
+  as.data.frame() %>%
+  ggplot(aes(x=log_total, y=subsets_genes_detected, color=to_be_dropped)) +
+  geom_point(size=0.25) +
+  labs(y="",
+       x="Library size (log10)",
+       #title="Library size vs. number of non-mitochondrial genes",
+       #subtitle="Cells dropped coloured in red"
+       ) +
+  scale_y_log10() +
+  geom_density_2d() +
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_updated +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +
+  guides(color=guide_legend(title="Dropped")) +
+  scale_colour_manual(values=c("#DB1E0D", "#2065AE"))
+
+# A2
+fig5a2 <- ggplot(colData(sce_edi_unfiltered) %>% as.data.frame,
+       aes(x=log_total, y=subsets_genes_detected, color=subsets_Mt_percent)) +
+  geom_point(size=0.25) +
+  labs(#title="Library size vs. number of non-mitochondrial genes",
+       #subtitle="Colour indicates mito. percentage of library size",
+       x="Library size (log10)",
+       y="") +
+  scale_y_log10() +
+  geom_density_2d() + 
+  facet_wrap(~Sample, nrow=4) +
+  theme_ipsum_updated +
+  theme(panel.spacing = unit(2, "mm"),
+        axis.text.x = element_text(size=8),
+        axis.text.y = element_text(size=8),
+        strip.text.x = element_text(size = 10),
+        plot.margin = margin(t = 2,
+                             r = 20,
+                             l = 20,
+                             b = 2)) +# Left margin) +
+  guides(color=guide_colourbar(title="% mito.")) 
+
+sce_integrated
+```
+
+## Panel B
+
+```{r}
+sample_to_protocol <- colData(sce_integrated) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Protocol, Sample) %>%
+  dplyr::summarise()
+
+cc_sample <- sce_integrated %>% 
+  nest(data=-Sample) %>% 
+  mutate(n_cells = purrr::map_dbl(data, ~ dim(.x)[2]),
+         sum_of_genes = purrr::map_dbl(data, ~ sum(colData(.x)$detected)),
+         average_n_genes = purrr::map_dbl(data, ~ mean(colData(.x)$detected)),
+         mean_n_nonzero_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 0)),
+         mean_n_10cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > 10)),
+         mean_n_1perc_cells_genes = purrr::map_dbl(data, ~ mean(rowSums(counts(.x) > 0) > ceiling(dim(.x)[2]/100)))) %>%
+  left_join(sample_to_protocol, by="Sample")
+
+
+fig5b <- ggpubr::ggarrange(
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = average_n_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(title = "", x="", fill="Mean genes\nper cell", y="Cells") +
+    theme_ipsum_updated +
+    theme(axis.text.x = element_text(angle = 45, hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  
+  ggplot(cc_sample, aes(x = Sample, y = n_cells, fill = mean_n_1perc_cells_genes)) +  # Plot with values on top
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = n_cells), vjust = 0, size = 3) +
+    facet_grid(. ~ Protocol, scales="free_x", space="free_x") +
+    labs(#title = "", 
+      x="", fill="Num. genes\nin at least \n1% of cells",  y="Cells") +
+    theme_ipsum_updated +
+    theme(axis.text.x = element_text(angle = 45,hjust=1, size=8), 
+          axis.text.y = element_text(size=8),
+          axis.ticks.x=element_blank(),
+          strip.text.x = element_blank(),
+          panel.spacing = unit(2, "mm"),
+          plot.margin = margin(2,2,2,2)),
+  nrow = 2)
+```
+
+## Panel C
+
+```{r}
+# sce_integrated$detected - sce_integrated_og$detected
+```
+
+```{r 6 panel c}
+fig5c1 <- sce_integrated_og %>% 
+  ggplot() +
+  theme_ipsum_updated +
+  labs(#title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  geom_density(aes(log10(total), fill=Protocol, color=Protocol), alpha=0.3) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol), type="fill") +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol)) +
+  theme(plot.margin = margin(30,20,30,50))
+
+fig5c2 <- sce_integrated %>% 
+  ggplot() +
+  geom_density(aes(log10(total), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_updated +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm"),
+        plot.margin = margin(30,20,30,30)) +
+  guides(fill=guide_legend(ncol=1, )) +
+  labs(#title="Distribution of cell library sizes",
+       x="Log total expression", y="Density") +
+  theme(panel.spacing = unit(2, "mm")) +
+  get_sample_colours(levels(colData(sce_integrated)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_integrated)$Sample))
+
+```
+
+## Panel D
+
+```{r}
+fig5d1 <- sce_integrated %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Protocol, color=Protocol), alpha=0.3) +
+  theme_ipsum_updated +
+  labs(#title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol)) +
+  get_protocol_colours(levels(colData(sce_integrated)$Protocol), type="fill") +
+  theme(plot.margin = margin(30,20,30,50))
+
+fig5d2 <- sce_integrated %>% 
+  ggplot() +
+  geom_density(aes(log10(detected), fill=Sample, color=Sample),alpha=0.1) +
+  facet_grid(Protocol~.) +
+  theme_ipsum_updated +
+  theme(strip.text.y = element_text(size = 12),
+        legend.text=element_text(size=8),
+        legend.key.size= unit(5, "mm"),
+        plot.margin = margin(30,20,30,30)) +
+  guides(fill=guide_legend(ncol=1)) +
+  labs(#title="Distribution of gene counts",
+       x="Number of genes (log10)", y="Density") +
+  get_sample_colours(levels(colData(sce_integrated)$Sample), type="fill") +
+  get_sample_colours(levels(colData(sce_integrated)$Sample))
+```
+
+## Output
+
+```{r Figure 5, fig.width=20, fig.height=24}
+Fig5 <- ggpubr::ggarrange(
+  ggpubr::ggarrange(fig5a1,fig5a2, ncol = 2),
+  fig5b,
+  ggpubr::ggarrange(fig5c1, fig5c2, ncol=2),
+  ggpubr::ggarrange(fig5d1, fig5d2, ncol=2),
+  ncol = 1, nrow = 4,labels = "AUTO", font.label = list(size = 30)
+)
+
+# suppressWarnings(Fig5)
+
+ggsave(paste0(folder_path, "figure5_downsampled.jpg"),
+       plot=Fig5,
+       width=20*0.9,
+       height=26*0.9,
+       units="in",
+       bg="white")
+```
+
+# Table output
+
+```{r}
+# colnames(colData(sce_edi_unfiltered))
+integrated_data_mean <- colData(sce_integrated) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Sample) %>%
+  summarise_at(vars(sum, detected), mean) %>%
+  dplyr::rename(Library_Size_mean=sum, Num_Genes_mean=detected)
+# rename(sum=Library_Size_mean, detected=Num_Genes_mean)
+
+data_integrated <- colData(sce_integrated) %>%
+  as.data.frame() %>%
+  dplyr::group_by(Sample) %>%
+  summarise_at(vars(sum, detected), median) %>%
+  dplyr::rename(Library_Size_median=sum, Num_Genes_median=detected) %>%
+  left_join(integrated_data_mean)
+
+
+# Save as image
+kable(data_integrated, digits=0) %>%
+  kable_styling() %>%
+  save_kable(file = paste0(folder_path, "Suppl_table_1_downsampled2.jpg"))
+
+# Write as csv
+write.csv(data_integrated, paste0(folder_path, "Suppl_table_1_downsampled2.csv"))
+```
+
+
